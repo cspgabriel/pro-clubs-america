@@ -49,13 +49,26 @@ service cloud.firestore {
 
     match /clubs/{clubKey} {
       allow read: if true;
-      allow create: if signedIn() && request.resource.data.ownerUid == request.auth.uid && request.resource.data.status == 'pending_review';
-      allow update: if signedIn() && resource.data.ownerUid == request.auth.uid
-        && request.resource.data.ownerUid == resource.data.ownerUid
-        && request.resource.data.status == resource.data.status
-        && request.resource.data.elo == resource.data.elo
-        && request.resource.data.reliability == resource.data.reliability
-        && request.resource.data.plan == resource.data.plan;
+      allow create: if signedIn()
+        && request.resource.data.claimantUid == request.auth.uid
+        && request.resource.data.status == 'pending_review'
+        && !('ownerUid' in request.resource.data);
+      allow update: if signedIn() && (
+        (resource.data.status == 'pending_review'
+          && resource.data.claimantUid == request.auth.uid
+          && request.resource.data.claimantUid == resource.data.claimantUid
+          && request.resource.data.status == resource.data.status
+          && !('ownerUid' in request.resource.data)
+          && request.resource.data.elo == resource.data.elo
+          && request.resource.data.reliability == resource.data.reliability
+          && request.resource.data.plan == resource.data.plan)
+        || (resource.data.get('ownerUid', null) == request.auth.uid
+          && request.resource.data.ownerUid == resource.data.ownerUid
+          && request.resource.data.status == resource.data.status
+          && request.resource.data.elo == resource.data.elo
+          && request.resource.data.reliability == resource.data.reliability
+          && request.resource.data.plan == resource.data.plan)
+      );
       allow delete: if false;
     }
 

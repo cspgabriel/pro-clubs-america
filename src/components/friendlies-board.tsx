@@ -122,7 +122,7 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
         <aside><ShieldCheck /> Aceite exige conta e time. Resultado validado exclusivamente pelo histórico Friendly Match.</aside>
       </form>
 
-      <section className="challenge-list">
+      <section className="challenge-list" id="desafios-abertos">
         <div className="market-title"><div><small>GERADOS PELA PLATAFORMA</small><h2>Jogos marcados e desafios</h2></div><span>{requests.length} anúncios</span></div>
         {requests.length ? requests.map((request) => {
           const host = registeredClubs.find((club) => club.id === request.hostClubId);

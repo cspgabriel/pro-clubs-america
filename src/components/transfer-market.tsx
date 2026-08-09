@@ -9,6 +9,7 @@ import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
 import { publishTransferPost, watchTransferPosts, type TransferPostRecord } from "@/lib/community-service";
 
 type TransferPost = TransferPostRecord;
+const planPriority = (plan: TransferPost["plan"]) => ({ free: 0, pro: 1, player_pro: 1, vip: 2, club_pro: 2, club_premium: 3 }[plan]);
 
 export function TransferMarket({ initialType = "club_vacancy" }: { initialType?: TransferPost["type"] }) {
   const [posts, setPosts] = useState<TransferPost[]>([]);
@@ -17,7 +18,7 @@ export function TransferMarket({ initialType = "club_vacancy" }: { initialType?:
   const [user, setUser] = useState<AuthUserSnapshot | null>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
-  const visible = useMemo(() => posts.filter((post) => filter === "all" || post.type === filter).sort((a, b) => ({ vip: 2, pro: 1, free: 0 }[b.plan] - { vip: 2, pro: 1, free: 0 }[a.plan]) || b.createdAt.localeCompare(a.createdAt)), [filter, posts]);
+  const visible = useMemo(() => posts.filter((post) => filter === "all" || post.type === filter).sort((a, b) => planPriority(b.plan) - planPriority(a.plan) || b.createdAt.localeCompare(a.createdAt)), [filter, posts]);
   useEffect(() => { const stopAuth = observeAuth(setUser); const stopPosts = watchTransferPosts(setPosts, () => setNotice("Não foi possível carregar o mercado em tempo real.")); return () => { stopAuth(); stopPosts(); }; }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (!user) { setNotice("Entre na sua conta para publicar no mercado."); return; } const formElement = event.currentTarget; const form = new FormData(formElement); const minimumOvr = Number(form.get("minimumOvr") || 0) || undefined; setBusy(true); setNotice(""); try { await publishTransferPost({ type, title: String(form.get("title")), owner: String(form.get("owner")), position: String(form.get("position")), minimumOvr, platform: String(form.get("platform")), availability: String(form.get("availability")), contact: String(form.get("contact")) }); formElement.reset(); setNotice("Anúncio publicado para toda a comunidade."); } catch { setNotice("Não foi possível publicar o anúncio."); } finally { setBusy(false); } }

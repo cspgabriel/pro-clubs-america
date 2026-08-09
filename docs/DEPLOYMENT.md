@@ -64,3 +64,20 @@ npx supabase db push
 ```
 
 Depois do push, confirme que a política `Public Read Profiles` não existe mais.
+
+## Stripe Billing
+
+O checkout é executado pelas Cloudflare Pages Functions em
+`functions/api/billing/`. A integração valida o ID token Firebase no servidor,
+redireciona ao Stripe Checkout e só concede plano pago depois de um webhook com
+assinatura válida. Consulte `docs/PAYMENTS.md` para bindings, eventos e smoke.
+
+Antes do deploy, além do export do Next.js, compile as Functions:
+
+```powershell
+npm run check:functions
+```
+
+Não publique uma chave `sk_*` ou `rk_*` no GitHub. Configure-a como secret no
+projeto Pages e use uma restricted key permanente, com o menor conjunto de
+permissões necessário.

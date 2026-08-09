@@ -29,6 +29,23 @@ const safeClub = (ownerUid, clubId, overrides = {}) => ({
   ownerUid,
   captainUids: [],
   playerUids: [],
+  status: "active",
+  plan: "free",
+  elo: 1000,
+  reliability: 100,
+  ...overrides,
+});
+
+const safePendingClub = (claimantUid, clubId, overrides = {}) => ({
+  clubId,
+  clubName: `Clube ${clubId}`,
+  platform: "common-gen5",
+  eaUrl: `https://www.ea.com/pt-br/games/ea-sports-fc/clubs/overview?clubId=${clubId}&platform=common-gen5`,
+  responsibleName: claimantUid,
+  country: "brasil",
+  claimantUid,
+  captainUids: [],
+  playerUids: [],
   status: "pending_review",
   plan: "free",
   elo: 1000,
@@ -50,12 +67,15 @@ try {
   const ownerDb = testEnv.authenticatedContext("owner-a").firestore();
   await assertSucceeds(setDoc(doc(ownerDb, "users", "owner-a"), safeProfile("owner-a")));
   const registration = writeBatch(ownerDb);
-  registration.set(doc(ownerDb, "clubs", "common-gen5-100"), safeClub("owner-a", "100"));
-  registration.set(doc(ownerDb, "users", "owner-a"), { role: "owner", clubId: "100", clubKey: "common-gen5-100" }, { merge: true });
+  registration.set(doc(ownerDb, "clubs", "common-gen5-100"), safePendingClub("owner-a", "100"));
+  registration.set(doc(ownerDb, "users", "owner-a"), { pendingClubId: "100", pendingClubKey: "common-gen5-100", pendingClubName: "Clube 100" }, { merge: true });
   await assertSucceeds(registration.commit());
+  await assertFails(updateDoc(doc(ownerDb, "users", "owner-a"), { role: "owner", clubId: "100", clubKey: "common-gen5-100" }));
 
   await testEnv.withSecurityRulesDisabled(async (context) => {
     const admin = context.firestore();
+    await setDoc(doc(admin, "users", "owner-a"), safeProfile("owner-a", { role: "owner", clubId: "100", clubKey: "common-gen5-100" }));
+    await setDoc(doc(admin, "clubs", "common-gen5-100"), safeClub("owner-a", "100"));
     await setDoc(doc(admin, "users", "owner-b"), safeProfile("owner-b", { role: "owner", clubId: "200", clubKey: "common-gen5-200" }));
     await setDoc(doc(admin, "clubs", "common-gen5-200"), safeClub("owner-b", "200"));
     await setDoc(doc(admin, "users", "outsider"), safeProfile("outsider", { role: "owner", clubId: "300", clubKey: "common-gen5-300" }));
@@ -88,7 +108,7 @@ try {
   await assertSucceeds(getDoc(doc(ownerDb, "friendlies", "match-1", "messages", "message-1")));
   await assertFails(getDoc(doc(testEnv.authenticatedContext("outsider").firestore(), "friendlies", "match-1", "messages", "message-1")));
 
-  console.log("Firestore rules: 13 security assertions passed.");
+  console.log("Firestore rules: 14 security assertions passed.");
 } finally {
   await testEnv.cleanup();
 }

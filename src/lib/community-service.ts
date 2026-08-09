@@ -24,7 +24,7 @@ import type { ChallengeMode, FriendlyRequest } from "./friendlies";
 import type { TeamRegistration } from "./community";
 
 export type CommunityRole = "owner" | "captain" | "player" | "visitor";
-export type CommunityPlan = "free" | "pro" | "vip";
+export type CommunityPlan = "free" | "pro" | "vip" | "player_pro" | "club_pro" | "club_premium";
 
 export interface CommunityProfile {
   uid: string;
@@ -35,6 +35,9 @@ export interface CommunityProfile {
   role: CommunityRole;
   clubId?: string;
   clubName?: string;
+  pendingClubId?: string;
+  pendingClubKey?: string;
+  pendingClubName?: string;
   plan: CommunityPlan;
   reliability: number;
   elo: number;
@@ -100,9 +103,15 @@ export async function registerCommunityClub(input: Omit<TeamRegistration, "id" |
   const user = requireSession(); const db = requireDb();
   const clubKey = `${input.platform}-${input.clubId}`;
   const { email, ...publicClubInput } = input;
+  const userRef = doc(db, "users", user.uid);
+  const clubRef = doc(db, "clubs", clubKey);
+  const [profileSnapshot, clubSnapshot] = await Promise.all([getDoc(userRef), getDoc(clubRef)]);
+  const currentProfile = profileSnapshot.data() as Partial<CommunityProfile> | undefined;
+  if (currentProfile?.clubId && ["owner", "captain"].includes(currentProfile.role ?? "")) throw new Error("CLUB_ALREADY_LINKED");
+  if (clubSnapshot.exists() && clubSnapshot.data().claimantUid !== user.uid) throw new Error("CLUB_ALREADY_CLAIMED");
   const batch = writeBatch(db);
-  batch.set(doc(db, "clubs", clubKey), { ...publicClubInput, routeId: input.platform === "common-gen5" ? input.clubId : clubKey, ownerUid: user.uid, captainUids: [], playerUids: [], status: "pending_review", submittedAt: serverTimestamp(), updatedAt: serverTimestamp(), elo: 1000, reliability: 100, plan: "free" }, { merge: true });
-  batch.set(doc(db, "users", user.uid), { uid: user.uid, displayName: user.displayName || input.responsibleName, email: user.email || email, country: input.country, role: "owner", clubId: input.platform === "common-gen5" ? input.clubId : clubKey, clubKey, clubName: input.clubName, plan: "free", reliability: 100, elo: 1000, updatedAt: serverTimestamp() }, { merge: true });
+  batch.set(clubRef, { ...publicClubInput, routeId: input.platform === "common-gen5" ? input.clubId : clubKey, claimantUid: user.uid, captainUids: [], playerUids: [], status: "pending_review", submittedAt: serverTimestamp(), updatedAt: serverTimestamp(), elo: 1000, reliability: 100, plan: "free" }, { merge: true });
+  batch.set(userRef, { ...(!profileSnapshot.exists() ? { uid: user.uid, displayName: user.displayName || input.responsibleName, email: user.email || email, locale: "pt-br", role: "visitor", plan: "free", reliability: 100, elo: 1000, createdAt: serverTimestamp() } : {}), country: input.country, pendingClubId: input.platform === "common-gen5" ? input.clubId : clubKey, pendingClubKey: clubKey, pendingClubName: input.clubName, updatedAt: serverTimestamp() }, { merge: true });
   await batch.commit();
   return { ...input, id: clubKey, submittedAt: new Date().toISOString(), status: "pending_review" } as TeamRegistration;
 }

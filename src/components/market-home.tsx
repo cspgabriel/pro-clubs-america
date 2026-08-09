@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BarChart3, BriefcaseBusiness, Search, Shield, Swords, UserRound, Users } from "lucide-react";
+import { ArrowRight, BarChart3, BriefcaseBusiness, CalendarDays, Clock3, MapPin, Radio, Search, Shield, Swords, UserRound, Users } from "lucide-react";
 import type { PlayerRanking } from "@/types/domain";
 import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
-import { getCommunityProfile, type CommunityProfile } from "@/lib/community-service";
+import { getCommunityProfile, watchFriendlies, type CommunityProfile } from "@/lib/community-service";
+import type { FriendlyRequest } from "@/lib/friendlies";
 import { PlatformHeader } from "./platform-header";
 import { MobileNav } from "./mobile-nav";
 import { BrandLogo } from "./brand-logo";
@@ -20,6 +21,7 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
   const [user, setUser] = useState<AuthUserSnapshot | null>(null);
   const [profile, setProfile] = useState<CommunityProfile | null>(null);
   const [authReady, setAuthReady] = useState(false);
+  const [openChallenges, setOpenChallenges] = useState<FriendlyRequest[]>([]);
   const [query, setQuery] = useState("");
   const [featured, setFeatured] = useState(0);
   const term = query.trim().toLocaleLowerCase("pt-BR");
@@ -44,6 +46,14 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
     if (!value) { setProfile(null); router.replace("/entrar?next=/inicio"); }
     else getCommunityProfile().then(setProfile).catch(() => setProfile(null));
   }), [router]);
+
+  useEffect(() => {
+    if (!user) return;
+    return watchFriendlies(
+      (items) => setOpenChallenges(items.filter((item) => item.mode === "open" && item.status === "searching").slice(0, 6)),
+      () => setOpenChallenges([]),
+    );
+  }, [user]);
 
   if (!authReady || !user) return <main className="member-home-loading"><BrandLogo size={82} /><span>Preparando sua comunidade…</span></main>;
 
@@ -72,6 +82,18 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
           <Link href="/rankings/jogadores/artilharia"><BarChart3 /><span><strong>Rankings</strong><small>Ver os líderes</small></span></Link>
         </div>
         <div className="member-status"><Link href={profile?.clubId ? `/club/${profile.clubId}` : "/cadastro"}><Shield /><span><small>MEU CLUBE</small><strong>{profile?.clubName ?? "Vincular time da EA"}</strong></span><ArrowRight /></Link><Link href="/conta"><UserRound /><span><small>MEU PERFIL</small><strong>{profile ? `${profile.elo} ELO · ${profile.reliability}% confiança` : "Completar perfil"}</strong></span><ArrowRight /></Link><Link href="/mercado"><BriefcaseBusiness /><span><small>MERCADO</small><strong>Publicar vaga ou perfil</strong></span><ArrowRight /></Link></div>
+      </section>
+
+      <section className="market-section open-challenges-home" id="desafios-abertos">
+        <div className="market-title"><div><small><Radio /> MURAL EM TEMPO REAL</small><h2>Desafios em aberto</h2></div><Link href="/partidas/amistosos#desafios-abertos">Ver todos <ArrowRight /></Link></div>
+        {openChallenges.length ? <div className="open-challenge-grid">{openChallenges.map((challenge) => {
+          const host = availableClubs.find((club) => club.id === challenge.hostClubId);
+          return <Link href="/partidas/amistosos#desafios-abertos" className="open-challenge-card" key={challenge.id}>
+            <header><span><Radio /> Aceitando rival</span><b>{challenge.hostElo ? `${challenge.hostElo} ELO` : "Aberto"}</b></header>
+            <div>{host?.crestUrl ? <Image src={host.crestUrl} alt={`Escudo ${challenge.hostClubName}`} width={56} height={56} unoptimized /> : <i>{challenge.hostClubName.slice(0, 2).toUpperCase()}</i>}<span><strong>{challenge.hostClubName}</strong><small>Publicado por {challenge.creatorName}</small></span><em>×</em><span className="open-rival"><b>?</b><small>Seu clube</small></span></div>
+            <footer><span><CalendarDays /> {new Date(`${challenge.date}T12:00:00`).toLocaleDateString("pt-BR")}</span><span><Clock3 /> {challenge.time}</span><span><MapPin /> {challenge.region}</span><ArrowRight /></footer>
+          </Link>;
+        })}</div> : <div className="open-challenge-empty"><Swords /><span><strong>Nenhum desafio aberto agora</strong><small>Seja o primeiro clube a publicar um horário para a comunidade.</small></span><Link href="/partidas/amistosos#buscar-amistoso">Criar desafio <ArrowRight /></Link></div>}
       </section>
 
       <section className="market-section" id="clubes">

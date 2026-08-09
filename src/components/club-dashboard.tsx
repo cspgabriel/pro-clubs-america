@@ -15,7 +15,6 @@ import {
   Database,
   Goal,
   Medal,
-  RefreshCcw,
   ShieldCheck,
   Sparkles,
   Trophy,
@@ -94,13 +93,6 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
       </section>
 
       <section className="content" id="visao">
-        {data.source.state !== "complete" && (
-          <aside className="notice">
-            <RefreshCcw size={19} />
-            <div><strong>Base preparada para dados reais</strong><p>{data.source.note}</p></div>
-          </aside>
-        )}
-
         <div className="section-heading">
           <div><span>PAINEL DE DESEMPENHO</span><h2>Visão geral</h2></div>
           <small>{data.source.fetchedAt ? `Atualizado em ${new Date(data.source.fetchedAt).toLocaleString("pt-BR")}` : "Aguardando primeira coleta"}</small>

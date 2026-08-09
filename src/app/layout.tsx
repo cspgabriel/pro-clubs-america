@@ -19,5 +19,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="pt-BR" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: `try{const t=localStorage.getItem('clubs-brasil-theme');document.documentElement.dataset.theme=t||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark')}catch{}` }} /></head><body><PwaRegister /><AppChrome>{children}</AppChrome></body></html>;
+  return (
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body>
+        <PwaRegister />
+        <AppChrome>{children}</AppChrome>
+      </body>
+    </html>
+  );
 }

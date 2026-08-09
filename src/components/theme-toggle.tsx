@@ -1,7 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Theme = "dark" | "light";
 
@@ -10,6 +10,13 @@ export function ThemeToggle() {
     if (typeof window === "undefined") return "dark";
     return (localStorage.getItem("clubs-brasil-theme") as Theme | null) ?? (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
   });
+
+  useEffect(() => {
+    // React may reconcile the server-rendered <html> attributes after the
+    // inline bootstrap script runs. Re-apply the persisted choice once the
+    // client is mounted so the visual theme and toggle label cannot diverge.
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   function toggle() {
     const next = theme === "dark" ? "light" : "dark";

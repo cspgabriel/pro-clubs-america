@@ -3,10 +3,12 @@ import { BarChart3, BriefcaseBusiness, Search, Swords, UserPlus } from "lucide-r
 import { ThemeToggle } from "./theme-toggle";
 import { AuthStatus } from "./auth-status";
 import { BrandLogo } from "./brand-logo";
+import { MobileMenuButton } from "./mobile-sidebar";
 
 export function PlatformHeader() {
   return (
     <header className="platform-header">
+      <MobileMenuButton label="" className="platform-menu-button" />
       <Link className="platform-brand" href="/inicio">
         <BrandLogo size={44} /><strong>PRO CLUBS AMERICA</strong>
       </Link>

@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check": "npm run lint && npm run build",
+    "check": "npm run lint && npm run build && npm run check:functions",
+    "check:functions": "wrangler pages functions build functions --outdir .wrangler/functions-check --compatibility-date 2026-08-06",
     "test:rules": "firebase emulators:exec --only firestore --project primeval-jet-326417 --log-verbosity QUIET \"node scripts/firestore-rules.test.mjs\"",
-    "import:data": "node scripts/import-normalized.mjs"
+    "import:data": "node scripts/import-normalized.mjs",
+    "import:supabase": "node scripts/import-supabase-catalog.mjs",
+    "import:supabase:apply": "node scripts/import-supabase-catalog.mjs --apply"
   },
   "dependencies": {
     "@fontsource/chakra-petch": "^5.3.0",
@@ -34,6 +37,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.120.0"
   }
 }

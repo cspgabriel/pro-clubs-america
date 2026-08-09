@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { BriefcaseBusiness, Home, Plus, Search, ShieldPlus, Swords, User, UserPlus, X } from "lucide-react";
+import { BriefcaseBusiness, Home, Plus, ShieldPlus, Swords, User, UserPlus, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { MobileMenuButton } from "./mobile-sidebar";
 
 const actions = [
   { href: "/mercado#nova-vaga", icon: BriefcaseBusiness, title: "Divulgar nova vaga", text: "Clube procurando jogador" },
@@ -21,9 +22,9 @@ export function MobileNav() {
   return <>
     <nav className="mobile-nav" aria-label="Navegação do aplicativo">
       <Link className={isActive("/inicio") ? "active" : ""} aria-current={isActive("/inicio") ? "page" : undefined} href="/inicio"><Home /><span>Início</span></Link>
-      <Link className={isActive("/buscar") ? "active" : ""} aria-current={isActive("/buscar") ? "page" : undefined} href="/buscar"><Search /><span>Buscar</span></Link>
+      <MobileMenuButton className="mobile-nav-menu" />
       <button className="mobile-market-action" type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-haspopup="dialog" aria-label="Abrir menu para criar"><Plus /><span>Criar</span></button>
-      <Link className={isActive("/partidas") ? "active" : ""} aria-current={isActive("/partidas") ? "page" : undefined} href="/partidas"><Swords /><span>Partidas</span></Link>
+      <Link className={isActive("/partidas") ? "active" : ""} aria-current={isActive("/partidas") ? "page" : undefined} href="/partidas/amistosos#desafios-abertos"><Swords /><span>Desafios</span></Link>
       <Link className={isActive("/conta") ? "active" : ""} aria-current={isActive("/conta") ? "page" : undefined} href="/conta"><User /><span>Minha conta</span></Link>
     </nav>
     {open && <div className="create-sheet" role="dialog" aria-modal="true" aria-label="Criar novo">
