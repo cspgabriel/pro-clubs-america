@@ -2,7 +2,7 @@
 
 **Data da Extração:** 09 de Agosto de 2026  
 **Fonte Oficial:** [EA Sports FC Pro Clubs Leaderboards](https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings)  
-**Repositório Oficial:** [cspgabriel/pro-clubs-pro-player](https://github.com/cspgabriel/pro-clubs-pro-player)  
+**Repositório Oficial:** [cspgabriel/pro-clubs-america](https://github.com/cspgabriel/pro-clubs-america)
 
 ---
 
@@ -44,7 +44,7 @@ Para cada um dos **552 times únicos**, foram extraídos os dados completos do e
 
 ## 3. Estrutura dos Arquivos de Dados Gerados no Repositório
 
-Todos os arquivos estão disponíveis na pasta `data/` do repositório `cspgabriel/pro-clubs-pro-player`:
+Todos os arquivos estão disponíveis na pasta `data/` do repositório `cspgabriel/pro-clubs-america`:
 
 | Nome do Arquivo | Formato | Descrição |
 |---|---|---|

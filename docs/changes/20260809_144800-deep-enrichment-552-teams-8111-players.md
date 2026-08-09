@@ -27,7 +27,7 @@ Atendimento integral à solicitação do usuário: *"enriqueça os dados com TOD
 
 # Como Testar
 
-1. Abrir e verificar os arquivos CSV e JSON gerados na pasta `data/` do repositório `cspgabriel/pro-clubs-pro-player`.
+1. Abrir e verificar os arquivos CSV e JSON gerados na pasta `data/` do repositório `cspgabriel/pro-clubs-america`.
 2. Executar buscas por times e jogadores específicos dentro dos arquivos `pro_clubs_all_teams_summary.csv` e `pro_clubs_all_players_full.csv`.
 3. Validar a execução do script `scripts/download_by_club_id.py` para consultas de clubes individuais.
 
@@ -38,7 +38,7 @@ Atendimento integral à solicitação do usuário: *"enriqueça os dados com TOD
 
 # Links
 
-- Repositório GitHub: [cspgabriel/pro-clubs-pro-player](https://github.com/cspgabriel/pro-clubs-pro-player)
+- Repositório GitHub: [cspgabriel/pro-clubs-america](https://github.com/cspgabriel/pro-clubs-america)
 - Fonte EA Sports FC: [EA Pro Clubs Rankings](https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings)
 
 # Próximos Passos

@@ -8,7 +8,7 @@ tags: [pro-clubs, ea-sports-fc, data-extraction, json, csv, python]
 
 # Resumo
 
-Foram extraídos todos os dados oficiais de rankings, elencos de jogadores e estrutura de ligas do portal da EA Sports FC Pro Clubs (`https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings`) e estruturados nos formatos JSON e CSV para integração no repositório `pro-clubs-pro-player`.
+Foram extraídos todos os dados oficiais de rankings, elencos de jogadores e estrutura de ligas do portal da EA Sports FC Pro Clubs (`https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings`) e estruturados nos formatos JSON e CSV para integração no repositório `pro-clubs-america`.
 
 # Detalhes das Alterações
 
@@ -40,12 +40,12 @@ Atender à solicitação do usuário de extração e persistência contínua dos
 
 - 299 clubes capturados com dados completos de desempenho.
 - Estatísticas detalhadas de mais de 40 jogadores do Top 15 mundial salvas com sucesso.
-- Estrutura pronta para visualização no dashboard do `pro-clubs-pro-player`.
+- Estrutura pronta para visualização no dashboard do `pro-clubs-america`.
 
 # Links
 
 - **Fonte Oficial:** [https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings](https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings)
-- **Repositório GitHub:** `cspgabriel/pro-clubs-pro-player`
+- **Repositório GitHub:** `cspgabriel/pro-clubs-america`
 
 # Próximos Passos
 

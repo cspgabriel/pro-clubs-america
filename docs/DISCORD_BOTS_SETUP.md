@@ -1,7 +1,7 @@
 # 🤖 BOTSFREE & AUTOMAÇÃO PARA O DISCORD — PRO CLUBS AMÉRICA
 
 **Plataforma Oficial:** [proclubsamerica.com](https://proclubsamerica.com)  
-**Repositório:** `cspgabriel/pro-clubs-pro-player`  
+**Repositório:** `cspgabriel/pro-clubs-america`
 
 ---
 

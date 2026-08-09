@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { BriefcaseBusiness, Home, Plus, Search, ShieldPlus, Swords, User, UserPlus, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const actions = [
@@ -13,13 +14,17 @@ const actions = [
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+
   return <>
     <nav className="mobile-nav" aria-label="Navegação do aplicativo">
-      <Link href="/"><Home /><span>Início</span></Link>
-      <Link href="/buscar"><Search /><span>Buscar</span></Link>
-      <button className="mobile-market-action" type="button" onClick={() => setOpen(true)} aria-label="Criar novo"><Plus /><span>Novo</span></button>
-      <Link href="/partidas"><Swords /><span>Partidas</span></Link>
-      <Link href="/conta"><User /><span>Minha conta</span></Link>
+      <Link className={isActive("/") ? "active" : ""} aria-current={isActive("/") ? "page" : undefined} href="/"><Home /><span>Início</span></Link>
+      <Link className={isActive("/buscar") ? "active" : ""} aria-current={isActive("/buscar") ? "page" : undefined} href="/buscar"><Search /><span>Buscar</span></Link>
+      <button className="mobile-market-action" type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-haspopup="dialog" aria-label="Abrir menu para criar"><Plus /><span>Criar</span></button>
+      <Link className={isActive("/partidas") ? "active" : ""} aria-current={isActive("/partidas") ? "page" : undefined} href="/partidas"><Swords /><span>Partidas</span></Link>
+      <Link className={isActive("/conta") ? "active" : ""} aria-current={isActive("/conta") ? "page" : undefined} href="/conta"><User /><span>Minha conta</span></Link>
     </nav>
     {open && <div className="create-sheet" role="dialog" aria-modal="true" aria-label="Criar novo">
       <button className="create-sheet-backdrop" onClick={() => setOpen(false)} aria-label="Fechar menu" />

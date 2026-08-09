@@ -1,5 +1,17 @@
 # Deploy no Cloudflare Pages
 
+## Produção canônica
+
+- GitHub: `cspgabriel/pro-clubs-america`
+- Cloudflare Pages: `pro-clubs-america`
+- URL ativa: `https://pro-clubs-america.pages.dev`
+- Banco Supabase: `mdqtlkvkpacjouwgtibr` (`sa-east-1`)
+
+A branch `main` publica no projeto Pages existente pelo workflow
+`.github/workflows/deploy-cloudflare-pages.yml`. O projeto Pages nasceu em modo
+Direct Upload; por isso a integração contínua usa GitHub Actions com Wrangler,
+sem criar outra aplicação ou trocar a URL pública.
+
 ## Build
 
 ```powershell
