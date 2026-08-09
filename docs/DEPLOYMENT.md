@@ -49,3 +49,18 @@ As regras devem passar antes da publicação:
 ```powershell
 npm run test:rules
 ```
+
+## Supabase + Firebase Auth
+
+O Firebase é o provedor de identidade; o Supabase é o banco relacional da
+plataforma. Nunca envie `service_role` ao navegador. A migration da ponte de
+identidade remove a leitura pública de `profiles.email` e associa perfis pelo
+`firebase_uid` validado no backend.
+
+```powershell
+npx supabase login
+npx supabase link --project-ref mdqtlkvkpacjouwgtibr
+npx supabase db push
+```
+
+Depois do push, confirme que a política `Public Read Profiles` não existe mais.

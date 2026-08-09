@@ -7,8 +7,13 @@
 
 ## Estado de implementação
 
-O schema Supabase versionado em `supabase/migrations/` é uma alternativa para
-analytics e espelhamento relacional, mas não está conectado ao frontend. O
+O projeto Supabase `mdqtlkvkpacjouwgtibr` e o schema inicial existem. A
+migration `20260809204500_firebase_identity_bridge.sql` corrige a fronteira de
+identidade para Firebase Auth e remove e-mails da leitura pública. Ela só pode
+ser considerada ativa depois de um `supabase db push` confirmado.
+
+O schema Supabase versionado em `supabase/migrations/` será o banco relacional
+da plataforma, mas ainda não está conectado ao frontend. O
 backend comunitário atualmente ativo é Firebase Auth + Cloud Firestore, em
 conformidade com a autenticação solicitada e com atualização em tempo real.
 
