@@ -11,6 +11,11 @@ flowchart LR
     M --> P["PWA Next.js"]
     P --> U["Clubes e jogadores"]
     P <--> F["Firebase Auth + Firestore"]
+    F --> R["RevenueCat app_user_id = Firebase UID"]
+    R --> E["Entitlements"]
+    W["Stripe Web"] --> R
+    A["Apple StoreKit"] --> R
+    G["Google Play Billing"] --> R
 ```
 
 O repositório atualmente contém a camada de normalização/importação, snapshot,
@@ -27,10 +32,13 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 - tema claro/escuro, sidebar desktop e menu inferior mobile.
 - Firebase Auth para Google/e-mail e Firestore para cadastros, amistosos,
   mercado, perfis e lobby em tempo real.
+- RevenueCat planejado como fonte de verdade de assinaturas; Stripe cobra na
+  Web e as lojas nativas cobrarão nos apps. O Firebase UID será o `app_user_id`.
 
 ## Rotas
 
-- `src/app/page.tsx`: home e destaques;
+- `src/app/page.tsx`: landing pública de aquisição;
+- `src/app/inicio/page.tsx`: home exclusiva da sessão autenticada;
 - `src/app/buscar/page.tsx`: busca global;
 - `src/app/clubes/page.tsx`: diretório de clubes;
 - `src/app/jogadores/page.tsx`: diretório de jogadores;
@@ -79,6 +87,8 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
   configuração pública do aplicativo Web Firebase.
 - o deploy Pages usa `output: export`, perfis pré-renderizados e fallback estático
   para URLs criadas pela comunidade.
+- checkout não está ativo: faltam projeto/chaves RevenueCat, produtos Stripe e
+  endpoints de webhook. O cliente nunca pode alterar entitlements diretamente.
 
 ## Direção para múltiplos clubes
 

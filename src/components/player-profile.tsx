@@ -17,6 +17,7 @@ import {
 import type { PlayerRanking } from "@/types/domain";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
+import { CountryFlag } from "./country-flag";
 
 export interface PlayerRecentMatch {
   id: string;
@@ -56,7 +57,7 @@ export function PlayerProfile({ player, club, recentMatches, limitedData = false
         <div className="player-hero-copy">
           <Link className="player-back" href="/#jogadores"><ArrowLeft size={15} /> VOLTAR À BUSCA</Link>
           <small>PERFIL DO JOGADOR</small>
-          <h1>{player.name}</h1>
+          <h1 className="player-name-country">{player.name}<CountryFlag country={player.country} /></h1>
           <Link className="player-club-link" href={`/club/${club.id}`}>
             {club.crestUrl && <Image src={club.crestUrl} alt={`Escudo ${club.name}`} width={38} height={38} unoptimized />}
             <span><b>{club.name}</b><small>Ver página do clube</small></span>

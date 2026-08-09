@@ -17,7 +17,7 @@ export function AuthScreen({ mode }: { mode: "login" | "register" | "reset" }) {
 
   async function google() {
     setBusy(true); setMessage("");
-    try { await loginWithGoogle(); router.push("/onboarding"); }
+    try { await loginWithGoogle(); router.push(mode === "register" ? "/onboarding" : "/inicio"); }
     catch { setMessage("Não foi possível entrar com Google. Tente novamente."); }
     finally { setBusy(false); }
   }
@@ -30,7 +30,7 @@ export function AuthScreen({ mode }: { mode: "login" | "register" | "reset" }) {
     try {
       if (mode === "reset") { await requestPasswordReset(email); setMessage("Confira seu e-mail para redefinir a senha."); }
       else if (mode === "register") { await registerWithEmail(String(form.get("name") ?? ""), email, password); router.push("/onboarding"); }
-      else { await loginWithEmail(email, password); router.push("/conta"); }
+      else { await loginWithEmail(email, password); router.push("/inicio"); }
     } catch { setMessage("Não foi possível concluir. Confira os dados e tente novamente."); }
     finally { setBusy(false); }
   }

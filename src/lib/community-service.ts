@@ -102,14 +102,14 @@ export async function registerCommunityClub(input: Omit<TeamRegistration, "id" |
   const { email, ...publicClubInput } = input;
   const batch = writeBatch(db);
   batch.set(doc(db, "clubs", clubKey), { ...publicClubInput, routeId: input.platform === "common-gen5" ? input.clubId : clubKey, ownerUid: user.uid, captainUids: [], playerUids: [], status: "pending_review", submittedAt: serverTimestamp(), updatedAt: serverTimestamp(), elo: 1000, reliability: 100, plan: "free" }, { merge: true });
-  batch.set(doc(db, "users", user.uid), { uid: user.uid, displayName: user.displayName || input.responsibleName, email: user.email || email, role: "owner", clubId: input.platform === "common-gen5" ? input.clubId : clubKey, clubKey, clubName: input.clubName, plan: "free", reliability: 100, elo: 1000, updatedAt: serverTimestamp() }, { merge: true });
+  batch.set(doc(db, "users", user.uid), { uid: user.uid, displayName: user.displayName || input.responsibleName, email: user.email || email, country: input.country, role: "owner", clubId: input.platform === "common-gen5" ? input.clubId : clubKey, clubKey, clubName: input.clubName, plan: "free", reliability: 100, elo: 1000, updatedAt: serverTimestamp() }, { merge: true });
   await batch.commit();
   return { ...input, id: clubKey, submittedAt: new Date().toISOString(), status: "pending_review" } as TeamRegistration;
 }
 
 export function watchCommunityClubs(callback: (items: TeamRegistration[]) => void, onError?: (error: FirestoreError) => void): Unsubscribe {
   const db = getFirebaseDb(); if (!db) { callback([]); return () => undefined; }
-  return onSnapshot(query(collection(db, "clubs"), orderBy("submittedAt", "desc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => ({ id: item.id, responsibleName: item.data().responsibleName, email: "", clubName: item.data().clubName, eaUrl: item.data().eaUrl, clubId: item.data().clubId, platform: item.data().platform, submittedAt: asIso(item.data().submittedAt), status: item.data().status }))), onError);
+  return onSnapshot(query(collection(db, "clubs"), orderBy("submittedAt", "desc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => ({ id: item.id, responsibleName: item.data().responsibleName, email: "", clubName: item.data().clubName, country: item.data().country || "brasil", eaUrl: item.data().eaUrl, clubId: item.data().clubId, platform: item.data().platform, submittedAt: asIso(item.data().submittedAt), status: item.data().status }))), onError);
 }
 
 export async function createFriendly(input: { hostClubId: string; hostClubName: string; mode: ChallengeMode; date: string; time: string; region: string; invitedClubId?: string; invitedClubName?: string }) {

@@ -97,6 +97,7 @@ export interface PlayerRanking {
   tacklesMade: number | null;
   tackleSuccessRate: number | null;
   winRate: number | null;
+  country?: string | null;
 }
 
 export interface DashboardData extends ClubDataset {

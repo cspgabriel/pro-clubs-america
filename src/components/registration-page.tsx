@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CheckCircle2, Clock3, ExternalLink, Link2, Search, ShieldCheck, UserPlus } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { parseEaClubUrl, type TeamRegistration } from "@/lib/community";
+import { countries } from "@/lib/i18n";
 import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
 import { registerCommunityClub } from "@/lib/community-service";
 import { MobileNav } from "./mobile-nav";
@@ -25,7 +26,7 @@ export function RegistrationPage() {
     if (!parsed) { setError("Cole uma URL pública válida de Overview, Integrantes ou Histórico da EA Clubs, contendo clubId e platform."); return; }
     setBusy(true); setError("");
     try {
-      const registration = await registerCommunityClub({ responsibleName: String(form.get("responsibleName")), email: String(form.get("email")), clubName: String(form.get("clubName")), eaUrl: parsed.normalizedUrl, clubId: parsed.clubId, platform: parsed.platform });
+      const registration = await registerCommunityClub({ responsibleName: String(form.get("responsibleName")), email: String(form.get("email")), clubName: String(form.get("clubName")), country: String(form.get("country")), eaUrl: parsed.normalizedUrl, clubId: parsed.clubId, platform: parsed.platform });
       setSubmitted(registration);
     } catch { setError("Não foi possível vincular o clube. Verifique se sua conta já possui um time ou tente novamente."); }
     finally { setBusy(false); }
@@ -38,7 +39,7 @@ export function RegistrationPage() {
         <header><ShieldCheck /><div><small>CADASTRO DE USUÁRIO + TIME</small><h2>Identificação obrigatória</h2></div></header>
         {!user && <p className="registration-error">Você precisa <Link href="/entrar">entrar ou criar uma conta</Link> antes de vincular o clube.</p>}
         <div className="registration-pair"><label>Nome do responsável<input required name="responsibleName" autoComplete="name" defaultValue={user?.name ?? ""} /></label><label>E-mail<input required name="email" type="email" autoComplete="email" defaultValue={user?.email ?? ""} /></label></div>
-        <label>Nome do time<input required name="clubName" /></label>
+        <div className="registration-pair"><label>Nome do time<input required name="clubName" /></label><label>País do clube<select required name="country" defaultValue="brasil">{countries.map((country) => <option value={country.slug} key={country.code}>{country.flag} {country.name.pt}</option>)}</select></label></div>
         <label>Link público do time na EA Clubs <span>OBRIGATÓRIO</span><div className="url-field"><Link2 /><input required name="eaUrl" type="url" placeholder="https://www.ea.com/pt-br/games/ea-sports-fc/clubs/member-list?clubId=...&platform=common-gen5" /></div></label>
         {error && <p className="registration-error">{error}</p>}
         <label className="registration-consent"><input required type="checkbox" /> Confirmo que este é o link público do meu clube e autorizo a indexação das estatísticas esportivas publicadas pela EA.</label>

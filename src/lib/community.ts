@@ -6,6 +6,7 @@ export interface TeamRegistration {
   eaUrl: string;
   clubId: string;
   platform: string;
+  country: string;
   submittedAt: string;
   status: "pending_review" | "indexed";
 }

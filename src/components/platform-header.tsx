@@ -7,7 +7,7 @@ import { BrandLogo } from "./brand-logo";
 export function PlatformHeader() {
   return (
     <header className="platform-header">
-      <Link className="platform-brand" href="/">
+      <Link className="platform-brand" href="/inicio">
         <BrandLogo size={44} /><strong>PRO CLUBS AMERICA</strong>
       </Link>
       <nav>

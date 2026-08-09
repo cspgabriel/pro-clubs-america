@@ -16,11 +16,11 @@ export function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href: string) => pathname === href || (href !== "/inicio" && pathname.startsWith(href));
 
   return <>
     <nav className="mobile-nav" aria-label="Navegação do aplicativo">
-      <Link className={isActive("/") ? "active" : ""} aria-current={isActive("/") ? "page" : undefined} href="/"><Home /><span>Início</span></Link>
+      <Link className={isActive("/inicio") ? "active" : ""} aria-current={isActive("/inicio") ? "page" : undefined} href="/inicio"><Home /><span>Início</span></Link>
       <Link className={isActive("/buscar") ? "active" : ""} aria-current={isActive("/buscar") ? "page" : undefined} href="/buscar"><Search /><span>Buscar</span></Link>
       <button className="mobile-market-action" type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-haspopup="dialog" aria-label="Abrir menu para criar"><Plus /><span>Criar</span></button>
       <Link className={isActive("/partidas") ? "active" : ""} aria-current={isActive("/partidas") ? "page" : undefined} href="/partidas"><Swords /><span>Partidas</span></Link>

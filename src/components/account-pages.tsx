@@ -9,6 +9,7 @@ import { getCommunityProfile, saveCommunityPreferences, type CommunityProfile } 
 import { countries, locales } from "@/lib/i18n";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
+import { CountryFlag } from "./country-flag";
 
 export function AccountPage() {
   const router = useRouter();
@@ -17,8 +18,8 @@ export function AccountPage() {
   useEffect(() => observeAuth((value) => { setUser(value); if (value) getCommunityProfile().then(setProfile); else setProfile(null); }), []);
   async function exit() { await logout(); router.push("/"); }
   return <main className="app-shell"><PlatformHeader /><section className="account-hero"><UserRound /><div><small>MINHA CONTA</small><h1>{user?.name ?? "Você ainda não entrou"}</h1><p>{user?.email ?? "Entre para aceitar desafios e representar seu clube."}</p></div></section><div className="account-grid">{user ? <>
-    <article><header><CheckCircle2 /><span>SESSÃO FIREBASE ATIVA</span></header><h2>Perfil da comunidade</h2><dl><div><dt>Função</dt><dd>{profile?.role ?? "visitante"}</dd></div><div><dt>Plano</dt><dd>{profile?.plan ?? "free"}</dd></div><div><dt>ELO</dt><dd>{profile?.elo ?? 1000}</dd></div><div><dt>Confiabilidade</dt><dd>{profile?.reliability ?? 100}%</dd></div></dl><Link href="/onboarding">Editar país e idioma <ArrowRight /></Link></article>
-    <article><header><Shield /><span>MEU CLUBE</span></header><h2>{profile?.clubName ?? "Vincule um time EA"}</h2><p>{profile?.clubId ? `Você representa este clube como ${profile.role}.` : "O vínculo público permite publicar e aceitar desafios em nome do clube."}</p><Link href={profile?.clubId ? `/club/${profile.clubId}` : "/cadastro"}>{profile?.clubId ? "Abrir meu clube" : "Cadastrar meu time"} <ArrowRight /></Link></article>
+    <article><header><CheckCircle2 /><span>SESSÃO FIREBASE ATIVA</span></header><h2 className="profile-country-title">Perfil da comunidade <CountryFlag country={profile?.country} /></h2><dl><div><dt>Função</dt><dd>{profile?.role ?? "visitante"}</dd></div><div><dt>Plano</dt><dd>{profile?.plan ?? "free"}</dd></div><div><dt>ELO</dt><dd>{profile?.elo ?? 1000}</dd></div><div><dt>Confiabilidade</dt><dd>{profile?.reliability ?? 100}%</dd></div></dl><Link href="/onboarding">Editar país e idioma <ArrowRight /></Link></article>
+    <article><header><Shield /><span>MEU CLUBE</span></header><h2 className="profile-country-title">{profile?.clubName ?? "Vincule um time EA"}<CountryFlag country={profile?.country} /></h2><p>{profile?.clubId ? `Você representa este clube como ${profile.role}.` : "O vínculo público permite publicar e aceitar desafios em nome do clube."}</p><Link href={profile?.clubId ? `/club/${profile.clubId}` : "/cadastro"}>{profile?.clubId ? "Abrir meu clube" : "Cadastrar meu time"} <ArrowRight /></Link></article>
     <button className="account-logout" onClick={exit}><LogOut /> Sair da conta</button>
   </> : <article><h2>Identificação necessária</h2><p>Crie uma conta ou entre com Google/e-mail.</p><Link href="/entrar">Entrar <ArrowRight /></Link></article>}</div><MobileNav /></main>;
 }
@@ -31,6 +32,6 @@ export function OnboardingPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => { if (!user) router.replace("/entrar"); else getCommunityProfile().then((profile) => { if (profile) { setCountry(profile.country || "brasil"); setLocale(profile.locale || "pt-br"); } }); }, [router, user]);
-  async function submit(event: FormEvent) { event.preventDefault(); setBusy(true); setError(""); try { await saveCommunityPreferences({ country, locale }); router.push(`/${locale}/comunidade/${country}`); } catch { setError("Não foi possível salvar seu perfil. Entre novamente e tente de novo."); } finally { setBusy(false); } }
+  async function submit(event: FormEvent) { event.preventDefault(); setBusy(true); setError(""); try { await saveCommunityPreferences({ country, locale }); router.push("/inicio"); } catch { setError("Não foi possível salvar seu perfil. Entre novamente e tente de novo."); } finally { setBusy(false); } }
   return <main className="app-shell"><PlatformHeader /><div className="onboarding-layout"><section><Globe2 /><small>PERSONALIZE SUA EXPERIÊNCIA</small><h1>Onde você joga?</h1><p>País e idioma ficam sincronizados na sua conta. Cargos de dono e capitão são concedidos pelo vínculo real com o clube.</p></section><form onSubmit={submit}><span>PERFIL FIREBASE</span><h2>Olá, {user?.name ?? "jogador"}</h2><label>País da comunidade<select value={country} onChange={(event) => setCountry(event.target.value)}>{countries.map((item) => <option value={item.slug} key={item.code}>{item.flag} {item.name.pt}</option>)}</select></label><label>Idioma<select value={locale} onChange={(event) => setLocale(event.target.value)}>{locales.map((item) => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>{error && <p className="registration-error">{error}</p>}<button disabled={busy} type="submit">{busy ? "Salvando…" : "Continuar para a comunidade"} <ArrowRight /></button><Link href="/cadastro">Já quero vincular meu clube</Link></form></div><MobileNav /></main>;
 }

@@ -2,18 +2,24 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BarChart3, BriefcaseBusiness, Search, Shield, Swords, Users } from "lucide-react";
+import { ArrowRight, BarChart3, BriefcaseBusiness, Search, Shield, Swords, UserRound, Users } from "lucide-react";
 import type { PlayerRanking } from "@/types/domain";
+import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
+import { getCommunityProfile, type CommunityProfile } from "@/lib/community-service";
 import { PlatformHeader } from "./platform-header";
 import { MobileNav } from "./mobile-nav";
-import { CountryGateway } from "./country-gateway";
 import { BrandLogo } from "./brand-logo";
 
 interface HomeClub { id: string; name: string; crestUrl: string; skillRating?: number; record?: string; }
 type HomePlayer = PlayerRanking & { clubName?: string };
 
 export function MarketHome({ players, availableClubs }: { players: HomePlayer[]; availableClubs: HomeClub[] }) {
+  const router = useRouter();
+  const [user, setUser] = useState<AuthUserSnapshot | null>(null);
+  const [profile, setProfile] = useState<CommunityProfile | null>(null);
+  const [authReady, setAuthReady] = useState(false);
   const [query, setQuery] = useState("");
   const [featured, setFeatured] = useState(0);
   const term = query.trim().toLocaleLowerCase("pt-BR");
@@ -33,10 +39,19 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
     return () => window.clearInterval(timer);
   }, [slides.length]);
 
+  useEffect(() => observeAuth((value) => {
+    setUser(value); setAuthReady(true);
+    if (!value) { setProfile(null); router.replace("/entrar?next=/inicio"); }
+    else getCommunityProfile().then(setProfile).catch(() => setProfile(null));
+  }), [router]);
+
+  if (!authReady || !user) return <main className="member-home-loading"><BrandLogo size={82} /><span>Preparando sua comunidade…</span></main>;
+
   return (
     <main className="app-shell">
       <PlatformHeader />
       <section className="featured-slider" aria-label="Destaques">
+        <Image className="featured-stadium" src="/brand/home-stadium.png" alt="" fill sizes="100vw" priority />
         <div className="featured-track" key={featured}>
           <div><small>{slides[featured].kicker}</small><h2>{slides[featured].title}</h2><p>{slides[featured].text}</p></div>
           <Link href={slides[featured].href}>{slides[featured].action}<ArrowRight /></Link>
@@ -44,27 +59,24 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
         <div className="featured-dots" aria-label="Selecionar destaque">{slides.map((slide, index) => <button type="button" aria-label={`Mostrar ${slide.title}`} aria-current={index === featured} className={index === featured ? "active" : ""} onClick={() => setFeatured(index)} key={slide.title} />)}</div>
       </section>
       <section className="market-hero" id="buscar">
-        <div className="market-wordmark"><BrandLogo size={104} /><strong>PRO CLUBS AMERICA</strong></div>
-        <h1>Seu clube. Seu time. Sua comunidade.</h1>
-        <p className="market-intro">Encontre clubes, jogadores, partidas e oportunidades para crescer no Pro Clubs.</p>
+        <div className="member-greeting"><BrandLogo size={94} /><div><small>PRO CLUBS AMERICA</small><h1>Olá, {user.name.split(" ")[0]}.</h1><p>{profile?.clubName ? <>Seu clube <strong>{profile.clubName}</strong> está pronto para competir.</> : "Encontre um clube, publique uma oportunidade ou comece seu próprio time."}</p></div></div>
         <label className="global-search">
           <Search size={20} />
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar clube ou jogador" />
           <span>FC 26</span>
         </label>
         <div className="quick-links">
-          <Link href="/clubes"><Shield /> Clubes</Link>
-          <Link href="/jogadores"><Users /> Jogadores</Link>
-          <Link href="/partidas/amistosos#buscar-amistoso"><Swords /> Buscar amistoso</Link>
-          <Link href="/rankings/jogadores/artilharia"><BarChart3 /> Rankings</Link>
-          <Link href="/mercado"><BriefcaseBusiness /> Mercado</Link>
+          <Link href="/clubes"><Shield /><span><strong>Clubes</strong><small>Encontrar times</small></span></Link>
+          <Link href="/jogadores"><Users /><span><strong>Jogadores</strong><small>Explorar atletas</small></span></Link>
+          <Link href="/partidas/amistosos#buscar-amistoso"><Swords /><span><strong>Amistosos</strong><small>Buscar confronto</small></span></Link>
+          <Link href="/rankings/jogadores/artilharia"><BarChart3 /><span><strong>Rankings</strong><small>Ver os líderes</small></span></Link>
         </div>
+        <div className="member-status"><Link href={profile?.clubId ? `/club/${profile.clubId}` : "/cadastro"}><Shield /><span><small>MEU CLUBE</small><strong>{profile?.clubName ?? "Vincular time da EA"}</strong></span><ArrowRight /></Link><Link href="/conta"><UserRound /><span><small>MEU PERFIL</small><strong>{profile ? `${profile.elo} ELO · ${profile.reliability}% confiança` : "Completar perfil"}</strong></span><ArrowRight /></Link><Link href="/mercado"><BriefcaseBusiness /><span><small>MERCADO</small><strong>Publicar vaga ou perfil</strong></span><ArrowRight /></Link></div>
       </section>
-      <CountryGateway />
 
       <section className="market-section" id="clubes">
         <div className="market-title"><div><small>{availableClubs.length} CLUBES INDEXADOS</small><h2>Clubes encontrados</h2></div><span>common-gen5</span></div>
-        {clubs.length ? <div className="club-strip">{clubs.map((club) => (
+        {clubs.length ? <div className="club-strip">{clubs.slice(0, 6).map((club) => (
           <Link className="club-market-card" href={`/club/${club.id}`} key={club.id}>
             <Image src={club.crestUrl} alt={`Escudo ${club.name}`} width={72} height={72} unoptimized />
             <div><strong>{club.name}</strong><small>ID {club.id}</small>{club.skillRating ? <b>SR {club.skillRating}</b> : <em>Visto no histórico</em>}</div>
@@ -75,7 +87,7 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
       <section className="market-section" id="jogadores">
         <div className="market-title"><div><small>BASE DE JOGADORES</small><h2>Mercado de desempenho</h2></div><span>{players.length} jogadores</span></div>
         {term && matchingPlayers.length === 0 ? <div className="market-empty">Nenhum jogador encontrado.</div> : (
-          <div className="home-player-grid">{visiblePlayers.map((player) => <Link href={`/jogador/${encodeURIComponent(player.id)}`} key={player.id}><span><small>{player.overallRating != null ? "OVR" : "NOTA"}</small><b>{player.overallRating ?? player.averageRating ?? "—"}</b></span><div><strong>{player.name}</strong><small>{player.clubName ?? "Clube indexado"}</small><p>{player.position} · {player.matches.toLocaleString("pt-BR")} jogos</p></div><dl><span><b>{player.goals ?? "—"}</b> gols</span><span><b>{player.assists ?? "—"}</b> assist.</span></dl></Link>)}</div>
+          <div className="home-player-grid">{visiblePlayers.slice(0, 6).map((player) => <Link href={`/jogador/${encodeURIComponent(player.id)}`} key={player.id}><span><small>{player.overallRating != null ? "OVR" : "NOTA"}</small><b>{player.overallRating ?? player.averageRating ?? "—"}</b></span><div><strong>{player.name}</strong><small>{player.clubName ?? "Clube indexado"}</small><p>{player.position} · {player.matches.toLocaleString("pt-BR")} jogos</p></div><dl><span><b>{player.goals ?? "—"}</b> gols</span><span><b>{player.assists ?? "—"}</b> assist.</span></dl></Link>)}</div>
         )}
       </section>
       <footer className="platform-footer">Plataforma comunitária independente para EA SPORTS FC Clubs. Sem afiliação ou patrocínio da Electronic Arts Inc.</footer>
