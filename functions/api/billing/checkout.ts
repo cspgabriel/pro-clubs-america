@@ -34,6 +34,7 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : "CHECKOUT_FAILED";
     const status = message.startsWith("AUTH_") ? 401 : message === "ORIGIN_NOT_ALLOWED" ? 403 : 500;
+    console.error(JSON.stringify({ event: "billing_checkout_failed", reason: message, status }));
     return apiError(status === 500 ? "Não foi possível iniciar o pagamento." : message, status);
   }
 };
