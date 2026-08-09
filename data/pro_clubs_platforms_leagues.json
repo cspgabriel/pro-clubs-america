@@ -1,0 +1,37 @@
+{
+  "source_url": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings",
+  "platforms_available": [
+    {
+      "code": "common-gen5",
+      "name": "Crossplay Nova Geração",
+      "devices": "PlayStation 5, Xbox Series X|S, PC"
+    },
+    {
+      "code": "common-gen4",
+      "name": "Geração Anterior",
+      "devices": "PlayStation 4, Xbox One"
+    },
+    {
+      "code": "nx",
+      "name": "Nintendo Switch",
+      "devices": "Nintendo Switch"
+    }
+  ],
+  "leagues_and_divisions": [
+    "Divisão Elite (Playoffs)",
+    "Divisão 1",
+    "Divisão 2",
+    "Divisão 3",
+    "Divisão 4",
+    "Divisão 5"
+  ],
+  "stats_captured": [
+    "Rank Mundial / Skill Rating",
+    "Vitórias / Empates / Derrotas",
+    "Gols Pró / Gols Sofridos / Saldo",
+    "Clean Sheets (Jogos sem sofrer gol)",
+    "Médias de Gols Pró e Sofridos por jogo",
+    "Nível e Tier de Reputação do Clube",
+    "Elenco de Jogadores com estatísticas individuais (Gols, Assistências, Avaliação, MoTM)"
+  ]
+}

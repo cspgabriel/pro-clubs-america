@@ -1,0 +1,4047 @@
+{
+  "common-gen5_123762": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "123762",
+    "club_name": "Gimme 20p FC",
+    "rank": 1,
+    "players": {
+      "members": [
+        {
+          "name": "Mister_Cong",
+          "proPos": "25",
+          "gamesPlayed": "1446",
+          "goals": "450",
+          "assists": "590",
+          "manOfTheMatch": "203",
+          "ratingAve": "7.8",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Colucciaa",
+          "proPos": "0",
+          "gamesPlayed": "3963",
+          "goals": "711",
+          "assists": "889",
+          "manOfTheMatch": "226",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "xScott-_h",
+          "proPos": "14",
+          "gamesPlayed": "2161",
+          "goals": "4022",
+          "assists": "1800",
+          "manOfTheMatch": "746",
+          "ratingAve": "8.7",
+          "prevGoals": "3",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Finley1x",
+          "proPos": "14",
+          "gamesPlayed": "2773",
+          "goals": "2821",
+          "assists": "2071",
+          "manOfTheMatch": "730",
+          "ratingAve": "8.3",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "iiSURF3R-",
+          "proPos": "5",
+          "gamesPlayed": "2040",
+          "goals": "62",
+          "assists": "43",
+          "manOfTheMatch": "55",
+          "ratingAve": "7.2",
+          "prevGoals": "1",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "silvacreeper98",
+          "proPos": "5",
+          "gamesPlayed": "445",
+          "goals": "18",
+          "assists": "6",
+          "manOfTheMatch": "5",
+          "ratingAve": "6.9",
+          "prevGoals": "1",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Mattiblak",
+          "proPos": "25",
+          "gamesPlayed": "1290",
+          "goals": "333",
+          "assists": "325",
+          "manOfTheMatch": "79",
+          "ratingAve": "7.3",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Lundiis96",
+          "proPos": "5",
+          "gamesPlayed": "1451",
+          "goals": "168",
+          "assists": "227",
+          "manOfTheMatch": "40",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "lNEUERl1",
+          "proPos": "0",
+          "gamesPlayed": "2721",
+          "goals": "92",
+          "assists": "7",
+          "manOfTheMatch": "115",
+          "ratingAve": "6.5",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "KingBM_96",
+          "proPos": "14",
+          "gamesPlayed": "1393",
+          "goals": "798",
+          "assists": "702",
+          "manOfTheMatch": "161",
+          "ratingAve": "7.6",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "CertifiedLeonean",
+          "proPos": "5",
+          "gamesPlayed": "1480",
+          "goals": "197",
+          "assists": "213",
+          "manOfTheMatch": "64",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "wyd--stepbro_",
+          "proPos": "25",
+          "gamesPlayed": "2830",
+          "goals": "1788",
+          "assists": "3047",
+          "manOfTheMatch": "621",
+          "ratingAve": "8.3",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Ju_We22",
+          "proPos": "25",
+          "gamesPlayed": "1966",
+          "goals": "1984",
+          "assists": "782",
+          "manOfTheMatch": "219",
+          "ratingAve": "7.9",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Olderskogen",
+          "proPos": "5",
+          "gamesPlayed": "1702",
+          "goals": "195",
+          "assists": "201",
+          "manOfTheMatch": "45",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "DontGoooAnywhere",
+          "proPos": "25",
+          "gamesPlayed": "73",
+          "goals": "36",
+          "assists": "79",
+          "manOfTheMatch": "19",
+          "ratingAve": "8.3",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Nichii97",
+          "proPos": "14",
+          "gamesPlayed": "2435",
+          "goals": "646",
+          "assists": "719",
+          "manOfTheMatch": "149",
+          "ratingAve": "7.9",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "DolceVita___",
+          "proPos": "14",
+          "gamesPlayed": "851",
+          "goals": "180",
+          "assists": "437",
+          "manOfTheMatch": "47",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "xTruls",
+          "proPos": "14",
+          "gamesPlayed": "93",
+          "goals": "56",
+          "assists": "35",
+          "manOfTheMatch": "3",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "PLAAM_S",
+          "proPos": "25",
+          "gamesPlayed": "2641",
+          "goals": "2673",
+          "assists": "1406",
+          "manOfTheMatch": "460",
+          "ratingAve": "7.8",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Boxyte",
+          "proPos": "25",
+          "gamesPlayed": "533",
+          "goals": "320",
+          "assists": "241",
+          "manOfTheMatch": "41",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Ezample-Captxin",
+          "proPos": "25",
+          "gamesPlayed": "722",
+          "goals": "383",
+          "assists": "530",
+          "manOfTheMatch": "99",
+          "ratingAve": "7.9",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Sahilcookiez",
+          "proPos": "0",
+          "gamesPlayed": "299",
+          "goals": "53",
+          "assists": "32",
+          "manOfTheMatch": "17",
+          "ratingAve": "5.9",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "xAres26",
+          "proPos": "5",
+          "gamesPlayed": "2594",
+          "goals": "1197",
+          "assists": "1117",
+          "manOfTheMatch": "161",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "JetpackEz",
+          "proPos": "25",
+          "gamesPlayed": "1248",
+          "goals": "1214",
+          "assists": "906",
+          "manOfTheMatch": "274",
+          "ratingAve": "8.3",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "JusPxtell",
+          "proPos": "25",
+          "gamesPlayed": "673",
+          "goals": "324",
+          "assists": "188",
+          "manOfTheMatch": "67",
+          "ratingAve": "7.4",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "ShyloMcFly",
+          "proPos": "14",
+          "gamesPlayed": "395",
+          "goals": "179",
+          "assists": "124",
+          "manOfTheMatch": "13",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Dimaria19-",
+          "proPos": "14",
+          "gamesPlayed": "2325",
+          "goals": "802",
+          "assists": "1018",
+          "manOfTheMatch": "311",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "vSheLuv2K",
+          "proPos": "5",
+          "gamesPlayed": "163",
+          "goals": "113",
+          "assists": "27",
+          "manOfTheMatch": "29",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "DaRealG455",
+          "proPos": "14",
+          "gamesPlayed": "1195",
+          "goals": "137",
+          "assists": "354",
+          "manOfTheMatch": "183",
+          "ratingAve": "7.9",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "RahThatsMaud",
+          "proPos": "14",
+          "gamesPlayed": "2574",
+          "goals": "1007",
+          "assists": "2978",
+          "manOfTheMatch": "438",
+          "ratingAve": "8.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Finley2x",
+          "proPos": "14",
+          "gamesPlayed": "1",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "3.0",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 11,
+        "goalkeeper": 3,
+        "forward": 10,
+        "defender": 7
+      }
+    }
+  },
+  "common-gen5_1271461": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "1271461",
+    "club_name": "swqaasdc",
+    "rank": 2,
+    "players": {
+      "members": [
+        {
+          "name": "hz_12m",
+          "proPos": "25",
+          "gamesPlayed": "273",
+          "goals": "383",
+          "assists": "203",
+          "manOfTheMatch": "48",
+          "ratingAve": "7.4",
+          "prevGoals": "4",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "v-TuG",
+          "proPos": "5",
+          "gamesPlayed": "103",
+          "goals": "89",
+          "assists": "67",
+          "manOfTheMatch": "20",
+          "ratingAve": "8.0",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Z_Wele",
+          "proPos": "14",
+          "gamesPlayed": "622",
+          "goals": "169",
+          "assists": "474",
+          "manOfTheMatch": "55",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "cRoLn-",
+          "proPos": "14",
+          "gamesPlayed": "984",
+          "goals": "517",
+          "assists": "628",
+          "manOfTheMatch": "254",
+          "ratingAve": "8.3",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "iWtsl",
+          "proPos": "5",
+          "gamesPlayed": "90",
+          "goals": "102",
+          "assists": "126",
+          "manOfTheMatch": "5",
+          "ratingAve": "6.9",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "vCASEMIROv14",
+          "proPos": "14",
+          "gamesPlayed": "61",
+          "goals": "17",
+          "assists": "14",
+          "manOfTheMatch": "18",
+          "ratingAve": "8.2",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "l_TKOO",
+          "proPos": "14",
+          "gamesPlayed": "1134",
+          "goals": "557",
+          "assists": "1725",
+          "manOfTheMatch": "344",
+          "ratingAve": "8.4",
+          "prevGoals": "3",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "T__K_O",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "abo-saad167",
+          "proPos": "14",
+          "gamesPlayed": "191",
+          "goals": "110",
+          "assists": "63",
+          "manOfTheMatch": "14",
+          "ratingAve": "7.8",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "QUZF1",
+          "proPos": "5",
+          "gamesPlayed": "1675",
+          "goals": "318",
+          "assists": "516",
+          "manOfTheMatch": "216",
+          "ratingAve": "7.8",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "HXKXOX",
+          "proPos": "25",
+          "gamesPlayed": "497",
+          "goals": "1051",
+          "assists": "185",
+          "manOfTheMatch": "115",
+          "ratingAve": "8.4",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 5,
+        "goalkeeper": 0,
+        "forward": 2,
+        "defender": 3
+      }
+    }
+  },
+  "common-gen5_1100665": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "1100665",
+    "club_name": "UNDATEABLES",
+    "rank": 3,
+    "players": {
+      "members": [
+        {
+          "name": "iDestr0",
+          "proPos": "14",
+          "gamesPlayed": "110",
+          "goals": "35",
+          "assists": "48",
+          "manOfTheMatch": "4",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "FriskyKH",
+          "proPos": "14",
+          "gamesPlayed": "440",
+          "goals": "230",
+          "assists": "383",
+          "manOfTheMatch": "108",
+          "ratingAve": "8.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Dutton28 x",
+          "proPos": "25",
+          "gamesPlayed": "363",
+          "goals": "584",
+          "assists": "531",
+          "manOfTheMatch": "83",
+          "ratingAve": "8.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "meeetchh",
+          "proPos": "5",
+          "gamesPlayed": "1077",
+          "goals": "106",
+          "assists": "70",
+          "manOfTheMatch": "21",
+          "ratingAve": "7.1",
+          "prevGoals": "1",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "HennersHG",
+          "proPos": "14",
+          "gamesPlayed": "1181",
+          "goals": "618",
+          "assists": "622",
+          "manOfTheMatch": "140",
+          "ratingAve": "7.6",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Domski_One_",
+          "proPos": "25",
+          "gamesPlayed": "1799",
+          "goals": "1815",
+          "assists": "1178",
+          "manOfTheMatch": "365",
+          "ratingAve": "7.8",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Poulsen-00",
+          "proPos": "0",
+          "gamesPlayed": "791",
+          "goals": "111",
+          "assists": "185",
+          "manOfTheMatch": "72",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "owlbee05",
+          "proPos": "14",
+          "gamesPlayed": "1177",
+          "goals": "830",
+          "assists": "657",
+          "manOfTheMatch": "225",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "MiseToltsu",
+          "proPos": "14",
+          "gamesPlayed": "432",
+          "goals": "102",
+          "assists": "146",
+          "manOfTheMatch": "36",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "sonnymccann",
+          "proPos": "5",
+          "gamesPlayed": "439",
+          "goals": "479",
+          "assists": "286",
+          "manOfTheMatch": "48",
+          "ratingAve": "7.5",
+          "prevGoals": "1",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Squizdonn",
+          "proPos": "5",
+          "gamesPlayed": "998",
+          "goals": "965",
+          "assists": "536",
+          "manOfTheMatch": "127",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Momq7",
+          "proPos": "14",
+          "gamesPlayed": "768",
+          "goals": "886",
+          "assists": "847",
+          "manOfTheMatch": "297",
+          "ratingAve": "8.7",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "XI_DowZz",
+          "proPos": "5",
+          "gamesPlayed": "514",
+          "goals": "61",
+          "assists": "81",
+          "manOfTheMatch": "30",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "RubanACR-TTV",
+          "proPos": "5",
+          "gamesPlayed": "3",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "7.0",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "vBoulder",
+          "proPos": "5",
+          "gamesPlayed": "967",
+          "goals": "239",
+          "assists": "256",
+          "manOfTheMatch": "79",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "l Poach l",
+          "proPos": "25",
+          "gamesPlayed": "125",
+          "goals": "48",
+          "assists": "37",
+          "manOfTheMatch": "16",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "TTV_DominicanFC",
+          "proPos": "0",
+          "gamesPlayed": "411",
+          "goals": "154",
+          "assists": "117",
+          "manOfTheMatch": "41",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "itsVaughanyy",
+          "proPos": "5",
+          "gamesPlayed": "648",
+          "goals": "34",
+          "assists": "72",
+          "manOfTheMatch": "26",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Jwthebird7k",
+          "proPos": "14",
+          "gamesPlayed": "1688",
+          "goals": "625",
+          "assists": "353",
+          "manOfTheMatch": "55",
+          "ratingAve": "6.9",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Blurz9",
+          "proPos": "14",
+          "gamesPlayed": "491",
+          "goals": "273",
+          "assists": "249",
+          "manOfTheMatch": "54",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "BrandonBH6586",
+          "proPos": "25",
+          "gamesPlayed": "354",
+          "goals": "159",
+          "assists": "139",
+          "manOfTheMatch": "42",
+          "ratingAve": "7.7",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "BlackMamba2003",
+          "proPos": "14",
+          "gamesPlayed": "290",
+          "goals": "70",
+          "assists": "72",
+          "manOfTheMatch": "16",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "ShiftingOnYou",
+          "proPos": "0",
+          "gamesPlayed": "701",
+          "goals": "167",
+          "assists": "97",
+          "manOfTheMatch": "43",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "Tobes_YT",
+          "proPos": "14",
+          "gamesPlayed": "246",
+          "goals": "124",
+          "assists": "122",
+          "manOfTheMatch": "11",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "TTV-TubbyMatt",
+          "proPos": "25",
+          "gamesPlayed": "989",
+          "goals": "1140",
+          "assists": "629",
+          "manOfTheMatch": "229",
+          "ratingAve": "8.0",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "KCGames8136",
+          "proPos": "5",
+          "gamesPlayed": "816",
+          "goals": "182",
+          "assists": "137",
+          "manOfTheMatch": "50",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "RubanACR-RTG",
+          "proPos": "14",
+          "gamesPlayed": "1046",
+          "goals": "745",
+          "assists": "683",
+          "manOfTheMatch": "135",
+          "ratingAve": "7.9",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "xMizzy11_",
+          "proPos": "14",
+          "gamesPlayed": "822",
+          "goals": "355",
+          "assists": "580",
+          "manOfTheMatch": "85",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "axmedd",
+          "proPos": "14",
+          "gamesPlayed": "89",
+          "goals": "27",
+          "assists": "68",
+          "manOfTheMatch": "15",
+          "ratingAve": "7.8",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "xKryptyk-TTV",
+          "proPos": "25",
+          "gamesPlayed": "1247",
+          "goals": "897",
+          "assists": "825",
+          "manOfTheMatch": "169",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "RubanACR",
+          "proPos": "5",
+          "gamesPlayed": "13",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "itschazzaa",
+          "proPos": "14",
+          "gamesPlayed": "195",
+          "goals": "7",
+          "assists": "13",
+          "manOfTheMatch": "8",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "ShAdowKnIghtXDX",
+          "proPos": "14",
+          "gamesPlayed": "92",
+          "goals": "17",
+          "assists": "36",
+          "manOfTheMatch": "6",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 15,
+        "goalkeeper": 3,
+        "forward": 6,
+        "defender": 9
+      }
+    }
+  },
+  "common-gen5_3817553": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "3817553",
+    "club_name": "PSG TIKITAKA",
+    "rank": 4,
+    "players": {
+      "members": [
+        {
+          "name": "RooskoPunch92",
+          "proPos": "14",
+          "gamesPlayed": "1595",
+          "goals": "75",
+          "assists": "782",
+          "manOfTheMatch": "215",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "RooskoPunch92i",
+          "proPos": "14",
+          "gamesPlayed": "1601",
+          "goals": "211",
+          "assists": "1808",
+          "manOfTheMatch": "426",
+          "ratingAve": "8.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "ou_vas_tu",
+          "proPos": "5",
+          "gamesPlayed": "3747",
+          "goals": "1239",
+          "assists": "1035",
+          "manOfTheMatch": "172",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 2,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 1
+      }
+    }
+  },
+  "common-gen5_7263": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "7263",
+    "club_name": "Ju We 20p Cong",
+    "rank": 5,
+    "players": {
+      "members": [
+        {
+          "name": "Colucciaa",
+          "proPos": "0",
+          "gamesPlayed": "3963",
+          "goals": "711",
+          "assists": "889",
+          "manOfTheMatch": "226",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "Lundiis96",
+          "proPos": "5",
+          "gamesPlayed": "1451",
+          "goals": "168",
+          "assists": "227",
+          "manOfTheMatch": "40",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "KingBM_96",
+          "proPos": "14",
+          "gamesPlayed": "1393",
+          "goals": "798",
+          "assists": "702",
+          "manOfTheMatch": "161",
+          "ratingAve": "7.6",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "CertifiedLeonean",
+          "proPos": "5",
+          "gamesPlayed": "1480",
+          "goals": "197",
+          "assists": "213",
+          "manOfTheMatch": "64",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Ju_We22",
+          "proPos": "25",
+          "gamesPlayed": "1966",
+          "goals": "1984",
+          "assists": "782",
+          "manOfTheMatch": "219",
+          "ratingAve": "7.9",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Ezample-Captxin",
+          "proPos": "25",
+          "gamesPlayed": "722",
+          "goals": "383",
+          "assists": "530",
+          "manOfTheMatch": "99",
+          "ratingAve": "7.9",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Sahilcookiez",
+          "proPos": "0",
+          "gamesPlayed": "299",
+          "goals": "53",
+          "assists": "32",
+          "manOfTheMatch": "17",
+          "ratingAve": "5.9",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "vSheLuv2K",
+          "proPos": "5",
+          "gamesPlayed": "163",
+          "goals": "113",
+          "assists": "27",
+          "manOfTheMatch": "29",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "RahThatsJuicy",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "Finley3x",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 1,
+        "goalkeeper": 2,
+        "forward": 2,
+        "defender": 3
+      }
+    }
+  },
+  "common-gen5_3435834": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "3435834",
+    "club_name": "Golazo 20p",
+    "rank": 6,
+    "players": {
+      "members": [
+        {
+          "name": "Mattiblak",
+          "proPos": "25",
+          "gamesPlayed": "1290",
+          "goals": "333",
+          "assists": "325",
+          "manOfTheMatch": "79",
+          "ratingAve": "7.3",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "RahThatsJuicy",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 1,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen5_2273162": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "2273162",
+    "club_name": "Nothing More",
+    "rank": 7,
+    "players": {
+      "members": [
+        {
+          "name": "ZakDoWork",
+          "proPos": "25",
+          "gamesPlayed": "727",
+          "goals": "242",
+          "assists": "145",
+          "manOfTheMatch": "33",
+          "ratingAve": "7.3",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Lorne Drake",
+          "proPos": "14",
+          "gamesPlayed": "890",
+          "goals": "276",
+          "assists": "274",
+          "manOfTheMatch": "66",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "I love winning",
+          "proPos": "5",
+          "gamesPlayed": "1917",
+          "goals": "428",
+          "assists": "327",
+          "manOfTheMatch": "114",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Its Jern",
+          "proPos": "14",
+          "gamesPlayed": "1119",
+          "goals": "980",
+          "assists": "755",
+          "manOfTheMatch": "193",
+          "ratingAve": "8.3",
+          "prevGoals": "3",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "itsjern",
+          "proPos": "5",
+          "gamesPlayed": "1540",
+          "goals": "1244",
+          "assists": "1787",
+          "manOfTheMatch": "316",
+          "ratingAve": "8.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "TGX SK1TTL3S",
+          "proPos": "5",
+          "gamesPlayed": "1790",
+          "goals": "669",
+          "assists": "648",
+          "manOfTheMatch": "108",
+          "ratingAve": "7.4",
+          "prevGoals": "1",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "YoCes1",
+          "proPos": "5",
+          "gamesPlayed": "664",
+          "goals": "11",
+          "assists": "39",
+          "manOfTheMatch": "44",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "StuckmonkeyD402",
+          "proPos": "25",
+          "gamesPlayed": "820",
+          "goals": "134",
+          "assists": "224",
+          "manOfTheMatch": "44",
+          "ratingAve": "7.3",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "RALFLY",
+          "proPos": "25",
+          "gamesPlayed": "1274",
+          "goals": "831",
+          "assists": "297",
+          "manOfTheMatch": "109",
+          "ratingAve": "7.4",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "OnlyAverageJoe",
+          "proPos": "25",
+          "gamesPlayed": "817",
+          "goals": "129",
+          "assists": "230",
+          "manOfTheMatch": "104",
+          "ratingAve": "7.8",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "BibleReaderr",
+          "proPos": "25",
+          "gamesPlayed": "999",
+          "goals": "279",
+          "assists": "227",
+          "manOfTheMatch": "54",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "tyshwish",
+          "proPos": "14",
+          "gamesPlayed": "1517",
+          "goals": "1104",
+          "assists": "996",
+          "manOfTheMatch": "157",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "ROBOTIC-BOBBY",
+          "proPos": "14",
+          "gamesPlayed": "875",
+          "goals": "595",
+          "assists": "654",
+          "manOfTheMatch": "199",
+          "ratingAve": "8.3",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "killer_vortex360",
+          "proPos": "14",
+          "gamesPlayed": "450",
+          "goals": "175",
+          "assists": "179",
+          "manOfTheMatch": "56",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "shelovesSanti",
+          "proPos": "14",
+          "gamesPlayed": "1280",
+          "goals": "841",
+          "assists": "1681",
+          "manOfTheMatch": "393",
+          "ratingAve": "8.4",
+          "prevGoals": "2",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "ChuyClappedYou",
+          "proPos": "5",
+          "gamesPlayed": "1268",
+          "goals": "577",
+          "assists": "533",
+          "manOfTheMatch": "195",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "K0FIWRLD",
+          "proPos": "25",
+          "gamesPlayed": "1694",
+          "goals": "1483",
+          "assists": "762",
+          "manOfTheMatch": "261",
+          "ratingAve": "7.7",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Matroidee",
+          "proPos": "25",
+          "gamesPlayed": "981",
+          "goals": "195",
+          "assists": "187",
+          "manOfTheMatch": "87",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "hrdwrkharris",
+          "proPos": "14",
+          "gamesPlayed": "360",
+          "goals": "21",
+          "assists": "32",
+          "manOfTheMatch": "13",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Nick Knoers",
+          "proPos": "5",
+          "gamesPlayed": "2329",
+          "goals": "3084",
+          "assists": "2364",
+          "manOfTheMatch": "704",
+          "ratingAve": "8.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "mikesmovin",
+          "proPos": "14",
+          "gamesPlayed": "404",
+          "goals": "108",
+          "assists": "130",
+          "manOfTheMatch": "35",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "ZTG-_-Dooby",
+          "proPos": "5",
+          "gamesPlayed": "1149",
+          "goals": "1075",
+          "assists": "603",
+          "manOfTheMatch": "167",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 8,
+        "goalkeeper": 0,
+        "forward": 7,
+        "defender": 7
+      }
+    }
+  },
+  "common-gen5_4959903": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "4959903",
+    "club_name": "20p Turtles",
+    "rank": 8,
+    "players": {
+      "members": [
+        {
+          "name": "RahThatsJuicy",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen5_6170": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "6170",
+    "club_name": "20p Tigers",
+    "rank": 9,
+    "players": {
+      "members": [
+        {
+          "name": "Platinum__xbeast",
+          "proPos": "14",
+          "gamesPlayed": "1214",
+          "goals": "297",
+          "assists": "2031",
+          "manOfTheMatch": "407",
+          "ratingAve": "8.8",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "ShyloMcFly",
+          "proPos": "14",
+          "gamesPlayed": "395",
+          "goals": "179",
+          "assists": "124",
+          "manOfTheMatch": "13",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Finley3x",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 2,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen5_5704370": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "5704370",
+    "club_name": "Glaswegians FC",
+    "rank": 10,
+    "players": {
+      "members": [
+        {
+          "name": "z1gUnner1989",
+          "proPos": "25",
+          "gamesPlayed": "164",
+          "goals": "289",
+          "assists": "105",
+          "manOfTheMatch": "67",
+          "ratingAve": "8.2",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "judgejules1979",
+          "proPos": "25",
+          "gamesPlayed": "167",
+          "goals": "46",
+          "assists": "82",
+          "manOfTheMatch": "5",
+          "ratingAve": "6.8",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "XYou_Raging_YetX",
+          "proPos": "25",
+          "gamesPlayed": "172",
+          "goals": "229",
+          "assists": "222",
+          "manOfTheMatch": "44",
+          "ratingAve": "9.6",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 3,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen5_4422111": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "4422111",
+    "club_name": "ACAXA",
+    "rank": 11,
+    "players": {
+      "members": [
+        {
+          "name": "xKhazinho",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen5_557529": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "557529",
+    "club_name": "6rbII",
+    "rank": 12,
+    "players": {
+      "members": [
+        {
+          "name": "m-maxs",
+          "proPos": "25",
+          "gamesPlayed": "48",
+          "goals": "50",
+          "assists": "36",
+          "manOfTheMatch": "8",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "vix4040",
+          "proPos": "14",
+          "gamesPlayed": "140",
+          "goals": "66",
+          "assists": "170",
+          "manOfTheMatch": "52",
+          "ratingAve": "7.9",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "AL8RSH1",
+          "proPos": "25",
+          "gamesPlayed": "93",
+          "goals": "78",
+          "assists": "67",
+          "manOfTheMatch": "16",
+          "ratingAve": "6.8",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "SONFOL1985",
+          "proPos": "25",
+          "gamesPlayed": "182",
+          "goals": "141",
+          "assists": "52",
+          "manOfTheMatch": "63",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "fcfcfc2727",
+          "proPos": "25",
+          "gamesPlayed": "572",
+          "goals": "751",
+          "assists": "1247",
+          "manOfTheMatch": "92",
+          "ratingAve": "7.1",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "fc262626fc",
+          "proPos": "25",
+          "gamesPlayed": "61",
+          "goals": "77",
+          "assists": "191",
+          "manOfTheMatch": "0",
+          "ratingAve": "6.8",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "hemi26fc",
+          "proPos": "25",
+          "gamesPlayed": "232",
+          "goals": "157",
+          "assists": "169",
+          "manOfTheMatch": "7",
+          "ratingAve": "6.6",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 1,
+        "goalkeeper": 0,
+        "forward": 6,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen5_1575910": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "1575910",
+    "club_name": "San Delta West",
+    "rank": 13,
+    "players": {
+      "members": [
+        {
+          "name": "Okok94",
+          "proPos": "14",
+          "gamesPlayed": "2865",
+          "goals": "1185",
+          "assists": "1350",
+          "manOfTheMatch": "319",
+          "ratingAve": "7.9",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "berkan12345",
+          "proPos": "14",
+          "gamesPlayed": "779",
+          "goals": "170",
+          "assists": "115",
+          "manOfTheMatch": "39",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "lNEUERl1",
+          "proPos": "0",
+          "gamesPlayed": "2721",
+          "goals": "92",
+          "assists": "7",
+          "manOfTheMatch": "115",
+          "ratingAve": "6.5",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "Lisqur4",
+          "proPos": "14",
+          "gamesPlayed": "1772",
+          "goals": "121",
+          "assists": "227",
+          "manOfTheMatch": "101",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "ZKRob",
+          "proPos": "5",
+          "gamesPlayed": "350",
+          "goals": "73",
+          "assists": "52",
+          "manOfTheMatch": "25",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Lil Yarma",
+          "proPos": "25",
+          "gamesPlayed": "1626",
+          "goals": "371",
+          "assists": "395",
+          "manOfTheMatch": "81",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Sergiuuu_",
+          "proPos": "25",
+          "gamesPlayed": "674",
+          "goals": "264",
+          "assists": "266",
+          "manOfTheMatch": "79",
+          "ratingAve": "7.8",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Green_light_2kk",
+          "proPos": "25",
+          "gamesPlayed": "1036",
+          "goals": "232",
+          "assists": "190",
+          "manOfTheMatch": "51",
+          "ratingAve": "6.7",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Trunks_NRV-",
+          "proPos": "0",
+          "gamesPlayed": "1284",
+          "goals": "30",
+          "assists": "17",
+          "manOfTheMatch": "38",
+          "ratingAve": "6.4",
+          "prevGoals": "1",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "Karukera-_-974",
+          "proPos": "5",
+          "gamesPlayed": "2662",
+          "goals": "208",
+          "assists": "497",
+          "manOfTheMatch": "300",
+          "ratingAve": "7.7",
+          "prevGoals": "1",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "X_SAUL_X8",
+          "proPos": "5",
+          "gamesPlayed": "1323",
+          "goals": "80",
+          "assists": "168",
+          "manOfTheMatch": "26",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "MB_West",
+          "proPos": "5",
+          "gamesPlayed": "2365",
+          "goals": "923",
+          "assists": "1369",
+          "manOfTheMatch": "487",
+          "ratingAve": "8.0",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "fabiodetp13",
+          "proPos": "5",
+          "gamesPlayed": "725",
+          "goals": "327",
+          "assists": "234",
+          "manOfTheMatch": "92",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Dimaria19-",
+          "proPos": "14",
+          "gamesPlayed": "2325",
+          "goals": "802",
+          "assists": "1018",
+          "manOfTheMatch": "311",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "iSafak7",
+          "proPos": "25",
+          "gamesPlayed": "594",
+          "goals": "417",
+          "assists": "419",
+          "manOfTheMatch": "78",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Alias2604",
+          "proPos": "25",
+          "gamesPlayed": "1735",
+          "goals": "1588",
+          "assists": "917",
+          "manOfTheMatch": "278",
+          "ratingAve": "7.8",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "B_deno",
+          "proPos": "25",
+          "gamesPlayed": "416",
+          "goals": "369",
+          "assists": "208",
+          "manOfTheMatch": "73",
+          "ratingAve": "7.8",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "TiiCxTaaC95",
+          "proPos": "25",
+          "gamesPlayed": "1365",
+          "goals": "822",
+          "assists": "983",
+          "manOfTheMatch": "157",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "LaPassionnn",
+          "proPos": "14",
+          "gamesPlayed": "162",
+          "goals": "69",
+          "assists": "86",
+          "manOfTheMatch": "21",
+          "ratingAve": "8.1",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Reyz_7x",
+          "proPos": "14",
+          "gamesPlayed": "3972",
+          "goals": "3336",
+          "assists": "1750",
+          "manOfTheMatch": "659",
+          "ratingAve": "7.8",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Usman4518",
+          "proPos": "5",
+          "gamesPlayed": "1415",
+          "goals": "545",
+          "assists": "503",
+          "manOfTheMatch": "133",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "CisseYSL",
+          "proPos": "5",
+          "gamesPlayed": "111",
+          "goals": "24",
+          "assists": "33",
+          "manOfTheMatch": "0",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "HamduliDuli",
+          "proPos": "25",
+          "gamesPlayed": "1339",
+          "goals": "543",
+          "assists": "891",
+          "manOfTheMatch": "274",
+          "ratingAve": "8.0",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Hury1x",
+          "proPos": "14",
+          "gamesPlayed": "2698",
+          "goals": "186",
+          "assists": "460",
+          "manOfTheMatch": "189",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "WelshJordyy-",
+          "proPos": "0",
+          "gamesPlayed": "328",
+          "goals": "280",
+          "assists": "293",
+          "manOfTheMatch": "25",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "II-RlPYou-XX",
+          "proPos": "25",
+          "gamesPlayed": "2109",
+          "goals": "2435",
+          "assists": "2040",
+          "manOfTheMatch": "547",
+          "ratingAve": "8.3",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "xKhazinho",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "xKF_Genzo_1",
+          "proPos": "0",
+          "gamesPlayed": "1573",
+          "goals": "58",
+          "assists": "10",
+          "manOfTheMatch": "40",
+          "ratingAve": "6.3",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 7,
+        "goalkeeper": 4,
+        "forward": 9,
+        "defender": 7
+      }
+    }
+  },
+  "common-gen5_3880887": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "3880887",
+    "club_name": "Lazy Carrots FC",
+    "rank": 14,
+    "players": {
+      "members": [
+        {
+          "name": "ManFred124",
+          "proPos": "14",
+          "gamesPlayed": "830",
+          "goals": "39",
+          "assists": "57",
+          "manOfTheMatch": "28",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "xThoninho_9",
+          "proPos": "25",
+          "gamesPlayed": "679",
+          "goals": "1033",
+          "assists": "618",
+          "manOfTheMatch": "202",
+          "ratingAve": "8.5",
+          "prevGoals": "5",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "LAFFERTY1690",
+          "proPos": "14",
+          "gamesPlayed": "1819",
+          "goals": "640",
+          "assists": "551",
+          "manOfTheMatch": "158",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "QPREd",
+          "proPos": "14",
+          "gamesPlayed": "1662",
+          "goals": "83",
+          "assists": "258",
+          "manOfTheMatch": "84",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "GS_VI-VI-MMXX",
+          "proPos": "25",
+          "gamesPlayed": "738",
+          "goals": "908",
+          "assists": "454",
+          "manOfTheMatch": "173",
+          "ratingAve": "7.9",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "rafster35",
+          "proPos": "5",
+          "gamesPlayed": "2980",
+          "goals": "1628",
+          "assists": "3377",
+          "manOfTheMatch": "406",
+          "ratingAve": "8.1",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Tdaniel9357",
+          "proPos": "14",
+          "gamesPlayed": "101",
+          "goals": "38",
+          "assists": "9",
+          "manOfTheMatch": "13",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "FinnTheHuman1990",
+          "proPos": "14",
+          "gamesPlayed": "720",
+          "goals": "122",
+          "assists": "274",
+          "manOfTheMatch": "45",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Nickel_Bean_",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 5,
+        "goalkeeper": 0,
+        "forward": 2,
+        "defender": 1
+      }
+    }
+  },
+  "common-gen5_3837376": {
+    "platform": "common-gen5",
+    "platform_name": "PlayStation 5 / Xbox Series X|S / PC (Crossplay Geração Atual)",
+    "club_id": "3837376",
+    "club_name": "San Delta",
+    "rank": 15,
+    "players": {
+      "members": [
+        {
+          "name": "Karukera-_-974",
+          "proPos": "5",
+          "gamesPlayed": "2662",
+          "goals": "208",
+          "assists": "497",
+          "manOfTheMatch": "300",
+          "ratingAve": "7.7",
+          "prevGoals": "1",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "xKhazinho",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 1
+      }
+    }
+  },
+  "common-gen4_29695": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "29695",
+    "club_name": "FluÃ®d FÃ¸Ã¸tball",
+    "rank": 1,
+    "players": {
+      "members": [
+        {
+          "name": "iTz_GAME-_-OVER",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "alan_brown",
+          "proPos": "5",
+          "gamesPlayed": "409",
+          "goals": "481",
+          "assists": "172",
+          "manOfTheMatch": "96",
+          "ratingAve": "8.1",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Sub-Zero_79x",
+          "proPos": "5",
+          "gamesPlayed": "1729",
+          "goals": "1416",
+          "assists": "1757",
+          "manOfTheMatch": "631",
+          "ratingAve": "8.7",
+          "prevGoals": "2",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "rubitorossik",
+          "proPos": "5",
+          "gamesPlayed": "1549",
+          "goals": "239",
+          "assists": "266",
+          "manOfTheMatch": "80",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 3
+      }
+    }
+  },
+  "common-gen4_175732": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "175732",
+    "club_name": "x no mercy x",
+    "rank": 2,
+    "players": {
+      "members": [
+        {
+          "name": "iSzh",
+          "proPos": "14",
+          "gamesPlayed": "1100",
+          "goals": "2000",
+          "assists": "1636",
+          "manOfTheMatch": "321",
+          "ratingAve": "8.1",
+          "prevGoals": "3",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "xT-Neymar-JR-11x",
+          "proPos": "25",
+          "gamesPlayed": "1727",
+          "goals": "2585",
+          "assists": "2052",
+          "manOfTheMatch": "421",
+          "ratingAve": "8.1",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "xXAVI-_6xx",
+          "proPos": "14",
+          "gamesPlayed": "23",
+          "goals": "24",
+          "assists": "14",
+          "manOfTheMatch": "6",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "xZx-xIxXz-Ivz",
+          "proPos": "25",
+          "gamesPlayed": "376",
+          "goals": "640",
+          "assists": "582",
+          "manOfTheMatch": "105",
+          "ratingAve": "8.1",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 2,
+        "goalkeeper": 0,
+        "forward": 2,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen4_416858": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "416858",
+    "club_name": "Ã¸Ã®Ã¸",
+    "rank": 3,
+    "players": {
+      "members": [
+        {
+          "name": "iTz_GAME-_-OVER",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "LINGER-11",
+          "proPos": "25",
+          "gamesPlayed": "310",
+          "goals": "73",
+          "assists": "105",
+          "manOfTheMatch": "11",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "tanvir3965",
+          "proPos": "25",
+          "gamesPlayed": "1522",
+          "goals": "1835",
+          "assists": "1632",
+          "manOfTheMatch": "470",
+          "ratingAve": "8.4",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "DinoSuljic7",
+          "proPos": "25",
+          "gamesPlayed": "805",
+          "goals": "74",
+          "assists": "85",
+          "manOfTheMatch": "28",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "xGolden7",
+          "proPos": "14",
+          "gamesPlayed": "683",
+          "goals": "385",
+          "assists": "488",
+          "manOfTheMatch": "85",
+          "ratingAve": "8.0",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "trust_theproces",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 1,
+        "goalkeeper": 0,
+        "forward": 3,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen4_569874": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "569874",
+    "club_name": "Ã®Tz SÃ¸ HÃ¸t",
+    "rank": 4,
+    "players": {
+      "members": [
+        {
+          "name": "MessiTheTidyGOAT",
+          "proPos": "25",
+          "gamesPlayed": "960",
+          "goals": "820",
+          "assists": "689",
+          "manOfTheMatch": "165",
+          "ratingAve": "7.9",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "xGolden7",
+          "proPos": "14",
+          "gamesPlayed": "683",
+          "goals": "385",
+          "assists": "488",
+          "manOfTheMatch": "85",
+          "ratingAve": "8.0",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Tyson_10-24_RiP",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 1,
+        "goalkeeper": 0,
+        "forward": 1,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen4_540421": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "540421",
+    "club_name": "TÃ¸tal FÃ¸Ã¸tball",
+    "rank": 5,
+    "players": {
+      "members": [
+        {
+          "name": "Guy-Jr045",
+          "proPos": "14",
+          "gamesPlayed": "583",
+          "goals": "104",
+          "assists": "182",
+          "manOfTheMatch": "47",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "SlideAndBreak",
+          "proPos": "5",
+          "gamesPlayed": "248",
+          "goals": "72",
+          "assists": "76",
+          "manOfTheMatch": "18",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Ndunamion",
+          "proPos": "14",
+          "gamesPlayed": "189",
+          "goals": "90",
+          "assists": "94",
+          "manOfTheMatch": "31",
+          "ratingAve": "8.0",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Tyson_10-24_RiP",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 2,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 1
+      }
+    }
+  },
+  "common-gen4_484095": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "484095",
+    "club_name": "BÃ®ggest SnÃ£kes",
+    "rank": 6,
+    "players": {
+      "members": [
+        {
+          "name": "iTz_GAME-_-OVER",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "BHconc",
+          "proPos": "25",
+          "gamesPlayed": "467",
+          "goals": "341",
+          "assists": "236",
+          "manOfTheMatch": "68",
+          "ratingAve": "8.0",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "SlideAndBreak",
+          "proPos": "5",
+          "gamesPlayed": "248",
+          "goals": "72",
+          "assists": "76",
+          "manOfTheMatch": "18",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "GuiltLi3z",
+          "proPos": "25",
+          "gamesPlayed": "1661",
+          "goals": "912",
+          "assists": "691",
+          "manOfTheMatch": "126",
+          "ratingAve": "7.6",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 2,
+        "defender": 1
+      }
+    }
+  },
+  "common-gen4_615403": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "615403",
+    "club_name": "Ã®nfernÃ¸",
+    "rank": 7,
+    "players": {
+      "members": [
+        {
+          "name": "LINGER-11",
+          "proPos": "25",
+          "gamesPlayed": "310",
+          "goals": "73",
+          "assists": "105",
+          "manOfTheMatch": "11",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "tanvir3965",
+          "proPos": "25",
+          "gamesPlayed": "1522",
+          "goals": "1835",
+          "assists": "1632",
+          "manOfTheMatch": "470",
+          "ratingAve": "8.4",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Sub-Zero_79x",
+          "proPos": "5",
+          "gamesPlayed": "1729",
+          "goals": "1416",
+          "assists": "1757",
+          "manOfTheMatch": "631",
+          "ratingAve": "8.7",
+          "prevGoals": "2",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Aqua__Monsta",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "rubitorossik",
+          "proPos": "5",
+          "gamesPlayed": "1549",
+          "goals": "239",
+          "assists": "266",
+          "manOfTheMatch": "80",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 2,
+        "defender": 2
+      }
+    }
+  },
+  "common-gen4_561178": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "561178",
+    "club_name": "LÃ®quÃ®d FÃ¸Ã¸tball",
+    "rank": 8,
+    "players": {
+      "members": [
+        {
+          "name": "BHconc",
+          "proPos": "25",
+          "gamesPlayed": "467",
+          "goals": "341",
+          "assists": "236",
+          "manOfTheMatch": "68",
+          "ratingAve": "8.0",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "SlideAndBreak",
+          "proPos": "5",
+          "gamesPlayed": "248",
+          "goals": "72",
+          "assists": "76",
+          "manOfTheMatch": "18",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "trust_theproces",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "rubitorossik",
+          "proPos": "5",
+          "gamesPlayed": "1549",
+          "goals": "239",
+          "assists": "266",
+          "manOfTheMatch": "80",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Tyson_10-24_RiP",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 1,
+        "defender": 2
+      }
+    }
+  },
+  "common-gen4_1369": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "1369",
+    "club_name": "SCHWARZ VORAUS",
+    "rank": 9,
+    "players": {
+      "members": [
+        {
+          "name": "GENERAL_v",
+          "proPos": "25",
+          "gamesPlayed": "40",
+          "goals": "8",
+          "assists": "7",
+          "manOfTheMatch": "0",
+          "ratingAve": "6.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "SwA_x_iJoHn",
+          "proPos": "14",
+          "gamesPlayed": "447",
+          "goals": "66",
+          "assists": "53",
+          "manOfTheMatch": "15",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "xx-Ghost-Turbo07",
+          "proPos": "25",
+          "gamesPlayed": "315",
+          "goals": "379",
+          "assists": "274",
+          "manOfTheMatch": "59",
+          "ratingAve": "8.3",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Siegfried_naga",
+          "proPos": "5",
+          "gamesPlayed": "58",
+          "goals": "6",
+          "assists": "9",
+          "manOfTheMatch": "1",
+          "ratingAve": "7.0",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "CoronelCactus79",
+          "proPos": "5",
+          "gamesPlayed": "894",
+          "goals": "908",
+          "assists": "315",
+          "manOfTheMatch": "126",
+          "ratingAve": "7.9",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Otnaspds55",
+          "proPos": "25",
+          "gamesPlayed": "548",
+          "goals": "872",
+          "assists": "348",
+          "manOfTheMatch": "151",
+          "ratingAve": "8.5",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Siegfried_Beule",
+          "proPos": "25",
+          "gamesPlayed": "608",
+          "goals": "1072",
+          "assists": "407",
+          "manOfTheMatch": "191",
+          "ratingAve": "8.6",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Candydandy01",
+          "proPos": "14",
+          "gamesPlayed": "850",
+          "goals": "592",
+          "assists": "774",
+          "manOfTheMatch": "272",
+          "ratingAve": "8.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Mr_Julezzz",
+          "proPos": "5",
+          "gamesPlayed": "46",
+          "goals": "7",
+          "assists": "15",
+          "manOfTheMatch": "1",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Siegfried_Tommy",
+          "proPos": "25",
+          "gamesPlayed": "753",
+          "goals": "474",
+          "assists": "1286",
+          "manOfTheMatch": "338",
+          "ratingAve": "8.9",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Siegfried_Lauch",
+          "proPos": "5",
+          "gamesPlayed": "651",
+          "goals": "401",
+          "assists": "96",
+          "manOfTheMatch": "48",
+          "ratingAve": "7.8",
+          "prevGoals": "1",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "ExPlaiN_ZYRO3",
+          "proPos": "5",
+          "gamesPlayed": "125",
+          "goals": "80",
+          "assists": "35",
+          "manOfTheMatch": "6",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Siegfried_Addi",
+          "proPos": "14",
+          "gamesPlayed": "474",
+          "goals": "94",
+          "assists": "134",
+          "manOfTheMatch": "8",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "UnbanSpeed",
+          "proPos": "0",
+          "gamesPlayed": "929",
+          "goals": "594",
+          "assists": "371",
+          "manOfTheMatch": "80",
+          "ratingAve": "7.0",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "baum2Jo",
+          "proPos": "14",
+          "gamesPlayed": "115",
+          "goals": "38",
+          "assists": "32",
+          "manOfTheMatch": "3",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Am6_Rw9",
+          "proPos": "14",
+          "gamesPlayed": "4",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "6.7",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 5,
+        "goalkeeper": 1,
+        "forward": 5,
+        "defender": 5
+      }
+    }
+  },
+  "common-gen4_95107": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "95107",
+    "club_name": "OUR FOOTBALL",
+    "rank": 10,
+    "players": {
+      "members": [
+        {
+          "name": "Professore-abo",
+          "proPos": "25",
+          "gamesPlayed": "2263",
+          "goals": "1670",
+          "assists": "1370",
+          "manOfTheMatch": "374",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Tenz1n1",
+          "proPos": "14",
+          "gamesPlayed": "358",
+          "goals": "91",
+          "assists": "214",
+          "manOfTheMatch": "76",
+          "ratingAve": "7.8",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "LetsGoDubs",
+          "proPos": "5",
+          "gamesPlayed": "1363",
+          "goals": "751",
+          "assists": "785",
+          "manOfTheMatch": "171",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Manon_25000",
+          "proPos": "25",
+          "gamesPlayed": "1505",
+          "goals": "1186",
+          "assists": "1060",
+          "manOfTheMatch": "216",
+          "ratingAve": "7.9",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Gambit-X365",
+          "proPos": "25",
+          "gamesPlayed": "282",
+          "goals": "287",
+          "assists": "233",
+          "manOfTheMatch": "49",
+          "ratingAve": "7.8",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "MH2D_1221",
+          "proPos": "25",
+          "gamesPlayed": "753",
+          "goals": "585",
+          "assists": "437",
+          "manOfTheMatch": "126",
+          "ratingAve": "7.8",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Ravinny",
+          "proPos": "25",
+          "gamesPlayed": "746",
+          "goals": "172",
+          "assists": "257",
+          "manOfTheMatch": "27",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "rraketa14",
+          "proPos": "14",
+          "gamesPlayed": "1022",
+          "goals": "245",
+          "assists": "594",
+          "manOfTheMatch": "140",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 2,
+        "goalkeeper": 0,
+        "forward": 5,
+        "defender": 1
+      }
+    }
+  },
+  "common-gen4_742806": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "742806",
+    "club_name": "Familia Moraeis",
+    "rank": 11,
+    "players": {
+      "members": [
+        {
+          "name": "thevictorhugo",
+          "proPos": "14",
+          "gamesPlayed": "395",
+          "goals": "204",
+          "assists": "473",
+          "manOfTheMatch": "58",
+          "ratingAve": "8.1",
+          "prevGoals": "2",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "joaosousxz_",
+          "proPos": "25",
+          "gamesPlayed": "350",
+          "goals": "326",
+          "assists": "140",
+          "manOfTheMatch": "59",
+          "ratingAve": "7.6",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "GuGustinelli",
+          "proPos": "25",
+          "gamesPlayed": "485",
+          "goals": "338",
+          "assists": "293",
+          "manOfTheMatch": "137",
+          "ratingAve": "8.2",
+          "prevGoals": "4",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "sNt-Fuzzi",
+          "proPos": "14",
+          "gamesPlayed": "290",
+          "goals": "26",
+          "assists": "52",
+          "manOfTheMatch": "18",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "sNt-BOY",
+          "proPos": "0",
+          "gamesPlayed": "6",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "5.3",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "Brielzinnbr",
+          "proPos": "14",
+          "gamesPlayed": "256",
+          "goals": "340",
+          "assists": "127",
+          "manOfTheMatch": "53",
+          "ratingAve": "7.8",
+          "prevGoals": "4",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Demolidor_EMM",
+          "proPos": "25",
+          "gamesPlayed": "176",
+          "goals": "59",
+          "assists": "19",
+          "manOfTheMatch": "8",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Teteuzinho1",
+          "proPos": "25",
+          "gamesPlayed": "98",
+          "goals": "63",
+          "assists": "29",
+          "manOfTheMatch": "7",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "karen_ctn",
+          "proPos": "14",
+          "gamesPlayed": "44",
+          "goals": "28",
+          "assists": "54",
+          "manOfTheMatch": "12",
+          "ratingAve": "8.3",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Vinicius_Spartac",
+          "proPos": "14",
+          "gamesPlayed": "380",
+          "goals": "237",
+          "assists": "204",
+          "manOfTheMatch": "20",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "gbl_araujox",
+          "proPos": "25",
+          "gamesPlayed": "10",
+          "goals": "9",
+          "assists": "4",
+          "manOfTheMatch": "1",
+          "ratingAve": "7.2",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 5,
+        "goalkeeper": 1,
+        "forward": 5,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen4_280002": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "280002",
+    "club_name": "Coringas  Do Rj",
+    "rank": 12,
+    "players": {
+      "members": [
+        {
+          "name": "Reliquia83",
+          "proPos": "14",
+          "gamesPlayed": "96",
+          "goals": "11",
+          "assists": "25",
+          "manOfTheMatch": "9",
+          "ratingAve": "7.8",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "CoutinhoSCCP",
+          "proPos": "0",
+          "gamesPlayed": "988",
+          "goals": "39",
+          "assists": "25",
+          "manOfTheMatch": "27",
+          "ratingAve": "6.5",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "Zezinho09",
+          "proPos": "14",
+          "gamesPlayed": "969",
+          "goals": "550",
+          "assists": "994",
+          "manOfTheMatch": "233",
+          "ratingAve": "8.2",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "SOLID LE",
+          "proPos": "5",
+          "gamesPlayed": "18",
+          "goals": "1",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "RegularMorty",
+          "proPos": "5",
+          "gamesPlayed": "5",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "5.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "KingVelto4174",
+          "proPos": "25",
+          "gamesPlayed": "462",
+          "goals": "158",
+          "assists": "184",
+          "manOfTheMatch": "50",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "evolux one",
+          "proPos": "5",
+          "gamesPlayed": "495",
+          "goals": "210",
+          "assists": "188",
+          "manOfTheMatch": "89",
+          "ratingAve": "8.0",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "xxThefaelxx",
+          "proPos": "5",
+          "gamesPlayed": "838",
+          "goals": "845",
+          "assists": "560",
+          "manOfTheMatch": "160",
+          "ratingAve": "8.2",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "DANIELSEP18",
+          "proPos": "14",
+          "gamesPlayed": "600",
+          "goals": "299",
+          "assists": "269",
+          "manOfTheMatch": "31",
+          "ratingAve": "7.4",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "BarataM4n",
+          "proPos": "0",
+          "gamesPlayed": "13",
+          "goals": "15",
+          "assists": "25",
+          "manOfTheMatch": "0",
+          "ratingAve": "6.5",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "Frank Marcelo",
+          "proPos": "25",
+          "gamesPlayed": "352",
+          "goals": "110",
+          "assists": "58",
+          "manOfTheMatch": "0",
+          "ratingAve": "6.7",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "JoaoMM93",
+          "proPos": "25",
+          "gamesPlayed": "802",
+          "goals": "994",
+          "assists": "393",
+          "manOfTheMatch": "126",
+          "ratingAve": "7.8",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "OTAVIOFELIPE10",
+          "proPos": "25",
+          "gamesPlayed": "789",
+          "goals": "524",
+          "assists": "375",
+          "manOfTheMatch": "67",
+          "ratingAve": "7.4",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "fwesley97",
+          "proPos": "14",
+          "gamesPlayed": "290",
+          "goals": "105",
+          "assists": "145",
+          "manOfTheMatch": "36",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "LeviXavier14",
+          "proPos": "5",
+          "gamesPlayed": "206",
+          "goals": "32",
+          "assists": "36",
+          "manOfTheMatch": "29",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Nefis Marreta",
+          "proPos": "25",
+          "gamesPlayed": "275",
+          "goals": "69",
+          "assists": "73",
+          "manOfTheMatch": "5",
+          "ratingAve": "7.2",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "CrudeArcher81",
+          "proPos": "5",
+          "gamesPlayed": "456",
+          "goals": "87",
+          "assists": "146",
+          "manOfTheMatch": "47",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Sr ARAUJO2632",
+          "proPos": "14",
+          "gamesPlayed": "448",
+          "goals": "127",
+          "assists": "97",
+          "manOfTheMatch": "27",
+          "ratingAve": "7.1",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Geladoxx",
+          "proPos": "25",
+          "gamesPlayed": "94",
+          "goals": "72",
+          "assists": "65",
+          "manOfTheMatch": "32",
+          "ratingAve": "8.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Livia Mota 06",
+          "proPos": "14",
+          "gamesPlayed": "3",
+          "goals": "1",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Kratos8311",
+          "proPos": "5",
+          "gamesPlayed": "209",
+          "goals": "73",
+          "assists": "40",
+          "manOfTheMatch": "21",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "LucianoRibeiroo",
+          "proPos": "5",
+          "gamesPlayed": "103",
+          "goals": "23",
+          "assists": "29",
+          "manOfTheMatch": "12",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "selmovillaa",
+          "proPos": "25",
+          "gamesPlayed": "156",
+          "goals": "93",
+          "assists": "62",
+          "manOfTheMatch": "10",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 6,
+        "goalkeeper": 2,
+        "forward": 7,
+        "defender": 8
+      }
+    }
+  },
+  "common-gen4_602484": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "602484",
+    "club_name": "FC Beuvry 2",
+    "rank": 13,
+    "players": {
+      "members": [
+        {
+          "name": "spayss-zoulou",
+          "proPos": "25",
+          "gamesPlayed": "1116",
+          "goals": "1994",
+          "assists": "1349",
+          "manOfTheMatch": "3",
+          "ratingAve": "6.9",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "AwSom__NuCle",
+          "proPos": "14",
+          "gamesPlayed": "372",
+          "goals": "350",
+          "assists": "420",
+          "manOfTheMatch": "146",
+          "ratingAve": "8.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Natsu27800",
+          "proPos": "25",
+          "gamesPlayed": "426",
+          "goals": "304",
+          "assists": "224",
+          "manOfTheMatch": "68",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "JordanDdw",
+          "proPos": "25",
+          "gamesPlayed": "47",
+          "goals": "58",
+          "assists": "36",
+          "manOfTheMatch": "12",
+          "ratingAve": "8.3",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "KB9doudou",
+          "proPos": "25",
+          "gamesPlayed": "1000",
+          "goals": "961",
+          "assists": "796",
+          "manOfTheMatch": "232",
+          "ratingAve": "8.1",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "omelette-total5",
+          "proPos": "14",
+          "gamesPlayed": "1078",
+          "goals": "289",
+          "assists": "474",
+          "manOfTheMatch": "257",
+          "ratingAve": "8.1",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Doubz39",
+          "proPos": "14",
+          "gamesPlayed": "892",
+          "goals": "735",
+          "assists": "855",
+          "manOfTheMatch": "154",
+          "ratingAve": "8.1",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "spayss-zerox",
+          "proPos": "14",
+          "gamesPlayed": "376",
+          "goals": "148",
+          "assists": "92",
+          "manOfTheMatch": "23",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 4,
+        "goalkeeper": 0,
+        "forward": 4,
+        "defender": 0
+      }
+    }
+  },
+  "common-gen4_290500": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "290500",
+    "club_name": "TIKI TAKA XI",
+    "rank": 14,
+    "players": {
+      "members": [
+        {
+          "name": "",
+          "proPos": "5",
+          "gamesPlayed": "706",
+          "goals": "39",
+          "assists": "64",
+          "manOfTheMatch": "58",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Molham35",
+          "proPos": "14",
+          "gamesPlayed": "639",
+          "goals": "227",
+          "assists": "419",
+          "manOfTheMatch": "138",
+          "ratingAve": "8.1",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Anonymexkiller",
+          "proPos": "14",
+          "gamesPlayed": "1497",
+          "goals": "673",
+          "assists": "1588",
+          "manOfTheMatch": "423",
+          "ratingAve": "8.4",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Xx_YosefXx44",
+          "proPos": "5",
+          "gamesPlayed": "4",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "6.7",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "Anas_Alwani",
+          "proPos": "14",
+          "gamesPlayed": "189",
+          "goals": "51",
+          "assists": "121",
+          "manOfTheMatch": "19",
+          "ratingAve": "7.6",
+          "prevGoals": "3",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "SSINYA-99",
+          "proPos": "25",
+          "gamesPlayed": "1259",
+          "goals": "1487",
+          "assists": "874",
+          "manOfTheMatch": "319",
+          "ratingAve": "8.4",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Mostafa-Tamim35",
+          "proPos": "25",
+          "gamesPlayed": "82",
+          "goals": "28",
+          "assists": "20",
+          "manOfTheMatch": "2",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "LFC4life-_-6ucl",
+          "proPos": "14",
+          "gamesPlayed": "214",
+          "goals": "35",
+          "assists": "59",
+          "manOfTheMatch": "24",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "hokerm",
+          "proPos": "5",
+          "gamesPlayed": "391",
+          "goals": "54",
+          "assists": "27",
+          "manOfTheMatch": "22",
+          "ratingAve": "7.4",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "ZUBRASHKA",
+          "proPos": "25",
+          "gamesPlayed": "703",
+          "goals": "1175",
+          "assists": "394",
+          "manOfTheMatch": "223",
+          "ratingAve": "8.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "xXAVI-_6xx",
+          "proPos": "14",
+          "gamesPlayed": "23",
+          "goals": "24",
+          "assists": "14",
+          "manOfTheMatch": "6",
+          "ratingAve": "7.5",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "mr_12_hr",
+          "proPos": "25",
+          "gamesPlayed": "308",
+          "goals": "52",
+          "assists": "42",
+          "manOfTheMatch": "14",
+          "ratingAve": "7.3",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 5,
+        "goalkeeper": 0,
+        "forward": 4,
+        "defender": 3
+      }
+    }
+  },
+  "common-gen4_792229": {
+    "platform": "common-gen4",
+    "platform_name": "PlayStation 4 / Xbox One (Geração Anterior)",
+    "club_id": "792229",
+    "club_name": "39 hÃ¸tdÃ¸gs",
+    "rank": 15,
+    "players": {
+      "members": [
+        {
+          "name": "Milster001",
+          "proPos": "14",
+          "gamesPlayed": "913",
+          "goals": "158",
+          "assists": "75",
+          "manOfTheMatch": "19",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 1,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 0
+      }
+    }
+  },
+  "nx_531605": {
+    "platform": "nx",
+    "platform_name": "Nintendo Switch",
+    "club_id": "531605",
+    "club_name": "KaliteSuperieur",
+    "rank": 1,
+    "players": {
+      "members": [
+        {
+          "name": "RaFoux_SLB",
+          "proPos": "14",
+          "gamesPlayed": "194",
+          "goals": "125",
+          "assists": "167",
+          "manOfTheMatch": "54",
+          "ratingAve": "7.7",
+          "prevGoals": "2",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "JojoAxe",
+          "proPos": "14",
+          "gamesPlayed": "295",
+          "goals": "417",
+          "assists": "501",
+          "manOfTheMatch": "99",
+          "ratingAve": "8.8",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Ayltonxo",
+          "proPos": "25",
+          "gamesPlayed": "29",
+          "goals": "101",
+          "assists": "21",
+          "manOfTheMatch": "20",
+          "ratingAve": "9.7",
+          "prevGoals": "5",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 2,
+        "goalkeeper": 0,
+        "forward": 1,
+        "defender": 0
+      }
+    }
+  },
+  "nx_684018": {
+    "platform": "nx",
+    "platform_name": "Nintendo Switch",
+    "club_id": "684018",
+    "club_name": "ARABESXNOIR",
+    "rank": 2,
+    "players": {
+      "members": [
+        {
+          "name": "zeerinhoo",
+          "proPos": "14",
+          "gamesPlayed": "166",
+          "goals": "212",
+          "assists": "183",
+          "manOfTheMatch": "53",
+          "ratingAve": "8.4",
+          "prevGoals": "7",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "TahanFahan",
+          "proPos": "14",
+          "gamesPlayed": "44",
+          "goals": "18",
+          "assists": "29",
+          "manOfTheMatch": "3",
+          "ratingAve": "7.2",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "mathmitt007",
+          "proPos": "25",
+          "gamesPlayed": "103",
+          "goals": "182",
+          "assists": "108",
+          "manOfTheMatch": "28",
+          "ratingAve": "8.6",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "edotrics",
+          "proPos": "5",
+          "gamesPlayed": "283",
+          "goals": "66",
+          "assists": "35",
+          "manOfTheMatch": "16",
+          "ratingAve": "6.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 2,
+        "goalkeeper": 0,
+        "forward": 1,
+        "defender": 1
+      }
+    }
+  },
+  "nx_562951": {
+    "platform": "nx",
+    "platform_name": "Nintendo Switch",
+    "club_id": "562951",
+    "club_name": "THE ROOKIE S7",
+    "rank": 3,
+    "players": {
+      "members": [
+        {
+          "name": "NORIANNE70",
+          "proPos": "25",
+          "gamesPlayed": "70",
+          "goals": "103",
+          "assists": "32",
+          "manOfTheMatch": "10",
+          "ratingAve": "7.6",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 1,
+        "defender": 0
+      }
+    }
+  },
+  "nx_1025725": {
+    "platform": "nx",
+    "platform_name": "Nintendo Switch",
+    "club_id": "1025725",
+    "club_name": "ArabeXnoir2",
+    "rank": 4,
+    "players": {
+      "members": [
+        {
+          "name": "zeerinhoo",
+          "proPos": "14",
+          "gamesPlayed": "166",
+          "goals": "212",
+          "assists": "183",
+          "manOfTheMatch": "53",
+          "ratingAve": "8.4",
+          "prevGoals": "7",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 1,
+        "goalkeeper": 0,
+        "forward": 0,
+        "defender": 0
+      }
+    }
+  },
+  "nx_196488": {
+    "platform": "nx",
+    "platform_name": "Nintendo Switch",
+    "club_id": "196488",
+    "club_name": "MorRiikow",
+    "rank": 5,
+    "players": {
+      "members": [
+        {
+          "name": "NzoRiikow60",
+          "proPos": "25",
+          "gamesPlayed": "68",
+          "goals": "84",
+          "assists": "60",
+          "manOfTheMatch": "17",
+          "ratingAve": "8.2",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "allan_69160",
+          "proPos": "25",
+          "gamesPlayed": "62",
+          "goals": "90",
+          "assists": "63",
+          "manOfTheMatch": "11",
+          "ratingAve": "8.2",
+          "prevGoals": "2",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Diegox2012",
+          "proPos": "25",
+          "gamesPlayed": "42",
+          "goals": "69",
+          "assists": "52",
+          "manOfTheMatch": "13",
+          "ratingAve": "8.5",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "ulg9nvzwh7xr",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "hjd3c49zvnex",
+          "proPos": "",
+          "gamesPlayed": "0",
+          "goals": "0",
+          "assists": "0",
+          "manOfTheMatch": "0",
+          "ratingAve": "0.0",
+          "prevGoals": "0",
+          "favoritePosition": ""
+        },
+        {
+          "name": "ALWERU",
+          "proPos": "25",
+          "gamesPlayed": "43",
+          "goals": "77",
+          "assists": "25",
+          "manOfTheMatch": "13",
+          "ratingAve": "8.3",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 0,
+        "goalkeeper": 0,
+        "forward": 4,
+        "defender": 0
+      }
+    }
+  },
+  "nx_1109092": {
+    "platform": "nx",
+    "platform_name": "Nintendo Switch",
+    "club_id": "1109092",
+    "club_name": "Pied Carre NN",
+    "rank": 6,
+    "players": {
+      "members": [
+        {
+          "name": "mathmitt007",
+          "proPos": "25",
+          "gamesPlayed": "103",
+          "goals": "182",
+          "assists": "108",
+          "manOfTheMatch": "28",
+          "ratingAve": "8.6",
+          "prevGoals": "3",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Nonodu7000",
+          "proPos": "25",
+          "gamesPlayed": "538",
+          "goals": "1641",
+          "assists": "647",
+          "manOfTheMatch": "266",
+          "ratingAve": "9.0",
+          "prevGoals": "4",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Deses_Loquace",
+          "proPos": "5",
+          "gamesPlayed": "348",
+          "goals": "470",
+          "assists": "275",
+          "manOfTheMatch": "139",
+          "ratingAve": "8.3",
+          "prevGoals": "0",
+          "favoritePosition": "defender"
+        },
+        {
+          "name": "thefoot2k25",
+          "proPos": "14",
+          "gamesPlayed": "25",
+          "goals": "14",
+          "assists": "16",
+          "manOfTheMatch": "1",
+          "ratingAve": "7.2",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 1,
+        "goalkeeper": 0,
+        "forward": 2,
+        "defender": 1
+      }
+    }
+  },
+  "nx_409943": {
+    "platform": "nx",
+    "platform_name": "Nintendo Switch",
+    "club_id": "409943",
+    "club_name": "AS KRETIN",
+    "rank": 7,
+    "players": {
+      "members": [
+        {
+          "name": "LeMarcooo",
+          "proPos": "25",
+          "gamesPlayed": "54",
+          "goals": "129",
+          "assists": "51",
+          "manOfTheMatch": "39",
+          "ratingAve": "8.9",
+          "prevGoals": "4",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "LeRoRo98",
+          "proPos": "14",
+          "gamesPlayed": "54",
+          "goals": "117",
+          "assists": "161",
+          "manOfTheMatch": "0",
+          "ratingAve": "7.0",
+          "prevGoals": "3",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 1,
+        "goalkeeper": 0,
+        "forward": 1,
+        "defender": 0
+      }
+    }
+  },
+  "nx_1432156": {
+    "platform": "nx",
+    "platform_name": "Nintendo Switch",
+    "club_id": "1432156",
+    "club_name": "CITÃ 93",
+    "rank": 8,
+    "players": {
+      "members": [
+        {
+          "name": "Mlv_n1",
+          "proPos": "14",
+          "gamesPlayed": "128",
+          "goals": "153",
+          "assists": "205",
+          "manOfTheMatch": "43",
+          "ratingAve": "8.7",
+          "prevGoals": "1",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "inesnina72",
+          "proPos": "0",
+          "gamesPlayed": "820",
+          "goals": "633",
+          "assists": "263",
+          "manOfTheMatch": "120",
+          "ratingAve": "6.6",
+          "prevGoals": "0",
+          "favoritePosition": "goalkeeper"
+        },
+        {
+          "name": "MHRZ_21",
+          "proPos": "14",
+          "gamesPlayed": "687",
+          "goals": "1001",
+          "assists": "805",
+          "manOfTheMatch": "147",
+          "ratingAve": "7.8",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Vardrix093",
+          "proPos": "14",
+          "gamesPlayed": "5",
+          "goals": "1",
+          "assists": "0",
+          "manOfTheMatch": "1",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "Ayltonxo",
+          "proPos": "25",
+          "gamesPlayed": "29",
+          "goals": "101",
+          "assists": "21",
+          "manOfTheMatch": "20",
+          "ratingAve": "9.7",
+          "prevGoals": "5",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "PSGMllrClub2k25",
+          "proPos": "25",
+          "gamesPlayed": "506",
+          "goals": "947",
+          "assists": "618",
+          "manOfTheMatch": "123",
+          "ratingAve": "7.8",
+          "prevGoals": "13",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "josei291",
+          "proPos": "25",
+          "gamesPlayed": "18",
+          "goals": "29",
+          "assists": "11",
+          "manOfTheMatch": "2",
+          "ratingAve": "8.2",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Mtzzmelo",
+          "proPos": "25",
+          "gamesPlayed": "72",
+          "goals": "84",
+          "assists": "30",
+          "manOfTheMatch": "15",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 3,
+        "goalkeeper": 1,
+        "forward": 4,
+        "defender": 0
+      }
+    }
+  }
+}
