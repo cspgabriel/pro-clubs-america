@@ -7,6 +7,7 @@ import { ArrowRight, BarChart3, BriefcaseBusiness, Search, Shield, Swords, Users
 import type { PlayerRanking } from "@/types/domain";
 import { PlatformHeader } from "./platform-header";
 import { MobileNav } from "./mobile-nav";
+import { CountryGateway } from "./country-gateway";
 
 interface HomeClub { id: string; name: string; crestUrl: string; skillRating?: number; record?: string; }
 type HomePlayer = PlayerRanking & { clubName?: string };
@@ -17,9 +18,9 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
   const term = query.trim().toLocaleLowerCase("pt-BR");
   const clubs = useMemo(() => availableClubs.filter((club) => club.name.toLocaleLowerCase("pt-BR").includes(term)), [availableClubs, term]);
   const matchingPlayers = useMemo(() => players.filter((player) => player.name.toLocaleLowerCase("pt-BR").includes(term)), [players, term]);
-  const visiblePlayers = (term ? matchingPlayers : players.slice().sort((a, b) => (b.goals ?? 0) - (a.goals ?? 0))).slice(0, 9);
+  const visiblePlayers = (term ? matchingPlayers : players.filter((player) => !("statsReliable" in player) || player.statsReliable).slice().sort((a, b) => (b.goals ?? 0) - (a.goals ?? 0))).slice(0, 9);
   const slides = [
-    { kicker: "MARCAR AMISTOSO", title: "Encontre um adversário", text: "Publique um horário ou desafie diretamente outro clube da comunidade.", href: "/partidas#buscar-amistoso", action: "Buscar amistoso" },
+    { kicker: "MARCAR AMISTOSO", title: "Encontre um adversário", text: "Publique um horário ou desafie diretamente outro clube da comunidade.", href: "/partidas/amistosos#buscar-amistoso", action: "Buscar amistoso" },
     { kicker: "RANKING DE JOGADORES", title: "Veja os artilheiros", text: "Compare gols, assistências, desarmes e aproveitamento por atleta.", href: "/rankings/jogadores/artilharia", action: "Ver artilharia" },
     { kicker: "RANKING DE CLUBES", title: "Os melhores times", text: "Classificação de clubes e times cadastrados com dados públicos da EA.", href: "/rankings/clubes/artilharia", action: "Ver clubes" },
     { kicker: "MERCADO", title: "Reforce seu elenco", text: "Divulgue vagas abertas ou mostre que você está procurando um clube.", href: "/mercado", action: "Abrir mercado" },
@@ -42,7 +43,7 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
         <div className="featured-dots" aria-label="Selecionar destaque">{slides.map((slide, index) => <button type="button" aria-label={`Mostrar ${slide.title}`} aria-current={index === featured} className={index === featured ? "active" : ""} onClick={() => setFeatured(index)} key={slide.title} />)}</div>
       </section>
       <section className="market-hero" id="buscar">
-        <div className="market-wordmark"><span>CB</span><strong>CLUBS BRASIL</strong></div>
+        <div className="market-wordmark"><span>PA</span><strong>PRO CLUBS AMERICA</strong></div>
         <h1>Seu clube. Seu time. Sua comunidade.</h1>
         <p className="market-intro">Encontre clubes, jogadores, partidas e oportunidades para crescer no Pro Clubs.</p>
         <label className="global-search">
@@ -53,11 +54,12 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
         <div className="quick-links">
           <Link href="/clubes"><Shield /> Clubes</Link>
           <Link href="/jogadores"><Users /> Jogadores</Link>
-          <Link href="/partidas#buscar-amistoso"><Swords /> Buscar amistoso</Link>
+          <Link href="/partidas/amistosos#buscar-amistoso"><Swords /> Buscar amistoso</Link>
           <Link href="/rankings/jogadores/artilharia"><BarChart3 /> Rankings</Link>
           <Link href="/mercado"><BriefcaseBusiness /> Mercado</Link>
         </div>
       </section>
+      <CountryGateway />
 
       <section className="market-section" id="clubes">
         <div className="market-title"><div><small>{availableClubs.length} CLUBES INDEXADOS</small><h2>Clubes encontrados</h2></div><span>common-gen5</span></div>

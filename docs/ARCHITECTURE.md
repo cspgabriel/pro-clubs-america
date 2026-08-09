@@ -21,7 +21,7 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 - React 19 e TypeScript;
 - Recharts para visualizações;
 - Zod disponível para evolução da validação;
-- Chakra Petch, Russo One e sistema visual mobile-first;
+- Outfit para títulos, Inter para leitura e sistema visual mobile-first;
 - manifesto e service worker para instalação PWA.
 - tema claro/escuro, sidebar desktop e menu inferior mobile.
 
@@ -35,6 +35,11 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 - `src/app/jogador/[id]/page.tsx`: perfil individual;
 - `src/app/amistosos/page.tsx`: mural comunitário;
 - `src/app/partidas/page.tsx`: histórico e amistosos;
+- `src/app/partidas/historico/page.tsx`: resultados públicos;
+- `src/app/partidas/amistosos/page.tsx`: criação e aceite de desafios;
+- `src/app/partida/[id]/page.tsx`: página individual e lobby;
+- `src/app/[locale]/comunidade/[country]/page.tsx`: comunidades regionais;
+- `src/app/entrar`, `criar-conta`, `recuperar-senha`: autenticação;
 - `src/app/mercado/page.tsx`: mercado de transferências;
 - `src/app/cadastro/page.tsx`: entrada de times por URL EA;
 - `src/app/rankings/[metric]/page.tsx`: quatro rankings esportivos;
@@ -50,19 +55,27 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 2. `scripts/import-normalized.mjs` verifica a estrutura mínima, o clube e IDs de
    partidas duplicados.
 3. O snapshot é salvo em `src/data/club.json`.
-4. `src/lib/public-data.ts` adapta os rankings e elencos globais versionados.
+4. `src/lib/public-data.ts` adapta 552 clubes e 8.111 jogadores dos snapshots
+   globais enriquecidos versionados.
 5. `src/lib/stats.ts` combina carreira e partidas sem duplicar totais oficiais.
 6. Server Components carregam os snapshots e entregam os dados aos componentes.
 7. Componentes client-side renderizam busca, filtros, formulários e gráficos.
+8. `src/lib/friendlies-data.ts` prepara snapshots compactos de times, elencos e
+   estatísticas para convites e desafios abertos.
 
 ## Limites atuais
 
 - o importador está temporariamente restrito ao clube `171630`;
-- cadastro, mercado e mural usam `localStorage`, sem conta ou sincronização remota;
+- cadastro, mercado e mural usam `localStorage`; a identificação do mural é
+  funcional no navegador, mas ainda não é autenticação segura ou sincronizada;
 - não há agendador/crawler de produção no repositório;
 - o endpoint de saúde verifica a aplicação, não a atualização da fonte;
 - o service worker usa estratégia simples network-first e exige evolução antes
   de um grande volume de rotas dinâmicas.
+- Firebase Auth funciona de verdade somente quando as variáveis públicas do
+  aplicativo Web estão configuradas; contas de serviço nunca entram no cliente.
+- o deploy Pages usa `output: export`, perfis pré-renderizados e fallback estático
+  para URLs criadas pela comunidade.
 
 ## Direção para múltiplos clubes
 

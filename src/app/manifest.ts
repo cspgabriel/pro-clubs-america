@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
 
+export const dynamic = "force-static";
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Clubs Brasil",
-    short_name: "Clubs Brasil",
-    description: "Clubes, jogadores, estatísticas e amistosos de Pro Clubs.",
+    name: "Pro Clubs America",
+    short_name: "Clubs America",
+    description: "Comunidade sul-americana de clubes, jogadores, estatísticas e amistosos de Pro Clubs.",
     start_url: "/",
     display: "standalone",
     background_color: "#000000",

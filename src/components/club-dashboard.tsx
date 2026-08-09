@@ -84,7 +84,7 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
             <span><Users size={15} /> Crossplay — geração atual</span>
             {data.club.overview && <span><Trophy size={15} /> Skill rating {data.club.overview.skillRating}</span>}
           </div>
-          <Link className="challenge-team-button" href={`/partidas?desafiar=${data.club.id}&nome=${encodeURIComponent(data.club.name)}#buscar-amistoso`}><Swords size={16} /> Desafiar clube</Link>
+          <Link className="challenge-team-button" href={`/partidas/amistosos?desafiar=${data.club.id}&nome=${encodeURIComponent(data.club.name)}#buscar-amistoso`}><Swords size={16} /> Desafiar clube</Link>
         </div>
         <div className={`sync-status ${data.source.state}`}>
           <span className="status-dot" />

@@ -1,7 +1,8 @@
-# Clubs Brasil
+# Pro Clubs America
 
-PWA comunitária e independente para descoberta de clubes, perfis de jogadores,
-estatísticas, rankings e organização de amistosos no EA SPORTS FC 26 Clubs.
+PWA comunitária e independente, com comunidades por país da América do Sul,
+para descoberta de clubes, perfis de jogadores, estatísticas, rankings,
+transferências e organização de amistosos no EA SPORTS FC 26 Clubs.
 
 O Villathinaikos (`clubId=171630`, `platform=common-gen5`) é a primeira base
 completa usada para validar o produto. A arquitetura foi desenhada para indexar
@@ -69,9 +70,16 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 | `/club/{clubId}` | Perfil, elenco, gráficos e histórico do clube |
 | `/jogador/{playerId}` | Perfil individual e desempenho do jogador |
 | `/partidas` | Últimos resultados e mural para marcar amistosos |
+| `/partidas/historico` | Histórico separado de partidas públicas |
+| `/partidas/amistosos` | Convites direcionados e desafios abertos |
+| `/partida/{id}` | Página individual, elencos, validação e lobby da partida |
 | `/amistosos` | Rota compatível do mural de partidas |
 | `/mercado` | Vagas em clubes e jogadores procurando time |
 | `/cadastro` | Cadastro de usuário/time com URL pública obrigatória da EA |
+| `/entrar`, `/criar-conta`, `/recuperar-senha` | Fluxos de autenticação Firebase ou demonstração local |
+| `/onboarding`, `/conta` | País, idioma, função e vínculo comunitário |
+| `/{idioma}/comunidade/{pais}` | Home regional em português, espanhol ou inglês |
+| `/planos` | Mockups Free, Pro e VIP; pagamentos ainda desativados |
 | `/rankings/jogadores/[metric]` | Rankings exclusivos de jogadores por gols, assistências, desarmes ou aproveitamento |
 | `/rankings/clubes/[metric]` | Rankings exclusivos de clubes por métrica |
 | `/rankings/times` | Times cadastrados e validados na comunidade |
@@ -81,8 +89,8 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 
 ## Base atual
 
-- 299 clubes no ranking público da EA, sendo 100 em `common-gen5`;
-- 166 jogadores de 15 elencos de destaque em `common-gen5`;
+- 552 clubes detalhados nas plataformas coletadas;
+- 8.111 jogadores vinculados aos respectivos clubes;
 - resumo oficial detalhado do Villathinaikos;
 - nove integrantes com estatísticas de carreira no clube;
 - cinco partidas recentes de Liga com dados individuais disponíveis;
@@ -91,6 +99,7 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 - escudos públicos carregados do CDN de conteúdo da EA.
 - perfis navegáveis dos clubes e jogadores presentes na extração global;
 - temas claro/escuro, sidebar desktop e menu inferior mobile.
+- busca e rankings alimentados pela extração enriquecida versionada em `data/`.
 
 Os placares de amistosos não podem ser digitados manualmente. Um resultado só
 deverá ganhar estado `verified` depois que a partida correspondente aparecer na
@@ -124,8 +133,17 @@ esportivas publicamente exibidas pela fonte.
 ## Snapshot global importado
 
 O commit `3f974173` adicionou os arquivos `pro_clubs_rankings_all_time.*`,
-`pro_clubs_top_teams_players.*` e `pro_clubs_platforms_leagues.json`. O site lê
-os JSONs em `src/lib/public-data.ts`. O helper Python incluído nesse commit usa
+`pro_clubs_top_teams_players.*` e `pro_clubs_platforms_leagues.json`. A atualização
+de 09/08/2026 acrescentou `pro_clubs_all_teams_detailed.json` e os arquivos
+enriquecidos de 552 times e 8.111 jogadores. O site lê esses JSONs em
+`src/lib/public-data.ts`. O helper Python incluído nesse commit usa
 endpoints HTTP internos da EA e **não integra o fluxo de produção definido por
 este projeto**, que permanece baseado em crawl das páginas públicas conforme a
 decisão do produto.
+
+## Publicação
+
+O build usa exportação estática do Next.js para Cloudflare Pages. Consulte
+[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). A autenticação real exige somente as
+credenciais públicas do aplicativo Web Firebase em `.env.local`; nunca use nem
+versione uma chave privada de conta de serviço no frontend.

@@ -4,10 +4,15 @@ import clubData from "@/data/club.json";
 import { buildDashboard } from "@/lib/stats";
 import { PlayerProfile, type PlayerRecentMatch } from "@/components/player-profile";
 import type { ClubDataset } from "@/types/domain";
-import { findPublicClub, findPublicPlayer } from "@/lib/public-data";
+import { findPublicClub, findPublicPlayer, publicPlayers } from "@/lib/public-data";
 
 const dataset = clubData as ClubDataset;
 const dashboard = buildDashboard(dataset);
+
+export function generateStaticParams() {
+  const ids = new Set([...dashboard.rankings.map((player) => player.id), ...publicPlayers.slice(0, 500).map((player) => player.id)]);
+  return [...ids].map((id) => ({ id }));
+}
 
 function findPlayer(id: string) {
   const decoded = decodeURIComponent(id);

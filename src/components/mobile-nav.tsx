@@ -7,7 +7,7 @@ import { useState } from "react";
 const actions = [
   { href: "/mercado#nova-vaga", icon: BriefcaseBusiness, title: "Divulgar nova vaga", text: "Clube procurando jogador" },
   { href: "/mercado?tipo=jogador#nova-vaga", icon: UserPlus, title: "Jogador procurando clube", text: "Publicar disponibilidade" },
-  { href: "/partidas#buscar-amistoso", icon: Swords, title: "Criar novo amistoso", text: "Buscar ou desafiar adversário" },
+  { href: "/partidas/amistosos#buscar-amistoso", icon: Swords, title: "Criar novo amistoso", text: "Buscar ou desafiar adversário" },
   { href: "/cadastro", icon: ShieldPlus, title: "Cadastrar meu time", text: "Vincular URL pública da EA" },
 ];
 

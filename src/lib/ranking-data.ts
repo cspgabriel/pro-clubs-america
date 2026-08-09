@@ -15,7 +15,7 @@ const dashboard = buildDashboard(dataset);
 export function getPlayerRankingRows(): RankedPlayer[] {
   return [
     ...dashboard.rankings.map((player) => ({ ...player, clubName: dataset.club.name })),
-    ...publicPlayers,
+    ...publicPlayers.filter((player) => player.statsReliable),
   ];
 }
 

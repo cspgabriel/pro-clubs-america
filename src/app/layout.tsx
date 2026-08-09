@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
-import "@fontsource/chakra-petch/400.css";
-import "@fontsource/chakra-petch/500.css";
-import "@fontsource/chakra-petch/600.css";
-import "@fontsource/chakra-petch/700.css";
-import "@fontsource/russo-one/400.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
+import "@fontsource/outfit/500.css";
+import "@fontsource/outfit/600.css";
+import "@fontsource/outfit/700.css";
 import { PwaRegister } from "@/components/pwa-register";
 import { DesktopSidebar } from "@/components/desktop-sidebar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Clubs Brasil | EA SPORTS FC Clubs",
-  description: "Estatísticas independentes de Pro Clubs: partidas, jogadores, gols e rankings.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://proclubsamerica.com"),
+  title: "Pro Clubs America | EA SPORTS FC Clubs",
+  description: "Comunidade sul-americana de Pro Clubs: clubes, jogadores, amistosos e rankings.",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, title: "Clubs Brasil", statusBarStyle: "black-translucent" },
+  appleWebApp: { capable: true, title: "Pro Clubs America", statusBarStyle: "black-translucent" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

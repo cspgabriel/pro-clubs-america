@@ -6,8 +6,12 @@ import { ClubDashboard } from "@/components/club-dashboard";
 import { PlatformHeader } from "@/components/platform-header";
 import { MobileNav } from "@/components/mobile-nav";
 import type { ClubDataset } from "@/types/domain";
-import { findPublicClub, publicPlayers } from "@/lib/public-data";
+import { findPublicClub, publicClubs, publicPlayers } from "@/lib/public-data";
 import { PublicClubProfile } from "@/components/public-club-profile";
+
+export function generateStaticParams() {
+  return [{ id: "171630" }, ...publicClubs.map((club) => ({ id: club.id }))];
+}
 
 export default async function ClubPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
