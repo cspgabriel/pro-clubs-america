@@ -10,6 +10,7 @@ flowchart LR
     S --> M["Métricas derivadas"]
     M --> P["PWA Next.js"]
     P --> U["Clubes e jogadores"]
+    P <--> F["Firebase Auth + Firestore"]
 ```
 
 O repositório atualmente contém a camada de normalização/importação, snapshot,
@@ -24,6 +25,8 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 - Outfit para títulos, Inter para leitura e sistema visual mobile-first;
 - manifesto e service worker para instalação PWA.
 - tema claro/escuro, sidebar desktop e menu inferior mobile.
+- Firebase Auth para Google/e-mail e Firestore para cadastros, amistosos,
+  mercado, perfis e lobby em tempo real.
 
 ## Rotas
 
@@ -62,18 +65,18 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 7. Componentes client-side renderizam busca, filtros, formulários e gráficos.
 8. `src/lib/friendlies-data.ts` prepara snapshots compactos de times, elencos e
    estatísticas para convites e desafios abertos.
+9. `src/lib/community-service.ts` aplica identidade Firebase e persistência em
+   tempo real; `firestore.rules` valida vínculo e função em cada mutação.
 
 ## Limites atuais
 
 - o importador está temporariamente restrito ao clube `171630`;
-- cadastro, mercado e mural usam `localStorage`; a identificação do mural é
-  funcional no navegador, mas ainda não é autenticação segura ou sincronizada;
 - não há agendador/crawler de produção no repositório;
 - o endpoint de saúde verifica a aplicação, não a atualização da fonte;
 - o service worker usa estratégia simples network-first e exige evolução antes
   de um grande volume de rotas dinâmicas.
-- Firebase Auth funciona de verdade somente quando as variáveis públicas do
-  aplicativo Web estão configuradas; contas de serviço nunca entram no cliente.
+- contas de serviço nunca entram no cliente; o frontend usa apenas a
+  configuração pública do aplicativo Web Firebase.
 - o deploy Pages usa `output: export`, perfis pré-renderizados e fallback estático
   para URLs criadas pela comunidade.
 

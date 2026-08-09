@@ -29,5 +29,11 @@ no console do Firebase e inclua `proclubsamerica.com` nos domínios autorizados.
 Não use `private_key`, arquivo JSON de service account ou credenciais do Admin
 SDK no navegador, no repositório ou nas variáveis `NEXT_PUBLIC_*`.
 
-Sem a configuração Web, o produto entra deliberadamente no modo de demonstração
-local e mostra essa condição na interface.
+Sem a configuração Web, login, cadastro, mercado e amistosos ficam indisponíveis;
+o produto não cria identidades ou dados comunitários de demonstração.
+
+As regras devem passar antes da publicação:
+
+```powershell
+npm run test:rules
+```

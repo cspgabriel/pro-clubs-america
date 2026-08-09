@@ -82,14 +82,14 @@ O mural pode avançar de `searching` para `scheduled` e `waiting_ea`. O estado
 `friendlyMatch` coletada da EA, usando clubes, janela de data/hora e placar
 publicado. Não existe entrada manual de resultado verificado.
 
-## Cadastros comunitários locais
+## Coleções comunitárias no Firestore
 
-Enquanto não há backend, três coleções ficam isoladas em `localStorage`:
+- `users/{uid}`: perfil, país, idioma, função, plano, ELO, confiabilidade e clube;
+- `clubs/{platform-clubId}`: solicitação, dono, capitães, status e URL pública EA;
+- `friendlies/{id}`: convite/desafio, horário, participantes e estado de validação;
+- `friendlies/{id}/messages/{id}`: lobby privado dos dois clubes;
+- `marketPosts/{id}`: vagas e jogadores disponíveis.
 
-- `clubs-brasil-team-registrations`: solicitações de clube por URL EA;
-- `clubs-brasil-friendly-requests`: disponibilidade para amistosos;
-- `clubs-brasil-transfer-market`: vagas em clubes e jogadores livres.
-
-Essas coleções são protótipos do navegador e não constituem cadastro público
-sincronizado. A migração para produção exige autenticação, validação no servidor,
-moderação, banco e trilha de auditoria.
+As regras impedem autoelevação de cargo, troca arbitrária de clube e aceite por
+contas que não representam o adversário elegível. O teste local é executado por
+`npm run test:rules`.

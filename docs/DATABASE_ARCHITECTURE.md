@@ -5,7 +5,14 @@
 
 ---
 
-## 🏆 1. Escolha Principal: SUPABASE (PostgreSQL Serverless)
+## Estado de implementação
+
+O schema Supabase versionado em `supabase/migrations/` é uma alternativa para
+analytics e espelhamento relacional, mas não está conectado ao frontend. O
+backend comunitário atualmente ativo é Firebase Auth + Cloud Firestore, em
+conformidade com a autenticação solicitada e com atualização em tempo real.
+
+## 🏆 1. Alternativa relacional: SUPABASE (PostgreSQL Serverless)
 
 ### Por que o Supabase é a melhor opção gratuita?
 - **Plano 100% Gratuito (Free Tier Lifetime):**

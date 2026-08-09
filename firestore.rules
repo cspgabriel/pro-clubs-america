@@ -2,21 +2,45 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
-    function user() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
-    function isClubLeader(clubId) { return signedIn() && user().clubId == clubId && (user().role == 'owner' || user().role == 'captain'); }
+    function userPath() { return /databases/$(database)/documents/users/$(request.auth.uid); }
+    function user() { return get(userPath()).data; }
+    function clubPath(clubKey) { return /databases/$(database)/documents/clubs/$(clubKey); }
+    function isClubLeader(clubId) {
+      return signedIn()
+        && exists(userPath())
+        && user().clubId == clubId
+        && user().clubKey is string
+        && exists(clubPath(user().clubKey))
+        && (
+          get(clubPath(user().clubKey)).data.ownerUid == request.auth.uid
+          || request.auth.uid in get(clubPath(user().clubKey)).data.captainUids
+        );
+    }
     function matchData(matchId) { return get(/databases/$(database)/documents/friendlies/$(matchId)).data; }
 
     match /users/{uid} {
-      allow read: if signedIn();
-      allow create: if signedIn() && request.auth.uid == uid && request.resource.data.uid == uid;
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.uid == uid
+        && request.resource.data.role == 'visitor'
+        && request.resource.data.plan == 'free'
+        && request.resource.data.elo == 1000
+        && request.resource.data.reliability == 100
+        && !('clubId' in request.resource.data)
+        && !('clubKey' in request.resource.data);
       allow update: if signedIn() && request.auth.uid == uid
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.plan == resource.data.plan
         && request.resource.data.elo == resource.data.elo
         && request.resource.data.reliability == resource.data.reliability
         && (
-          request.resource.data.role == resource.data.role
-          || (request.resource.data.role == 'owner'
+          (request.resource.data.role == resource.data.role
+            && request.resource.data.get('clubId', null) == resource.data.get('clubId', null)
+            && request.resource.data.get('clubKey', null) == resource.data.get('clubKey', null))
+          || (resource.data.role == 'visitor'
+            && request.resource.data.role == 'owner'
+            && request.resource.data.clubId is string
+            && request.resource.data.clubKey is string
             && existsAfter(/databases/$(database)/documents/clubs/$(request.resource.data.clubKey))
             && getAfter(/databases/$(database)/documents/clubs/$(request.resource.data.clubKey)).data.ownerUid == uid)
         );
@@ -52,7 +76,8 @@ service cloud.firestore {
       allow delete: if signedIn() && resource.data.creatorUid == request.auth.uid && resource.data.status == 'searching';
 
       match /messages/{messageId} {
-        allow read: if true;
+        allow read: if signedIn() && exists(userPath())
+          && (user().clubId == matchData(matchId).hostClubId || user().clubId == matchData(matchId).opponentClubId);
         allow create: if signedIn() && request.resource.data.authorUid == request.auth.uid
           && (user().clubId == matchData(matchId).hostClubId || user().clubId == matchData(matchId).opponentClubId);
         allow update, delete: if false;

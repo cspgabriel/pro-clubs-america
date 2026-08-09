@@ -15,6 +15,7 @@ import {
   updateDoc,
   writeBatch,
   type DocumentData,
+  type FirestoreError,
   type QueryDocumentSnapshot,
   type Unsubscribe,
 } from "firebase/firestore";
@@ -98,16 +99,17 @@ export async function saveCommunityPreferences(input: { country: string; locale:
 export async function registerCommunityClub(input: Omit<TeamRegistration, "id" | "submittedAt" | "status">) {
   const user = requireSession(); const db = requireDb();
   const clubKey = `${input.platform}-${input.clubId}`;
+  const { email, ...publicClubInput } = input;
   const batch = writeBatch(db);
-  batch.set(doc(db, "clubs", clubKey), { ...input, routeId: input.platform === "common-gen5" ? input.clubId : clubKey, ownerUid: user.uid, captainUids: [], playerUids: [], status: "pending_review", submittedAt: serverTimestamp(), updatedAt: serverTimestamp(), elo: 1000, reliability: 100, plan: "free" }, { merge: true });
-  batch.set(doc(db, "users", user.uid), { uid: user.uid, displayName: user.displayName || input.responsibleName, email: user.email || input.email, role: "owner", clubId: input.platform === "common-gen5" ? input.clubId : clubKey, clubKey, clubName: input.clubName, plan: "free", reliability: 100, elo: 1000, updatedAt: serverTimestamp() }, { merge: true });
+  batch.set(doc(db, "clubs", clubKey), { ...publicClubInput, routeId: input.platform === "common-gen5" ? input.clubId : clubKey, ownerUid: user.uid, captainUids: [], playerUids: [], status: "pending_review", submittedAt: serverTimestamp(), updatedAt: serverTimestamp(), elo: 1000, reliability: 100, plan: "free" }, { merge: true });
+  batch.set(doc(db, "users", user.uid), { uid: user.uid, displayName: user.displayName || input.responsibleName, email: user.email || email, role: "owner", clubId: input.platform === "common-gen5" ? input.clubId : clubKey, clubKey, clubName: input.clubName, plan: "free", reliability: 100, elo: 1000, updatedAt: serverTimestamp() }, { merge: true });
   await batch.commit();
   return { ...input, id: clubKey, submittedAt: new Date().toISOString(), status: "pending_review" } as TeamRegistration;
 }
 
-export function watchCommunityClubs(callback: (items: TeamRegistration[]) => void): Unsubscribe {
+export function watchCommunityClubs(callback: (items: TeamRegistration[]) => void, onError?: (error: FirestoreError) => void): Unsubscribe {
   const db = getFirebaseDb(); if (!db) { callback([]); return () => undefined; }
-  return onSnapshot(query(collection(db, "clubs"), orderBy("submittedAt", "desc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => ({ id: item.id, responsibleName: item.data().responsibleName, email: item.data().email, clubName: item.data().clubName, eaUrl: item.data().eaUrl, clubId: item.data().clubId, platform: item.data().platform, submittedAt: asIso(item.data().submittedAt), status: item.data().status }))));
+  return onSnapshot(query(collection(db, "clubs"), orderBy("submittedAt", "desc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => ({ id: item.id, responsibleName: item.data().responsibleName, email: "", clubName: item.data().clubName, eaUrl: item.data().eaUrl, clubId: item.data().clubId, platform: item.data().platform, submittedAt: asIso(item.data().submittedAt), status: item.data().status }))), onError);
 }
 
 export async function createFriendly(input: { hostClubId: string; hostClubName: string; mode: ChallengeMode; date: string; time: string; region: string; invitedClubId?: string; invitedClubName?: string }) {
@@ -131,9 +133,14 @@ export async function markFriendlyPlayed(match: FriendlyRequest) {
   await updateDoc(doc(db, "friendlies", match.id), { status: "waiting_ea", playedByUid: user.uid, playedAt: serverTimestamp(), updatedAt: serverTimestamp() });
 }
 
-export function watchFriendlies(callback: (items: FriendlyRequest[]) => void): Unsubscribe {
+export function watchFriendlies(callback: (items: FriendlyRequest[]) => void, onError?: (error: FirestoreError) => void): Unsubscribe {
   const db = getFirebaseDb(); if (!db) { callback([]); return () => undefined; }
-  return onSnapshot(query(collection(db, "friendlies"), orderBy("createdAt", "desc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => record(item) as FriendlyRequest)));
+  return onSnapshot(query(collection(db, "friendlies"), orderBy("createdAt", "desc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => record(item) as FriendlyRequest)), onError);
+}
+
+export function watchFriendly(matchId: string, callback: (item: FriendlyRequest | null) => void, onError?: (error: FirestoreError) => void): Unsubscribe {
+  const db = getFirebaseDb(); if (!db) { callback(null); return () => undefined; }
+  return onSnapshot(doc(db, "friendlies", matchId), (snapshot) => callback(snapshot.exists() ? ({ id: snapshot.id, ...snapshot.data(), createdAt: asIso(snapshot.data().createdAt) } as FriendlyRequest) : null), onError);
 }
 
 export async function publishTransferPost(input: Omit<TransferPostRecord, "id" | "authorUid" | "plan" | "createdAt">) {
@@ -141,9 +148,9 @@ export async function publishTransferPost(input: Omit<TransferPostRecord, "id" |
   await addDoc(collection(db, "marketPosts"), { ...input, authorUid: user.uid, plan: profile?.plan || "free", createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
 }
 
-export function watchTransferPosts(callback: (items: TransferPostRecord[]) => void): Unsubscribe {
+export function watchTransferPosts(callback: (items: TransferPostRecord[]) => void, onError?: (error: FirestoreError) => void): Unsubscribe {
   const db = getFirebaseDb(); if (!db) { callback([]); return () => undefined; }
-  return onSnapshot(query(collection(db, "marketPosts"), orderBy("createdAt", "desc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => record(item) as TransferPostRecord)));
+  return onSnapshot(query(collection(db, "marketPosts"), orderBy("createdAt", "desc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => record(item) as TransferPostRecord)), onError);
 }
 
 export async function sendLobbyMessage(matchId: string, text: string) {
@@ -151,9 +158,9 @@ export async function sendLobbyMessage(matchId: string, text: string) {
   await addDoc(collection(db, "friendlies", matchId, "messages"), { authorUid: user.uid, author: profile?.displayName || user.displayName || "Jogador", clubId: profile?.clubId || null, text: text.trim().slice(0, 500), createdAt: serverTimestamp() });
 }
 
-export function watchLobbyMessages(matchId: string, callback: (items: LobbyMessageRecord[]) => void): Unsubscribe {
+export function watchLobbyMessages(matchId: string, callback: (items: LobbyMessageRecord[]) => void, onError?: (error: FirestoreError) => void): Unsubscribe {
   const db = getFirebaseDb(); if (!db) { callback([]); return () => undefined; }
-  return onSnapshot(query(collection(db, "friendlies", matchId, "messages"), orderBy("createdAt", "asc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => record(item) as LobbyMessageRecord)));
+  return onSnapshot(query(collection(db, "friendlies", matchId, "messages"), orderBy("createdAt", "asc"), limit(100)), (snapshot) => callback(snapshot.docs.map((item) => record(item) as LobbyMessageRecord)), onError);
 }
 
 export async function listCommunityClubKeys() {

@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "check": "npm run lint && npm run build",
+    "test:rules": "firebase emulators:exec --only firestore --project primeval-jet-326417 --log-verbosity QUIET \"node scripts/firestore-rules.test.mjs\"",
     "import:data": "node scripts/import-normalized.mjs"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

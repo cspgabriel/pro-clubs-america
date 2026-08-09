@@ -1,11 +1,8 @@
-import clubData from "@/data/club.json";
 import { CommunityRanking } from "@/components/community-ranking";
-import { buildDashboard } from "@/lib/stats";
-import type { ClubDataset } from "@/types/domain";
+import { publicClubs } from "@/lib/public-data";
 
-export const metadata = { title: "Ranking de times | Clubs Brasil" };
+export const metadata = { title: "Ranking de times | Pro Clubs America" };
 export default function TeamRankingPage() {
-  const dataset = clubData as ClubDataset;
-  const dashboard = buildDashboard(dataset);
-  return <CommunityRanking officialClubs={[{ id: dataset.club.id, name: dataset.club.name, skillRating: dataset.club.overview?.skillRating ?? 0, matches: dashboard.summary.matches, wins: dashboard.summary.wins, winRate: dashboard.summary.winRate, goals: dashboard.summary.goalsFor }]} />;
+  const clubs = [...publicClubs].sort((a, b) => b.skillRating - a.skillRating || b.winRate - a.winRate).map((club) => ({ id: club.id, name: club.name, skillRating: club.skillRating, matches: club.matches, wins: club.wins, winRate: club.winRate, goals: club.goals }));
+  return <CommunityRanking officialClubs={clubs} />;
 }

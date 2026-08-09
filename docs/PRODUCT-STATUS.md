@@ -18,16 +18,16 @@ gráficos e organização de amistosos verificados pela fonte pública.
 | Jogador | funcional | perfis globais e recorte detalhado quando disponível |
 | Rankings | funcional | gols, assistências, tackles, win rate e comunidade |
 | Partidas | funcional | histórico oficial e filtros por modo |
-| Amistosos | protótipo local | conta/time ativo, convite direcionado, desafio aberto, aceite, horário, elencos e dados persistem via `localStorage` |
-| Mercado | protótipo local | vagas em clubes e jogadores livres |
-| Cadastro | protótipo local | URL EA obrigatória e fila de até 24 horas |
+| Amistosos | backend ativo | convite direcionado, desafio aberto, aceite e estado aguardando EA persistem e sincronizam via Firestore |
+| Mercado | backend ativo | vagas e jogadores livres em tempo real; anúncios Pro/VIP têm prioridade |
+| Cadastro | backend ativo | conta autenticada, URL EA obrigatória, vínculo de dono e fila pública de até 24 horas |
 | Tema e navegação | funcional | claro/escuro, sidebar e menu inferior |
 | Importador | funcional para `171630` | estrutura mínima e duplicidade de partidas |
 | Crawler automático | não implementado | especificado em `CRAWLER-OPERATIONS.md` |
-| Banco multi-clube | não implementado | snapshot atual é um JSON versionado |
-| Autenticação | integração condicional | Firebase Web quando configurado; demonstração local identificada quando ausente |
+| Banco comunitário | funcional | Firebase Auth + Firestore com regras por dono/capitão; snapshots esportivos continuam versionados |
+| Autenticação | funcional | Google e e-mail/senha no projeto Firebase de produção |
 | Comunidades por país | funcional | 12 países, português, espanhol e inglês |
-| Página de partida e lobby | protótipo local | horário, escalações, chat e validação EA; backend ainda necessário |
+| Página de partida e lobby | backend ativo | horário, escalações e chat em tempo real privado aos clubes participantes |
 | Planos | mockup | Free, Pro e VIP sem cobrança habilitada |
 
 ## Fonte carregada
@@ -46,7 +46,7 @@ O Villathinaikos é o primeiro clube completo. A base global enriquecida contém
   de evolução de gols no final;
 - cada clube mantém Liga, Friendly e Playoff separados;
 - resultado de amistoso comunitário só é confirmado após aparecer em Friendly;
-- publicar ou aceitar desafio exige uma identidade local vinculada a um time;
+- publicar ou aceitar desafio exige conta Firebase e vínculo verificado como dono/capitão;
 - convite direcionado só pode ser aceito pelo clube convidado e desafio aberto
   pode ser aceito por qualquer outro clube indexado;
 - a plataforma atende múltiplos clubes, não é uma página exclusiva do primeiro
@@ -56,10 +56,9 @@ O Villathinaikos é o primeiro clube completo. A base global enriquecida contém
 
 1. Extrair o crawler para um worker independente.
 2. Generalizar o importador para qualquer `clubId`/plataforma.
-3. Adotar banco com snapshots, partidas idempotentes e histórico de mudanças.
+3. Persistir snapshots esportivos e histórico de mudanças no backend operacional.
 4. Criar fila de clubes e descoberta controlada de adversários.
-5. Substituir a identidade local do mural por autenticação, autorização de
-   dirigentes e persistência remota.
+5. Adicionar painel administrativo para atribuir capitães e moderar cadastros.
 6. Fazer o reconciliador de amistosos com a aba Friendly.
 7. Adicionar testes de parser com fixtures sanitizadas e testes E2E das rotas.
 8. Publicar telemetria de atualização e idade dos dados.

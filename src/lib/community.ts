@@ -1,5 +1,3 @@
-export const registrationStorageKey = "clubs-brasil-team-registrations";
-
 export interface TeamRegistration {
   id: string;
   responsibleName: string;

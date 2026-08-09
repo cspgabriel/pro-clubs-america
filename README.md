@@ -57,6 +57,7 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 | `npm run lint` | Verificação ESLint |
 | `npm run build` | Build de produção |
 | `npm run check` | Lint seguido de build |
+| `npm run test:rules` | Testes de autorização do Firestore no emulador |
 | `npm run import:data -- arquivo.json` | Valida e importa uma base normalizada |
 
 ## Rotas do produto
@@ -76,7 +77,7 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 | `/amistosos` | Rota compatível do mural de partidas |
 | `/mercado` | Vagas em clubes e jogadores procurando time |
 | `/cadastro` | Cadastro de usuário/time com URL pública obrigatória da EA |
-| `/entrar`, `/criar-conta`, `/recuperar-senha` | Fluxos de autenticação Firebase ou demonstração local |
+| `/entrar`, `/criar-conta`, `/recuperar-senha` | Fluxos reais de autenticação Firebase |
 | `/onboarding`, `/conta` | País, idioma, função e vínculo comunitário |
 | `/{idioma}/comunidade/{pais}` | Home regional em português, espanhol ou inglês |
 | `/planos` | Mockups Free, Pro e VIP; pagamentos ainda desativados |
