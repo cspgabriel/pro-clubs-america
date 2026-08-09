@@ -1,0 +1,6 @@
+import Link from "next/link";
+import { CalendarPlus, History, Radio, Swords } from "lucide-react";
+import { MobileNav } from "@/components/mobile-nav";
+import { PlatformHeader } from "@/components/platform-header";
+export const metadata = { title: "Central de partidas | Pro Clubs America" };
+export default function PartidasPage() { return <main className="app-shell"><PlatformHeader /><section className="partidas-hub-hero"><Swords /><small>CENTRAL DE PARTIDAS</small><h1>O que você quer fazer?</h1><p>Consulte resultados oficiais, marque um confronto ou acompanhe os desafios da comunidade.</p></section><section className="partidas-hub-grid"><Link href="/partidas/historico"><span><History /></span><small>DADOS DA EA</small><h2>Ver partidas</h2><p>Liga, Playoff e Friendly publicados na fonte oficial.</p></Link><Link href="/partidas/amistosos#buscar-amistoso"><span><CalendarPlus /></span><small>NOVO CONFRONTO</small><h2>Marcar amistoso</h2><p>Convide um time ou publique um desafio aberto.</p></Link><Link href="/partidas/amistosos"><span><Radio /></span><small>COMUNIDADE</small><h2>Jogos e desafios</h2><p>Acompanhe convites, aceites e horários agendados.</p></Link></section><MobileNav /></main>; }
