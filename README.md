@@ -72,11 +72,10 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 | `/amistosos` | Rota compatível do mural de partidas |
 | `/mercado` | Vagas em clubes e jogadores procurando time |
 | `/cadastro` | Cadastro de usuário/time com URL pública obrigatória da EA |
-| `/rankings/artilharia` | Ranking geral de gols |
-| `/rankings/assistencias` | Ranking geral de assistências |
-| `/rankings/desarmes` | Ranking de tackles e tackles por jogo |
-| `/rankings/aproveitamento` | Ranking de win rate |
-| `/rankings/comunidade` | Times cadastrados e validados na comunidade |
+| `/rankings/jogadores/[metric]` | Rankings exclusivos de jogadores por gols, assistências, desarmes ou aproveitamento |
+| `/rankings/clubes/[metric]` | Rankings exclusivos de clubes por métrica |
+| `/rankings/times` | Times cadastrados e validados na comunidade |
+| `/rankings/[metric]` | Compatibilidade: redireciona links antigos ao ranking de jogadores |
 | `/api/health` | Verificação simples de saúde |
 | `/manifest.webmanifest` | Manifesto instalável da PWA |
 

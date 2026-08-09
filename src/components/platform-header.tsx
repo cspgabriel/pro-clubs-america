@@ -10,7 +10,7 @@ export function PlatformHeader() {
       </Link>
       <nav>
         <Link href="/buscar"><Search size={16} /> Buscar</Link>
-        <Link href="/rankings/artilharia"><BarChart3 size={16} /> Rankings</Link>
+        <Link href="/rankings/jogadores/artilharia"><BarChart3 size={16} /> Rankings</Link>
         <Link href="/mercado"><BriefcaseBusiness size={16} /> Mercado</Link>
         <Link href="/partidas"><Swords size={16} /> Partidas</Link>
         <Link href="/cadastro"><UserPlus size={16} /> Cadastrar time</Link>

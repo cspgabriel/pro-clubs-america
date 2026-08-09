@@ -18,7 +18,7 @@ export function MobileNav() {
       <Link href="/"><Home /><span>Início</span></Link>
       <Link href="/buscar"><Search /><span>Buscar</span></Link>
       <button className="mobile-market-action" type="button" onClick={() => setOpen(true)} aria-label="Criar novo"><Plus /><span>Novo</span></button>
-      <Link href="/rankings/artilharia"><BarChart3 /><span>Rankings</span></Link>
+      <Link href="/rankings/jogadores/artilharia"><BarChart3 /><span>Rankings</span></Link>
       <Link href="/partidas"><Swords /><span>Partidas</span></Link>
     </nav>
     {open && <div className="create-sheet" role="dialog" aria-modal="true" aria-label="Criar novo">

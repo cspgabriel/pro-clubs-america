@@ -182,3 +182,28 @@ html[data-theme="light"] .transfer-hero{background:#e9eef5}html[data-theme="ligh
 .create-sheet{display:none}.mobile-nav button{border:0;background:transparent;color:#858b83}
 html[data-theme="light"] .home-player-grid>a,html[data-theme="light"] .search-hub-grid>a{background:#fff}
 @media(max-width:800px){.home-player-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.home-player-grid>a{min-height:130px;grid-template-columns:48px 1fr;padding:10px;gap:9px}.home-player-grid>a>span{width:48px;height:48px}.home-player-grid>a>span b{font-size:19px}.search-hub-grid{width:calc(100% - 28px);grid-template-columns:1fr;padding-top:16px}.search-hub-grid>a{min-height:210px}.mobile-nav a,.mobile-nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#858b83;font-size:9px}.mobile-nav button svg{width:19px}.create-sheet{display:block;position:fixed;inset:0;z-index:100}.create-sheet-backdrop{position:absolute;inset:0;border:0;background:rgba(0,0,0,.72)}.create-sheet>section{position:absolute;left:0;right:0;bottom:0;padding:18px 14px 80px;border-top:1px solid var(--color-cta);background:var(--surface)}.create-sheet>section>header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.create-sheet header small{color:var(--color-cta);font-size:8px;letter-spacing:.14em}.create-sheet h2{margin:3px 0}.create-sheet header>button{width:38px;height:38px;border:1px solid var(--soft-line);background:transparent;color:var(--color-text)}.create-sheet header svg{width:18px}.create-sheet nav{display:grid;grid-template-columns:1fr 1fr;gap:8px}.create-sheet nav a{min-height:82px;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center;padding:10px;border:1px solid var(--soft-line);background:var(--color-background)}.create-sheet nav a>svg{color:var(--color-cta)}.create-sheet nav a>span{display:grid;text-align:left}.create-sheet nav strong{font-size:10px}.create-sheet nav small{font-size:8px;color:#778599}}
+
+/* Consolidated desktop navigation and split rankings */
+@media(min-width:801px){
+  body{padding-left:224px}
+  .desktop-sidebar{width:224px;align-items:stretch;padding:16px 12px 14px;overflow-y:auto}
+  .sidebar-logo{width:auto;height:48px;margin:0 0 18px;padding:0 10px;display:flex;align-items:center;justify-content:flex-start;gap:10px;background:transparent;color:var(--color-text)}
+  .sidebar-logo b{width:38px;height:38px;display:grid;place-items:center;background:var(--color-cta);color:#04120a;font:13px "Russo One",sans-serif}
+  .sidebar-logo span{font:12px "Russo One",sans-serif;letter-spacing:.06em}
+  .desktop-sidebar nav{display:grid;gap:16px}
+  .desktop-sidebar nav section{display:grid;gap:3px}
+  .desktop-sidebar nav section>small{padding:0 10px 5px;color:#596679;font-size:8px;letter-spacing:.16em}
+  .desktop-sidebar nav a{height:37px;flex-direction:row;justify-content:flex-start;gap:10px;padding:0 10px;border-left:2px solid transparent;font-size:10px}
+  .desktop-sidebar nav a svg{width:16px;height:16px}
+  .desktop-sidebar nav a span{font-size:10px}
+  .sidebar-season{margin-top:auto;display:flex;align-items:center;gap:9px;padding:11px;border:1px solid var(--soft-line);color:var(--color-cta)}
+  .sidebar-season svg{width:17px}
+  .sidebar-season span{display:grid;font-size:9px}.sidebar-season strong{color:#68768a;font-size:7px;font-weight:500}
+  .platform-header nav{display:none}
+}
+.ranking-entity-tabs{width:min(1180px,calc(100% - 40px));margin:20px auto 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--soft-line);border-left:1px solid var(--soft-line)}
+.ranking-entity-tabs a{min-height:50px;display:flex;align-items:center;justify-content:center;gap:8px;border-right:1px solid var(--soft-line);border-bottom:1px solid var(--soft-line);color:#8795a8;font-size:10px}
+.ranking-entity-tabs a.active{background:var(--color-cta);color:#04120a;font-weight:700}.ranking-entity-tabs svg{width:16px}
+.compact-leaders .leader-card{min-height:132px;padding:13px 15px;display:grid;grid-template-columns:22px auto 1fr;grid-template-rows:auto auto;align-items:center;column-gap:9px}
+.compact-leaders .leader-card>span{font-size:32px}.compact-leaders .leader-card>svg{grid-row:1}.compact-leaders .leader-card>small{grid-row:1;margin:0}.compact-leaders .leader-card>strong{grid-row:1;font-size:27px;margin:0;text-align:right}.compact-leaders .leader-card h2{grid-column:1/-1;margin:8px 0 2px;font-size:14px}.compact-leaders .leader-card p{grid-column:1/-1}.ranking-list-full{width:100%}
+@media(max-width:800px){.ranking-entity-tabs{width:calc(100% - 28px);grid-template-columns:1fr 1fr}.ranking-entity-tabs a:last-child{grid-column:1/-1}.compact-leaders .leader-card{min-height:124px}.compact-leaders .leader-card:nth-child(3){grid-column:1/-1}}

@@ -1,5 +1,5 @@
 const CACHE = "clubs-brasil-v3";
-const SHELL = ["/", "/buscar", "/clubes", "/jogadores", "/mercado", "/partidas", "/cadastro", "/rankings/artilharia", "/rankings/comunidade", "/club/171630", "/icon.svg"];
+const SHELL = ["/", "/buscar", "/clubes", "/jogadores", "/mercado", "/partidas", "/cadastro", "/rankings/jogadores/artilharia", "/rankings/clubes/artilharia", "/rankings/times", "/club/171630", "/icon.svg"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL))));
 self.addEventListener("activate", (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))));
 self.addEventListener("fetch", (event) => {

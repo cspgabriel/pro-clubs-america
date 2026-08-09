@@ -38,7 +38,9 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 - `src/app/mercado/page.tsx`: mercado de transferências;
 - `src/app/cadastro/page.tsx`: entrada de times por URL EA;
 - `src/app/rankings/[metric]/page.tsx`: quatro rankings esportivos;
-- `src/app/rankings/comunidade/page.tsx`: clubes validados da comunidade;
+- `src/app/rankings/jogadores/[metric]/page.tsx`: rankings exclusivos de atletas;
+- `src/app/rankings/clubes/[metric]/page.tsx`: rankings exclusivos de clubes;
+- `src/app/rankings/times/page.tsx`: clubes cadastrados e validados na comunidade;
 - `src/app/api/health/route.ts`: saúde da aplicação;
 - `src/app/manifest.ts`: metadados de instalação.
 

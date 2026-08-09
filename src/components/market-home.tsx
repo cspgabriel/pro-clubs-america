@@ -18,11 +18,11 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
   const clubs = useMemo(() => availableClubs.filter((club) => club.name.toLocaleLowerCase("pt-BR").includes(term)), [availableClubs, term]);
   const matchingPlayers = useMemo(() => players.filter((player) => player.name.toLocaleLowerCase("pt-BR").includes(term)), [players, term]);
   const visiblePlayers = (term ? matchingPlayers : players.slice().sort((a, b) => (b.goals ?? 0) - (a.goals ?? 0))).slice(0, 9);
-  const leader = players[0];
   const slides = [
-    { kicker: "CLUBE EM DESTAQUE", title: "Villathinaikos", text: "2.403 skill rating · 624 vitórias", href: "/club/171630", action: "Ver clube" },
-    { kicker: "ARTILHARIA GERAL", title: leader?.name ?? "Ranking de jogadores", text: leader ? `${leader.goals ?? 0} gols em ${leader.matches} jogos` : "Compare os destaques da comunidade", href: "/rankings/artilharia", action: "Abrir ranking" },
-    { kicker: "MURAL DA COMUNIDADE", title: "Partidas e amistosos", text: "Resultados oficiais e desafios organizados pela plataforma", href: "/partidas", action: "Ver partidas" },
+    { kicker: "MARCAR AMISTOSO", title: "Encontre um adversário", text: "Publique um horário ou desafie diretamente outro clube da comunidade.", href: "/partidas#buscar-amistoso", action: "Buscar amistoso" },
+    { kicker: "RANKING DE JOGADORES", title: "Veja os artilheiros", text: "Compare gols, assistências, desarmes e aproveitamento por atleta.", href: "/rankings/jogadores/artilharia", action: "Ver artilharia" },
+    { kicker: "RANKING DE CLUBES", title: "Os melhores times", text: "Classificação de clubes e times cadastrados com dados públicos da EA.", href: "/rankings/clubes/artilharia", action: "Ver clubes" },
+    { kicker: "MERCADO", title: "Reforce seu elenco", text: "Divulgue vagas abertas ou mostre que você está procurando um clube.", href: "/mercado", action: "Abrir mercado" },
   ];
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
           <Link href="/clubes"><Shield /> Clubes</Link>
           <Link href="/jogadores"><Users /> Jogadores</Link>
           <Link href="/partidas#buscar-amistoso"><Swords /> Buscar amistoso</Link>
-          <Link href="/rankings/artilharia"><BarChart3 /> Rankings</Link>
+          <Link href="/rankings/jogadores/artilharia"><BarChart3 /> Rankings</Link>
           <Link href="/mercado"><BriefcaseBusiness /> Mercado</Link>
         </div>
       </section>

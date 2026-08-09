@@ -61,7 +61,7 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
         <nav aria-label="Navegação principal">
           <a href="#visao">Visão geral</a>
           <a href="#jogadores">Jogadores</a>
-          <Link href="/rankings/artilharia">Rankings</Link>
+          <Link href="/rankings/jogadores/artilharia">Rankings</Link>
           <Link href="/partidas">Partidas</Link>
         </nav>
         <a className="source-link" href={data.club.sourceUrl} target="_blank" rel="noreferrer">

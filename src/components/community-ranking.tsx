@@ -16,8 +16,8 @@ export function CommunityRanking({ officialClubs }: { officialClubs: OfficialCom
   });
 
   return <main className="app-shell community-ranking"><PlatformHeader />
-    <section className="rankings-hero"><div><small>CLUBES CADASTRADOS</small><h1>Ranking da comunidade</h1><p>Somente times que entraram na comunidade e tiveram dados públicos validados na EA.</p></div><Shield /></section>
-    <nav className="ranking-tabs" aria-label="Tipos de ranking"><Link href="/rankings/artilharia">Artilharia</Link><Link href="/rankings/assistencias">Assistências</Link><Link href="/rankings/desarmes">Tackles</Link><Link href="/rankings/aproveitamento">Win rate</Link><Link className="active" href="/rankings/comunidade">Comunidade</Link></nav>
+    <section className="rankings-hero"><div><small>TIMES DA COMUNIDADE</small><h1>Ranking de times</h1><p>Clubes cadastrados na plataforma com dados públicos validados na EA.</p></div><Shield /></section>
+    <nav className="ranking-entity-tabs" aria-label="Categoria do ranking"><Link href="/rankings/jogadores/artilharia">Jogadores</Link><Link href="/rankings/clubes/artilharia">Clubes</Link><Link className="active" href="/rankings/times">Ranking de times</Link></nav>
     <div className="community-content">
       <header><div><small>CLASSIFICAÇÃO ATUAL</small><h2>{officialClubs.length} clubes validados</h2></div><Link href="/cadastro"><UserPlus /> Cadastrar meu time</Link></header>
       <section className="community-table"><div className="community-head"><span>#</span><span>Clube</span><span>SR</span><span>Jogos</span><span>Vitórias</span><span>Win rate</span><span>Gols</span></div>{officialClubs.map((club, index) => <Link href={`/club/${club.id}`} className="community-row" key={club.id}><span>{String(index + 1).padStart(2, "0")}</span><strong><Shield />{club.name}<small>ID {club.id}</small></strong><b>{club.skillRating.toLocaleString("pt-BR")}</b><span>{club.matches.toLocaleString("pt-BR")}</span><span>{club.wins.toLocaleString("pt-BR")}</span><span>{club.winRate}%</span><span>{club.goals.toLocaleString("pt-BR")}</span></Link>)}</section>
