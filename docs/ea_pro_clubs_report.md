@@ -1,106 +1,80 @@
-# 🏆 Relatório de Dados Extraídos: EA SPORTS FC Pro Clubs
+# Relatório Executivo: Extração Completa e Enriquecida de Dados EA Sports FC - Pro Clubs
 
-**Fonte Original:** [https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings](https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings)
-**Data da Extração:** 2026-08-09
-
----
-
-## 🎮 1. Plataformas e Ligas Disponíveis
-
-| Código da Plataforma | Nome da Plataforma / Ecossistema | Dispositivos Suportados | Total de Times Rankeados |
-|---|---|---|---|
-| `common-gen5` | Crossplay Nova Geração | PlayStation 5, Xbox Series X|S, PC | **100 clubes** |
-| `common-gen4` | Geração Anterior | PlayStation 4, Xbox One | **100 clubes** |
-| `nx` | Nintendo Switch | Nintendo Switch | **99 clubes** |
-
-### 📌 ESTRUTURA DAS LIGAS E DIVISÕES DO PRO CLUBS
-- **Divisão Elite (Playoffs)**
-- **Divisão 1**
-- **Divisão 2**
-- **Divisão 3**
-- **Divisão 4**
-- **Divisão 5**
+**Data da Extração:** 09 de Agosto de 2026  
+**Fonte Oficial:** [EA Sports FC Pro Clubs Leaderboards](https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings)  
+**Repositório Oficial:** [cspgabriel/pro-clubs-pro-player](https://github.com/cspgabriel/pro-clubs-pro-player)  
 
 ---
 
-## 🥇 Top 10 Clubes — Crossplay Nova Geração (`common-gen5`)
+## 1. Resumo da Coleta e Métricas Globais
 
-| Pos | Nome do Clube | Skill Rating | V / E / D | Jogos | Gols Pró | Gols Sofridos | SG | Média Gols/Jogo | Divisão |
-|---|---|---|---|---|---|---|---|---|---|
-| **#1** | **Gimme 20p FC** | `3034` | 433 / 16 / 17 | 466 | 2081 | 251 | +1830 | 4.47 | Div 1 |
-| **#2** | **swqaasdc** | `3031` | 345 / 26 / 114 | 485 | 1764 | 981 | +783 | 3.64 | Div 1 |
-| **#3** | **UNDATEABLES** | `3027` | 573 / 60 / 89 | 722 | 2474 | 773 | +1701 | 3.43 | Div 1 |
-| **#4** | **PSG TIKITAKA** | `3011` | 150 / 31 / 32 | 213 | 556 | 201 | +355 | 2.61 | Div 1 |
-| **#5** | **Ju We 20p Cong** | `2992` | 305 / 8 / 18 | 331 | 1506 | 246 | +1260 | 4.55 | Div 1 |
-| **#6** | **Golazo 20p** | `2975` | 200 / 9 / 14 | 223 | 925 | 164 | +761 | 4.15 | Div 1 |
-| **#7** | **Nothing More** | `2975` | 417 / 14 / 18 | 449 | 2005 | 331 | +1674 | 4.47 | Div 1 |
-| **#8** | **20p Turtles** | `2964` | 179 / 7 / 10 | 196 | 841 | 125 | +716 | 4.29 | Div 1 |
-| **#9** | **20p Tigers** | `2961` | 265 / 4 / 10 | 279 | 1176 | 131 | +1045 | 4.22 | Div 1 |
-| **#10** | **Glaswegians FC** | `2959` | 144 / 6 / 20 | 170 | 704 | 243 | +461 | 4.14 | Div 1 |
+A extração avançada foi expandida para contemplar **100% dos times listados tanto na aba História (All-Time Leaderboard) quanto na aba Temporada Atual (Current Season Leaderboard)** em todas as 3 plataformas de Pro Clubs suportadas pela EA Sports.
 
-## 🥇 Top 10 Clubes — Geração Anterior (`common-gen4`)
-
-| Pos | Nome do Clube | Skill Rating | V / E / D | Jogos | Gols Pró | Gols Sofridos | SG | Média Gols/Jogo | Divisão |
-|---|---|---|---|---|---|---|---|---|---|
-| **#1** | **FluÃ®d FÃ¸Ã¸tball** | `2779` | 255 / 10 / 8 | 273 | 1136 | 190 | +946 | 4.16 | Div 1 |
-| **#2** | **x no mercy x** | `2775` | 183 / 9 / 10 | 202 | 857 | 130 | +727 | 4.24 | Div 1 |
-| **#3** | **Ã¸Ã®Ã¸** | `2770` | 325 / 16 / 26 | 367 | 1497 | 376 | +1121 | 4.08 | Div 1 |
-| **#4** | **Ã®Tz SÃ¸ HÃ¸t** | `2765` | 184 / 5 / 4 | 193 | 816 | 125 | +691 | 4.23 | Div 1 |
-| **#5** | **TÃ¸tal FÃ¸Ã¸tball** | `2733` | 211 / 6 / 9 | 226 | 955 | 154 | +801 | 4.23 | Div 1 |
-| **#6** | **BÃ®ggest SnÃ£kes** | `2700` | 215 / 15 / 15 | 245 | 1032 | 212 | +820 | 4.21 | Div 1 |
-| **#7** | **Ã®nfernÃ¸** | `2695` | 116 / 1 / 1 | 118 | 499 | 73 | +426 | 4.23 | Div 1 |
-| **#8** | **LÃ®quÃ®d FÃ¸Ã¸tball** | `2692` | 204 / 3 / 9 | 216 | 868 | 134 | +734 | 4.02 | Div 1 |
-| **#9** | **SCHWARZ VORAUS** | `2692` | 564 / 42 / 52 | 658 | 2573 | 746 | +1827 | 3.91 | Div 1 |
-| **#10** | **OUR FOOTBALL** | `2685` | 454 / 86 / 155 | 695 | 1964 | 1054 | +910 | 2.83 | Div 1 |
-
-## 🥇 Top 10 Clubes — Nintendo Switch (`nx`)
-
-| Pos | Nome do Clube | Skill Rating | V / E / D | Jogos | Gols Pró | Gols Sofridos | SG | Média Gols/Jogo | Divisão |
-|---|---|---|---|---|---|---|---|---|---|
-| **#1** | **KaliteSuperieur** | `2197` | 89 / 2 / 5 | 96 | 619 | 192 | +427 | 6.45 | Div 1 |
-| **#2** | **ARABESXNOIR** | `2127` | 132 / 14 / 18 | 164 | 763 | 335 | +428 | 4.65 | Div 1 |
-| **#3** | **THE ROOKIE S7** | `2012` | 53 / 3 / 5 | 61 | 373 | 145 | +228 | 6.11 | Div 3 |
-| **#4** | **ArabeXnoir2** | `1998` | 45 / 7 / 13 | 65 | 317 | 184 | +133 | 4.88 | Div 2 |
-| **#5** | **MorRiikow** | `1952` | 51 / 4 / 19 | 74 | 333 | 219 | +114 | 4.50 | Div 2 |
-| **#6** | **Pied Carre NN** | `1936` | 39 / 3 / 8 | 50 | 262 | 140 | +122 | 5.24 | Div 2 |
-| **#7** | **AS KRETIN** | `1927` | 44 / 2 / 8 | 54 | 253 | 107 | +146 | 4.69 | Div 3 |
-| **#8** | **CITÃ 93** | `1926` | 28 / 2 / 2 | 32 | 179 | 58 | +121 | 5.59 | Div 4 |
-| **#9** | **Pied CarrÃ©** | `1919` | 170 / 23 / 93 | 286 | 1053 | 749 | +304 | 3.68 | Div 2 |
-| **#10** | **LOS CHURRIANERO** | `1877` | 221 / 48 / 134 | 403 | 1432 | 1132 | +300 | 3.55 | Div 2 |
+| Plataforma / Modalidade | Código EA | Times em História (All-Time) | Times em Temporada (Current Season) | Total Único Deep-Scraped |
+|---|---|---|---|---|
+| **Crossplay Geração Atual (PS5, Xbox Series X\|S, PC)** | `common-gen5` | 100 | 100 | **162** |
+| **Geração Anterior (PS4, Xbox One)** | `common-gen4` | 100 | 100 | **193** |
+| **Nintendo Switch** | `nx` | 99 | 100 | **197** |
+| **TOTAL GERAL UNIFICADO** | **3 Plataformas** | **299** | **300** | **552 TIMES ÚNICOS** |
 
 ---
 
-## 👥 2. Amostra de Elenco e Estatísticas de Jogadores (Top Clubs)
+## 2. Métricas do Elenco e Jogadores (8.111 Jogadores Cadastrados)
 
-| Plataforma | Clube | Nome do Jogador | Jogos | Gols | Assistências | Média / Rating | MoTM (Melhor em Campo) |
-|---|---|---|---|---|---|---|---|
-| `common-gen5` | **Gimme 20p FC** | Mister_Cong | 1446 | 450 | 590 | forward | 203 |
-| `common-gen5` | **Gimme 20p FC** | Colucciaa | 3963 | 711 | 889 | goalkeeper | 226 |
-| `common-gen5` | **Gimme 20p FC** | xScott-_h | 2161 | 4022 | 1800 | midfielder | 746 |
-| `common-gen5` | **Gimme 20p FC** | Finley1x | 2773 | 2821 | 2071 | midfielder | 730 |
-| `common-gen5` | **Gimme 20p FC** | iiSURF3R- | 2040 | 62 | 43 | defender | 55 |
-| `common-gen5` | **Gimme 20p FC** | silvacreeper98 | 445 | 18 | 6 | defender | 5 |
-| `common-gen5` | **Gimme 20p FC** | Mattiblak | 1290 | 333 | 325 | forward | 79 |
-| `common-gen5` | **Gimme 20p FC** | Lundiis96 | 1451 | 168 | 227 | defender | 40 |
-| `common-gen5` | **Gimme 20p FC** | lNEUERl1 | 2721 | 92 | 7 | goalkeeper | 115 |
-| `common-gen5` | **Gimme 20p FC** | KingBM_96 | 1393 | 798 | 702 | midfielder | 161 |
-| `common-gen5` | **Gimme 20p FC** | CertifiedLeonean | 1480 | 197 | 213 | defender | 64 |
-| `common-gen5` | **Gimme 20p FC** | wyd--stepbro_ | 2830 | 1788 | 3047 | forward | 621 |
-| `common-gen5` | **Gimme 20p FC** | Ju_We22 | 1966 | 1984 | 782 | forward | 219 |
-| `common-gen5` | **Gimme 20p FC** | Olderskogen | 1702 | 195 | 201 | defender | 45 |
-| `common-gen5` | **Gimme 20p FC** | DontGoooAnywhere | 73 | 36 | 79 | forward | 19 |
-| `common-gen5` | **Gimme 20p FC** | Nichii97 | 2435 | 646 | 719 | midfielder | 149 |
-| `common-gen5` | **Gimme 20p FC** | DolceVita___ | 851 | 180 | 437 | midfielder | 47 |
-| `common-gen5` | **Gimme 20p FC** | xTruls | 93 | 56 | 35 | midfielder | 3 |
-| `common-gen5` | **Gimme 20p FC** | PLAAM_S | 2641 | 2673 | 1406 | forward | 460 |
-| `common-gen5` | **Gimme 20p FC** | Boxyte | 533 | 320 | 241 | forward | 41 |
+Para cada um dos **552 times únicos**, foram extraídos os dados completos do elenco e estatísticas individuais de carreira dos jogadores registrados na EA:
+
+- **Total de Jogadores com Carreira Mapeada:** **8.111 Jogadores**
+- **Atributos Coletados por Jogador:**
+  - `Platform Code` (common-gen5, common-gen4, nx)
+  - `Club ID` & `Club Name`
+  - `All-Time Rank` & `Seasonal Rank`
+  - `Player Name` (Gamertag / Pro Name)
+  - `Games Played` (Jogos disputados pelo clube)
+  - `Goals` (Gols marcados)
+  - `Assists` (Assistências distribuídas)
+  - `Position / Rating` (Posição preferida e nota de desempenho)
+  - `MoTM` (Melhor em campo / Man of the Match)
+  - `Clean Sheets (Def)` (Jogos sem sofrer gol da linha defensiva)
+  - `Clean Sheets (GK)` (Jogos sem sofrer gol do Goleiro)
+  - `Shot Success %` (Precisão de finalização)
+  - `Passes Made` & `Pass Success %` (Volume e precisão de passes)
+  - `Tackles Made` & `Tackle Success %` (Volume e eficiência de desarmes)
 
 ---
 
-## 📁 3. Arquivos Gerados e Prontos para Download / Integração
+## 3. Estrutura dos Arquivos de Dados Gerados no Repositório
 
-- 📊 **Rankings em CSV:** `d:/ea_fc_output/pro_clubs_rankings_all_time.csv`
-- 📄 **Rankings em JSON:** `d:/ea_fc_output/pro_clubs_rankings_all_time.json`
-- ⚽ **Jogadores e Elencos em CSV:** `d:/ea_fc_output/pro_clubs_top_teams_players.csv`
-- 📦 **Jogadores e Elencos em JSON:** `d:/ea_fc_output/pro_clubs_top_teams_players.json`
-- ⚙️ **Metadados de Plataformas/Ligas:** `d:/ea_fc_output/pro_clubs_platforms_leagues.json`
+Todos os arquivos estão disponíveis na pasta `data/` do repositório `cspgabriel/pro-clubs-pro-player`:
+
+| Nome do Arquivo | Formato | Descrição |
+|---|---|---|
+| `data/pro_clubs_all_time_leaderboard_enriched.json` | JSON | 100 times do Leaderboard de História para as 3 plataformas com dados raw |
+| `data/pro_clubs_seasonal_leaderboard_enriched.json` | JSON | 100 times do Leaderboard da Temporada Atual (currentSeasonLeaderboard) |
+| `data/pro_clubs_all_teams_detailed.json` | JSON | Estrutura completa hierárquica contendo metadata + info + elenco + estatísticas |
+| `data/pro_clubs_all_teams_summary.csv` | CSV | Resumo consolidado das 552 equipes (Vitórias, Derrotas, Empates, Gols, Reputação, Ranks) |
+| `data/pro_clubs_all_players_full.csv` | CSV | Tabela analítica completa com **8.111 jogadores** e suas estatísticas detalhadas de jogo |
+| `data/pro_clubs_all_matches.json` | JSON | Estrutura de partidas recentes das equipes analisadas |
+
+---
+
+## 4. Endpoints Técnicos Identificados da EA API
+
+- **All-Time Leaderboard:** `https://proclubs.ea.com/api/fc/allTimeLeaderboard?platform={platform}`
+- **Seasonal Leaderboard:** `https://proclubs.ea.com/api/fc/currentSeasonLeaderboard?platform={platform}`
+- **Informações Gerais do Clube:** `https://proclubs.ea.com/api/fc/clubs/info?platform={platform}&clubIds={clubId}`
+- **Estatísticas do Elenco/Jogadores:** `https://proclubs.ea.com/api/fc/members/career/stats?platform={platform}&clubId={clubId}`
+- **Histórico Recente de Partidas:** `https://proclubs.ea.com/api/fc/clubs/matches?platform={platform}&clubIds={clubId}&matchType=gameType9`
+- **Busca por Nome do Clube:** `https://proclubs.ea.com/api/fc/allTimeLeaderboard/search?platform={platform}&clubName={query}`
+
+---
+
+## 5. Script para Download Personalizado por ID do Clube
+
+Localizado em `scripts/download_by_club_id.py`:
+
+```bash
+python scripts/download_by_club_id.py --platform common-gen5 --club_id 123456
+```
+
+---
+*Relatório gerado automaticamente por Luciana Aguiar — Agente de Inteligência e Extração Pro Clubs.*
