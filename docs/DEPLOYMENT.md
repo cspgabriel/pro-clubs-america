@@ -26,7 +26,7 @@ fallback client-side.
 ## Publicação direta
 
 ```powershell
-npx wrangler pages deploy out --project-name proclubsamerica --branch main
+npx wrangler pages deploy out --project-name pro-clubs-america --branch main
 ```
 
 O domínio de produção é `proclubsamerica.com`. Ele precisa estar na mesma conta
