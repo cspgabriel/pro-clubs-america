@@ -9,12 +9,13 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Comunidade sul-americana de clubes, jogadores, estatísticas e amistosos de Pro Clubs.",
     start_url: "/",
     display: "standalone",
-    background_color: "#000000",
-    theme_color: "#00e676",
+    background_color: "#061329",
+    theme_color: "#0d2347",
     orientation: "portrait",
     icons: [
-      { src: "/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
-      { src: "/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "maskable" },
+      { src: "/brand/pro-clubs-america-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/brand/pro-clubs-america-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/brand/pro-clubs-america-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }

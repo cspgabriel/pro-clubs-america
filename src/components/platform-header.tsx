@@ -2,12 +2,13 @@ import Link from "next/link";
 import { BarChart3, BriefcaseBusiness, Search, Swords, UserPlus } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { AuthStatus } from "./auth-status";
+import { BrandLogo } from "./brand-logo";
 
 export function PlatformHeader() {
   return (
     <header className="platform-header">
       <Link className="platform-brand" href="/">
-        <span>PA</span><strong>PRO CLUBS AMERICA</strong>
+        <BrandLogo size={44} /><strong>PRO CLUBS AMERICA</strong>
       </Link>
       <nav>
         <Link href="/buscar"><Search size={16} /> Buscar</Link>

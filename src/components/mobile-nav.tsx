@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BarChart3, BriefcaseBusiness, Home, Plus, Search, ShieldPlus, Swords, UserPlus, X } from "lucide-react";
+import { BriefcaseBusiness, Home, Plus, Search, ShieldPlus, Swords, User, UserPlus, X } from "lucide-react";
 import { useState } from "react";
 
 const actions = [
@@ -18,8 +18,8 @@ export function MobileNav() {
       <Link href="/"><Home /><span>Início</span></Link>
       <Link href="/buscar"><Search /><span>Buscar</span></Link>
       <button className="mobile-market-action" type="button" onClick={() => setOpen(true)} aria-label="Criar novo"><Plus /><span>Novo</span></button>
-      <Link href="/rankings/jogadores/artilharia"><BarChart3 /><span>Rankings</span></Link>
       <Link href="/partidas"><Swords /><span>Partidas</span></Link>
+      <Link href="/conta"><User /><span>Minha conta</span></Link>
     </nav>
     {open && <div className="create-sheet" role="dialog" aria-modal="true" aria-label="Criar novo">
       <button className="create-sheet-backdrop" onClick={() => setOpen(false)} aria-label="Fechar menu" />

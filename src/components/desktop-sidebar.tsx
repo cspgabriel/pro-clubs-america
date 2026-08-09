@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { BarChart3, BriefcaseBusiness, Crosshair, Crown, Goal, Handshake, Home, Percent, Search, Shield, ShieldCheck, Swords, UserPlus, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { BrandLogo } from "./brand-logo";
 
 const groups = [
   { label: "EXPLORAR", items: [
@@ -29,7 +30,7 @@ const groups = [
 export function DesktopSidebar() {
   const pathname = usePathname();
   return <aside className="desktop-sidebar" aria-label="Menu completo">
-    <Link className="sidebar-logo" href="/" aria-label="Pro Clubs America"><b>PA</b><span>PRO CLUBS AMERICA</span></Link>
+    <Link className="sidebar-logo" href="/" aria-label="Pro Clubs America"><BrandLogo size={58} /><span>PRO CLUBS AMERICA</span></Link>
     <nav>{groups.map((group) => <section key={group.label}><small>{group.label}</small>{group.items.map((item) => { const Icon = item.icon; const path = item.href.split("#")[0]; const active = !item.href.includes("#") && (path === "/" ? pathname === "/" : pathname === path); return <Link className={active ? "active" : ""} href={item.href} key={item.label}><Icon /><span>{item.label}</span></Link>; })}</section>)}</nav>
     <div className="sidebar-season"><Percent /><span>EAFC 26<strong>common-gen5</strong></span></div>
   </aside>;

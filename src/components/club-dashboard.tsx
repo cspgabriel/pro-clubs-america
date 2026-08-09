@@ -27,6 +27,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { DashboardData } from "@/types/domain";
 import { ThemeToggle } from "./theme-toggle";
+import { BrandLogo } from "./brand-logo";
 
 const number = new Intl.NumberFormat("pt-BR");
 
@@ -54,9 +55,9 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
   return (
     <main className="site-shell">
       <header className="topbar">
-        <a className="brand" href="#inicio" aria-label="Clubs Brasil — início">
-          <span className="brand-mark">CB</span>
-          <span>CLUBS <b>BRASIL</b></span>
+        <a className="brand" href="#inicio" aria-label="Pro Clubs America — início">
+          <BrandLogo size={46} />
+          <span>PRO CLUBS <b>AMERICA</b></span>
         </a>
         <nav aria-label="Navegação principal">
           <a href="#visao">Visão geral</a>
@@ -156,7 +157,7 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
         </article>
       </section>
 
-      <footer><strong>CLUBS BRASIL</strong><p>Projeto comunitário independente. Este site não é afiliado nem patrocinado pela Electronic Arts Inc. ou seus licenciadores.</p></footer>
+      <footer><strong>PRO CLUBS AMERICA</strong><p>Projeto comunitário independente. Este site não é afiliado nem patrocinado pela Electronic Arts Inc. ou seus licenciadores.</p></footer>
     </main>
   );
 }

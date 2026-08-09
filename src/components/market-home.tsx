@@ -8,6 +8,7 @@ import type { PlayerRanking } from "@/types/domain";
 import { PlatformHeader } from "./platform-header";
 import { MobileNav } from "./mobile-nav";
 import { CountryGateway } from "./country-gateway";
+import { BrandLogo } from "./brand-logo";
 
 interface HomeClub { id: string; name: string; crestUrl: string; skillRating?: number; record?: string; }
 type HomePlayer = PlayerRanking & { clubName?: string };
@@ -43,7 +44,7 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
         <div className="featured-dots" aria-label="Selecionar destaque">{slides.map((slide, index) => <button type="button" aria-label={`Mostrar ${slide.title}`} aria-current={index === featured} className={index === featured ? "active" : ""} onClick={() => setFeatured(index)} key={slide.title} />)}</div>
       </section>
       <section className="market-hero" id="buscar">
-        <div className="market-wordmark"><span>PA</span><strong>PRO CLUBS AMERICA</strong></div>
+        <div className="market-wordmark"><BrandLogo size={104} /><strong>PRO CLUBS AMERICA</strong></div>
         <h1>Seu clube. Seu time. Sua comunidade.</h1>
         <p className="market-intro">Encontre clubes, jogadores, partidas e oportunidades para crescer no Pro Clubs.</p>
         <label className="global-search">
