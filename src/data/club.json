@@ -1,0 +1,137 @@
+{
+  "club": {
+    "id": "171630",
+    "name": "Villathinaikos",
+    "platform": "common-gen5",
+    "sourceUrl": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/overview?clubId=171630&platform=common-gen5",
+    "crestUrl": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l1318.png",
+    "overview": {
+      "skillRating": 2403,
+      "reputation": "World Renown",
+      "wins": 624,
+      "draws": 121,
+      "losses": 445,
+      "totalMatches": 1190,
+      "leagueAppearances": 1067,
+      "playoffAppearances": 123,
+      "goalsFor": 3738,
+      "goalsAgainst": 3081,
+      "members": 9,
+      "midfielders": 5,
+      "forwards": 1,
+      "defenders": 3,
+      "goalkeepers": 0
+    }
+  },
+  "source": {
+    "state": "partial",
+    "fetchedAt": "2026-08-09T13:42:29.5788258-03:00",
+    "note": "Resumo, elenco oficial e cinco partidas recentes de Liga estão carregados. Friendly e Playoff serão mantidos em históricos separados quando forem coletados da página pública."
+  },
+  "players": [
+    { "id": "brizzindelass", "name": "brizzindelass", "position": "Defender", "overallRating": 82, "gamesPlayed": 204, "goals": 61, "assists": 99, "passesMade": 3033, "passSuccessRate": 79, "tacklesMade": 221, "tackleSuccessRate": 32, "cleanSheets": 3, "winRate": 57 },
+    { "id": "cspgabriell", "name": "cspgabriell", "position": "Defender", "overallRating": 88, "gamesPlayed": 891, "goals": 301, "assists": 297, "passesMade": 10530, "passSuccessRate": 80, "tacklesMade": 992, "tackleSuccessRate": 14, "cleanSheets": 0, "winRate": 50 },
+    { "id": "danieldhds", "name": "danieldhds", "position": "Forward", "overallRating": 89, "gamesPlayed": 418, "goals": 269, "assists": 254, "passesMade": 5468, "passSuccessRate": 78, "tacklesMade": 387, "tackleSuccessRate": 18, "cleanSheets": 0, "winRate": 58 },
+    { "id": "eu_nery55", "name": "eu_nery55", "position": "Midfielder", "overallRating": 85, "gamesPlayed": 521, "goals": 845, "assists": 451, "passesMade": 6867, "passSuccessRate": 82, "tacklesMade": 369, "tackleSuccessRate": 12, "cleanSheets": 0, "winRate": 60 },
+    { "id": "fml170716", "name": "fml170716", "position": "Defender", "overallRating": 86, "gamesPlayed": 251, "goals": 79, "assists": 58, "passesMade": 2508, "passSuccessRate": 77, "tacklesMade": 116, "tackleSuccessRate": 16, "cleanSheets": 0, "winRate": 45 },
+    { "id": "lokp7", "name": "lokp7", "position": "Midfielder", "overallRating": 86, "gamesPlayed": 371, "goals": 69, "assists": 311, "passesMade": 6689, "passSuccessRate": 69, "tacklesMade": 428, "tackleSuccessRate": 20, "cleanSheets": 0, "winRate": 48 },
+    { "id": "matthewsmendesx", "name": "MatthewsMendesx", "position": "Midfielder", "overallRating": 90, "gamesPlayed": 1048, "goals": 1070, "assists": 891, "passesMade": 16870, "passSuccessRate": 79, "tacklesMade": 1240, "tackleSuccessRate": 23, "cleanSheets": 0, "winRate": 54 },
+    { "id": "star_lordy1", "name": "Star_Lordy1", "position": "Midfielder", "overallRating": 88, "gamesPlayed": 1095, "goals": 567, "assists": 619, "passesMade": 16574, "passSuccessRate": 77, "tacklesMade": 1141, "tackleSuccessRate": 13, "cleanSheets": 0, "winRate": 53 },
+    { "id": "tcpcavaliere", "name": "TCPCavaliere", "position": "Midfielder", "overallRating": 87, "gamesPlayed": 157, "goals": 19, "assists": 16, "passesMade": 1570, "passSuccessRate": 80, "tacklesMade": 127, "tackleSuccessRate": 37, "cleanSheets": 0, "winRate": 57 }
+  ],
+  "matches": [
+    {
+      "id": "ea-visible-league-2026-08-09-1",
+      "mode": "leagueMatch",
+      "playedAt": "2026-08-06T12:00:00-03:00",
+      "homeClubId": "171630",
+      "homeClubName": "Villathinaikos",
+      "awayClubId": "tropa",
+      "awayClubName": "Tropa",
+      "homeScore": 7,
+      "awayScore": 3,
+      "competition": "League Match — exibido há 3 dias",
+      "sourceUrl": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/match-history?clubId=171630&platform=common-gen5",
+      "players": [
+        { "playerId": "brizzindelass", "playerName": "brizzindelass", "position": "Midfielder", "goals": 0, "assists": 2, "rating": 7.8, "shots": 2, "passesMade": 17, "passAttempts": 27, "tacklesMade": 4, "redCards": 0 },
+        { "playerId": "eu_nery55", "playerName": "eu_nery55", "position": "Forward", "goals": 5, "assists": 1, "rating": 10, "shots": 7, "passesMade": 14, "passAttempts": 14, "tacklesMade": 1, "redCards": 0 },
+        { "playerId": "danieldhds", "playerName": "danieldhds", "position": "Forward", "goals": 2, "assists": 2, "rating": 9.9, "shots": 6, "passesMade": 13, "passAttempts": 17, "tacklesMade": 1, "redCards": 0 },
+        { "playerId": "cspgabriell", "playerName": "cspgabriell", "position": "Midfielder", "goals": 0, "assists": 0, "rating": 8.6, "shots": 0, "passesMade": 14, "passAttempts": 17, "tacklesMade": 5, "redCards": 0 }
+      ]
+    },
+    {
+      "id": "ea-visible-league-2026-08-09-2",
+      "mode": "leagueMatch",
+      "playedAt": "2026-08-06T11:59:00-03:00",
+      "homeClubId": "171630",
+      "homeClubName": "Villathinaikos",
+      "awayClubId": "sao-paulo-fc-visible",
+      "awayClubName": "São PauIo FC",
+      "homeScore": 5,
+      "awayScore": 4,
+      "competition": "League Match — exibido há 3 dias",
+      "sourceUrl": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/match-history?clubId=171630&platform=common-gen5",
+      "players": [
+        { "playerId": "brizzindelass", "playerName": "brizzindelass", "position": "Midfielder", "goals": 4, "assists": 1, "rating": 9.6, "shots": 5, "passesMade": 22, "passAttempts": 27, "tacklesMade": 0, "redCards": 0 },
+        { "playerId": "eu_nery55", "playerName": "eu_nery55", "position": "Forward", "goals": 1, "assists": 4, "rating": 9.8, "shots": 2, "passesMade": 20, "passAttempts": 23, "tacklesMade": 0, "redCards": 0 },
+        { "playerId": "danieldhds", "playerName": "danieldhds", "position": "Forward", "goals": 0, "assists": 0, "rating": 6.3, "shots": 1, "passesMade": 17, "passAttempts": 21, "tacklesMade": 0, "redCards": 0 },
+        { "playerId": "cspgabriell", "playerName": "cspgabriell", "position": "Midfielder", "goals": 0, "assists": 0, "rating": 7.4, "shots": 0, "passesMade": 22, "passAttempts": 28, "tacklesMade": 1, "redCards": 0 }
+      ]
+    },
+    {
+      "id": "ea-visible-league-2026-08-09-3",
+      "mode": "leagueMatch",
+      "playedAt": "2026-08-06T11:58:00-03:00",
+      "homeClubId": "171630",
+      "homeClubName": "Villathinaikos",
+      "awayClubId": "tropa-artista",
+      "awayClubName": "TROPA ARTISTA",
+      "homeScore": 6,
+      "awayScore": 4,
+      "competition": "League Match — exibido há 3 dias",
+      "sourceUrl": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/match-history?clubId=171630&platform=common-gen5",
+      "players": [
+        { "playerId": "brizzindelass", "playerName": "brizzindelass", "position": "Midfielder", "goals": 1, "assists": 2, "rating": 8.3, "shots": 2, "passesMade": 16, "passAttempts": 22, "tacklesMade": 0, "redCards": 0 },
+        { "playerId": "eu_nery55", "playerName": "eu_nery55", "position": "Forward", "goals": 4, "assists": 1, "rating": 10, "shots": 4, "passesMade": 14, "passAttempts": 14, "tacklesMade": 0, "redCards": 0 },
+        { "playerId": "danieldhds", "playerName": "danieldhds", "position": "Forward", "goals": 1, "assists": 1, "rating": 8.3, "shots": 1, "passesMade": 25, "passAttempts": 29, "tacklesMade": 1, "redCards": 0 },
+        { "playerId": "cspgabriell", "playerName": "cspgabriell", "position": "Midfielder", "goals": 0, "assists": 1, "rating": 7.6, "shots": 0, "passesMade": 13, "passAttempts": 18, "tacklesMade": 2, "redCards": 0 }
+      ]
+    },
+    {
+      "id": "ea-visible-league-2026-08-09-4",
+      "mode": "leagueMatch",
+      "playedAt": "2026-08-06T11:57:00-03:00",
+      "homeClubId": "171630",
+      "homeClubName": "Villathinaikos",
+      "awayClubId": "trivelas-fc",
+      "awayClubName": "TRIVELAS FC",
+      "homeScore": 3,
+      "awayScore": 5,
+      "competition": "League Match — exibido há 3 dias",
+      "sourceUrl": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/match-history?clubId=171630&platform=common-gen5",
+      "players": [
+        { "playerId": "eu_nery55", "playerName": "eu_nery55", "position": "Forward", "goals": 2, "assists": 0, "rating": 8.4, "shots": 6, "passesMade": 19, "passAttempts": 23, "tacklesMade": 0, "redCards": 0 },
+        { "playerId": "danieldhds", "playerName": "danieldhds", "position": "Forward", "goals": 0, "assists": 1, "rating": 7.1, "shots": 1, "passesMade": 19, "passAttempts": 26, "tacklesMade": 2, "redCards": 0 },
+        { "playerId": "cspgabriell", "playerName": "cspgabriell", "position": "Midfielder", "goals": 1, "assists": 1, "rating": 7.5, "shots": 1, "passesMade": 17, "passAttempts": 23, "tacklesMade": 0, "redCards": 0 }
+      ]
+    },
+    {
+      "id": "ea-visible-league-2026-08-09-5",
+      "mode": "leagueMatch",
+      "playedAt": "2026-08-06T11:56:00-03:00",
+      "homeClubId": "171630",
+      "homeClubName": "Villathinaikos",
+      "awayClubId": "xibiu-team",
+      "awayClubName": "Xibiu Team",
+      "homeScore": 0,
+      "awayScore": 3,
+      "competition": "League Match — exibido há 3 dias",
+      "sourceUrl": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/match-history?clubId=171630&platform=common-gen5",
+      "players": [
+        { "playerId": "eu_nery55", "playerName": "eu_nery55", "position": "Forward", "goals": 0, "assists": 1, "rating": 7.3, "shots": 0, "passesMade": 3, "passAttempts": 3, "tacklesMade": 0, "redCards": 0 },
+        { "playerId": "danieldhds", "playerName": "danieldhds", "position": "Forward", "goals": 0, "assists": 0, "rating": 7.3, "shots": 0, "passesMade": 0, "passAttempts": 0, "tacklesMade": 0, "redCards": 0 },
+        { "playerId": "cspgabriell", "playerName": "cspgabriell", "position": "Midfielder", "goals": 0, "assists": 0, "rating": 6.8, "shots": 0, "passesMade": 0, "passAttempts": 0, "tacklesMade": 0, "redCards": 0 }
+      ]
+    }
+  ]
+}

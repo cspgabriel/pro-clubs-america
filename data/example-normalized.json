@@ -1,0 +1,15 @@
+{
+  "club": {
+    "id": "171630",
+    "name": "Villa Thinaikos",
+    "platform": "common-gen5",
+    "sourceUrl": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/overview?clubId=171630&platform=common-gen5"
+  },
+  "source": {
+    "state": "complete",
+    "fetchedAt": "2026-08-09T00:00:00.000Z",
+    "note": "Substitua por dados observados na página pública."
+  },
+  "players": [],
+  "matches": []
+}

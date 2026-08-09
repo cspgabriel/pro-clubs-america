@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Guia completo para evoluir no Pro Clubs e no Ultimate Team: fundamentos, rotina de treino, posicionamento, tomada de decisão, mercado, evolução de elenco e checklist prático."
+    />
+    <meta name="theme-color" content="#060814" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EA FC Academy" />
+    <meta property="og:title" content="Guia Completo de Pro Clubs + Ultimate Team" />
+    <meta property="og:description" content="Para quem cansou de perder, passar raiva e depender de vídeos soltos no YouTube. Aprenda Pro Clubs e UT com método, rotina e fundamentos claros." />
+    <meta property="og:url" content="https://cspgabriel.github.io/pro-clubs-pro-player/v2.html" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&h=630&q=80" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Guia Completo de Pro Clubs + Ultimate Team" />
+    <meta name="twitter:description" content="Método organizado para parar de depender de dicas soltas e começar a jogar melhor." />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&h=630&q=80" />
+    <title>Aprenda Pro Clubs + Ultimate Team | Guia Completo</title>
+    <style>
+      :root {
+        --bg: #060814;
+        --bg2: #0b1628;
+        --text: #f7fbff;
+        --muted: #aab8d4;
+        --line: rgba(255,255,255,.13);
+        --cyan: #66f0ff;
+        --pink: #ff6bd6;
+        --yellow: #ffd65a;
+        --green: #7dffb2;
+        --orange: #ff9f43;
+        --shadow: 0 30px 90px rgba(0,0,0,.42);
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; overflow-x: hidden; }
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          linear-gradient(180deg, rgba(6,8,20,.65), rgba(6,8,20,.97) 460px),
+          url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1600&q=80") center top/cover no-repeat fixed,
+          linear-gradient(180deg, var(--bg), var(--bg2));
+        overflow-x: hidden;
+      }
+      a { color: inherit; }
+      @keyframes popIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes pulse { 50% { transform: scale(1.025); } }
+      @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+      @keyframes shine { from { transform: translateX(-130%) rotate(12deg); } to { transform: translateX(240%) rotate(12deg); } }
+      .wrap { width: min(1180px, 100%); margin: 0 auto; padding: 22px 18px 72px; }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(10,16,34,.74);
+        backdrop-filter: blur(16px);
+        box-shadow: var(--shadow);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: .78rem;
+        font-weight: 950;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      .badge {
+        max-width: 100%;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255,214,90,.12);
+        color: var(--yellow);
+        border: 1px solid rgba(255,214,90,.24);
+        font-size: .84rem;
+        font-weight: 850;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.08fr .92fr;
+        gap: 22px;
+        align-items: center;
+        padding: 42px 0 22px;
+        min-width: 0;
+      }
+      .hero > * { min-width: 0; }
+      .eyebrow {
+        display: inline-flex;
+        padding: 9px 12px;
+        border-radius: 999px;
+        color: var(--green);
+        border: 1px solid rgba(125,255,178,.22);
+        background: rgba(125,255,178,.12);
+        font-size: .84rem;
+        font-weight: 850;
+        animation: pulse 3.8s ease-in-out infinite;
+      }
+      h1 {
+        margin: 16px 0 0;
+        font-size: clamp(2.75rem, 5.7vw, 6rem);
+        line-height: .96;
+        letter-spacing: 0;
+      }
+      .accent {
+        background: linear-gradient(90deg, var(--cyan), var(--pink), var(--yellow));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lead {
+        margin: 18px 0 0;
+        max-width: 66ch;
+        color: #d7e1f5;
+        line-height: 1.72;
+        font-size: 1.07rem;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .btn {
+        min-height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 18px;
+        border-radius: 16px;
+        border: 1px solid transparent;
+        text-decoration: none;
+        font-weight: 950;
+        text-align: center;
+        cursor: pointer;
+        transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+      }
+      .btn:hover { transform: translateY(-2px); }
+      .btn.primary {
+        background: linear-gradient(135deg, var(--cyan), var(--pink));
+        color: #04111f;
+        box-shadow: 0 18px 40px rgba(102,240,255,.18);
+      }
+      .btn.secondary {
+        background: rgba(255,255,255,.06);
+        color: var(--text);
+        border-color: var(--line);
+      }
+      .ticker {
+        max-width: 100%;
+        margin: 16px 0 0;
+        border: 1px solid rgba(255,255,255,.1);
+        border-radius: 999px;
+        background: rgba(255,255,255,.06);
+        overflow: hidden;
+      }
+      .ticker-track {
+        display: flex;
+        width: max-content;
+        gap: 24px;
+        white-space: nowrap;
+        padding: 12px 0;
+        animation: slide 22s linear infinite;
+      }
+      .ticker span {
+        padding: 0 12px;
+        color: #dbe7ff;
+      }
+      .hero-card, .callout, .checkout, .card {
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 20% 0%, rgba(255,214,90,.15), transparent 34%),
+          radial-gradient(circle at 90% 15%, rgba(255,107,214,.12), transparent 28%),
+          linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+        box-shadow: var(--shadow);
+        animation: popIn .65s ease both;
+      }
+      .hero-card {
+        position: relative;
+        overflow: hidden;
+        padding: 16px;
+        border-radius: 28px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .stat {
+        position: relative;
+        min-height: 132px;
+        padding: 14px;
+        overflow: hidden;
+        border-radius: 22px;
+        border: 1px solid rgba(255,255,255,.14);
+        animation: popIn .6s ease both;
+      }
+      .stat:nth-child(1) { background: linear-gradient(145deg, rgba(255,214,90,.24), rgba(255,107,214,.08)); border-color: rgba(255,214,90,.32); }
+      .stat:nth-child(2) { background: linear-gradient(145deg, rgba(102,240,255,.22), rgba(125,255,178,.08)); border-color: rgba(102,240,255,.32); animation-delay: .08s; }
+      .stat:nth-child(3) { background: linear-gradient(145deg, rgba(255,107,214,.22), rgba(102,240,255,.08)); border-color: rgba(255,107,214,.32); animation-delay: .16s; }
+      .stat:nth-child(4) { background: linear-gradient(145deg, rgba(125,255,178,.2), rgba(255,214,90,.08)); border-color: rgba(125,255,178,.32); animation-delay: .24s; }
+      .stat::before, .plan-card::before {
+        content: "";
+        position: absolute;
+        top: -40%;
+        left: -70%;
+        width: 44%;
+        height: 180%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+        animation: shine 5.4s ease-in-out infinite;
+      }
+      .stat strong {
+        display: block;
+        position: relative;
+        font-size: 1.45rem;
+        line-height: 1.05;
+        margin-bottom: 6px;
+      }
+      .stat span {
+        position: relative;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .bar {
+        position: relative;
+        display: block;
+        height: 7px;
+        margin-top: 12px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(0,0,0,.24);
+      }
+      .bar::after {
+        content: "";
+        display: block;
+        width: 82%;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--cyan), var(--pink), var(--yellow));
+        animation: pulse 2.3s ease-in-out infinite;
+      }
+      .panel {
+        margin-top: 12px;
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,.18);
+        background: linear-gradient(135deg, rgba(255,255,255,.1), rgba(255,107,214,.08));
+      }
+      .panel strong { display: block; font-size: 1.08rem; margin-bottom: 6px; }
+      .panel p, .card p, .card li, .fine { color: var(--muted); line-height: 1.65; }
+      .section { margin-top: 34px; }
+      .section h2 {
+        margin: 0 0 12px;
+        font-size: clamp(1.85rem, 4vw, 3rem);
+        line-height: 1.08;
+      }
+      .sub {
+        max-width: 74ch;
+        margin: 0 0 20px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .grid-3, .grid-2 {
+        display: grid;
+        gap: 14px;
+      }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .card {
+        min-height: 100%;
+        padding: 18px;
+        border-radius: 22px;
+      }
+      .icon {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 12px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(102,240,255,.2), rgba(255,107,214,.16));
+        border: 1px solid rgba(255,255,255,.12);
+        font-weight: 950;
+        color: var(--cyan);
+      }
+      .card h3 { margin: 0 0 10px; font-size: 1.08rem; }
+      ul { margin: 0; padding-left: 18px; }
+      .lesson {
+        padding: 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,.1);
+        background: rgba(255,255,255,.045);
+      }
+      .lesson + .lesson { margin-top: 12px; }
+      .phase {
+        display: inline-flex;
+        margin-bottom: 8px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: rgba(125,255,178,.12);
+        border: 1px solid rgba(125,255,178,.22);
+        color: var(--green);
+        font-size: .76rem;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+      .lesson h3 { margin: 0 0 10px; }
+      .lesson li { color: var(--muted); margin-bottom: 6px; }
+      .plans {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+      .plan-card {
+        position: relative;
+        overflow: hidden;
+        padding: 18px;
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+      }
+      .plan-card:nth-child(1) { background: linear-gradient(145deg, rgba(102,240,255,.18), rgba(255,255,255,.04)); }
+      .plan-card:nth-child(2) { background: linear-gradient(145deg, rgba(125,255,178,.17), rgba(255,255,255,.04)); }
+      .plan-card:nth-child(3) { background: linear-gradient(145deg, rgba(255,107,214,.18), rgba(255,214,90,.08)); border-color: rgba(255,107,214,.28); }
+      .plan-card h3 { margin: 0 0 8px; }
+      .plan-card p { color: var(--muted); }
+      .plan-card strong { display: block; font-size: 2rem; }
+      .checkout {
+        display: grid;
+        grid-template-columns: 1.05fr .95fr;
+        gap: 16px;
+        padding: 22px;
+        border-radius: 28px;
+      }
+      label {
+        display: grid;
+        gap: 7px;
+        margin-bottom: 12px;
+        color: #e9f3ff;
+        font-weight: 850;
+      }
+      input, select {
+        width: 100%;
+        min-height: 48px;
+        padding: 13px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(4,10,22,.78);
+        color: var(--text);
+        font: inherit;
+        outline: none;
+      }
+      .summary {
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+      }
+      .price {
+        margin: 8px 0 6px;
+        font-size: clamp(2.4rem, 5vw, 3.8rem);
+        font-weight: 1000;
+        line-height: 1;
+      }
+      .notice {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(125,255,178,.12);
+        border: 1px solid rgba(125,255,178,.22);
+        color: #d7ffe7;
+        font-weight: 800;
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 30;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(0,0,0,.72);
+        backdrop-filter: blur(10px);
+      }
+      .modal.open { display: flex; }
+      .modal-box {
+        width: min(520px, 100%);
+        padding: 22px;
+        border-radius: 22px;
+        border: 1px solid rgba(255,255,255,.18);
+        background: linear-gradient(180deg, rgba(14,24,48,.98), rgba(7,11,26,.98));
+        box-shadow: var(--shadow);
+      }
+      .modal-box h2 { margin: 0 0 8px; }
+      .footer {
+        margin-top: 32px;
+        color: var(--muted);
+        text-align: center;
+        font-size: .9rem;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; }
+      }
+      @media (max-width: 920px) {
+        .hero, .grid-3, .grid-2, .plans, .checkout { grid-template-columns: 1fr; }
+        .stats { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 640px) {
+        .wrap { padding: 14px 12px 56px; overflow: hidden; }
+        .topbar { align-items: flex-start; flex-direction: column; border-radius: 20px; }
+        .hero { padding-top: 24px; gap: 18px; }
+        h1 { font-size: 2.55rem; line-height: 1.03; overflow-wrap: anywhere; }
+        .lead { font-size: 1rem; line-height: 1.58; }
+        .btn { width: 100%; }
+        .ticker { border-radius: 18px; }
+        .ticker-track { gap: 12px; padding: 10px 0; animation-duration: 15s; }
+        .ticker span { font-size: .9rem; padding: 0 10px; }
+        .hero-card { padding: 12px; border-radius: 22px; }
+        .stats { grid-template-columns: 1fr; gap: 10px; }
+        .stat { min-height: auto; border-radius: 18px; }
+        .section { margin-top: 28px; }
+        .section h2 { font-size: 2rem; }
+        .sub { font-size: .98rem; line-height: 1.52; }
+        .card, .lesson, .plan-card, .checkout { border-radius: 20px; padding: 16px; }
+        .price { font-size: 2.45rem; }
+      }
+      @media (max-width: 390px) {
+        h1 { font-size: 2.25rem; }
+        .badge, .eyebrow { font-size: .78rem; }
+        .price { font-size: 2.1rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="topbar">
+        <div class="brand">EA FC Academy V2</div>
+        <div class="badge">Pro Clubs + Ultimate Team com método</div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Guia completo para quem quer evoluir de verdade</div>
+          <h1>Aprenda <span class="accent">Pro Clubs</span> e Ultimate Team sem depender de vídeos soltos.</h1>
+          <p class="lead">
+            Para quem cansou de perder, passar raiva e trocar de dica toda semana. Um roteiro organizado para entender o jogo, montar melhor suas decisões e evoluir com prática.
+          </p>
+          <div class="cta-row">
+            <a class="btn primary" href="#planos">Escolher plano</a>
+            <a class="btn secondary" href="#guia">Ler guia completo</a>
+          </div>
+          <div class="ticker" aria-hidden="true">
+            <div class="ticker-track">
+              <span>Pro Clubs: posicionamento e decisão</span>
+              <span>Ultimate Team: elenco e mentalidade</span>
+              <span>Roteiro do básico ao avançado</span>
+              <span>3 planos de acesso</span>
+              <span>Pro Clubs: posicionamento e decisão</span>
+              <span>Ultimate Team: elenco e mentalidade</span>
+              <span>Roteiro do básico ao avançado</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <div class="stats">
+            <div class="stat"><strong>UT</strong><span>Elenco, moedas, tática base e controle emocional.</span><i class="bar"></i></div>
+            <div class="stat"><strong>Pro Clubs</strong><span>Função, movimentação, comunicação e jogo coletivo.</span><i class="bar"></i></div>
+            <div class="stat"><strong>Combo</strong><span>Os dois modos em um roteiro único de evolução.</span><i class="bar"></i></div>
+            <div class="stat"><strong>Método</strong><span>Fundamento, repetição consciente e aplicação em partida.</span><i class="bar"></i></div>
+          </div>
+          <div class="panel">
+            <strong>Para quem é</strong>
+            <p>Para jogadores que querem parar de improvisar evolução e começar a jogar com plano, leitura e consistência.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section">
+        <h2>O que você vai aprender</h2>
+        <p class="sub">O guia junta fundamentos de jogo em equipe, evolução individual e gestão do modo competitivo. A ideia é tirar ruído e deixar um roteiro claro.</p>
+        <div class="grid-3">
+          <article class="card"><div class="icon">PC</div><h3>Pro Clubs</h3><p>Função em campo, ocupação de espaço, movimentação sem bola, tomada de decisão e comunicação curta.</p></article>
+          <article class="card"><div class="icon">UT</div><h3>Ultimate Team</h3><p>Montagem de elenco, prioridades de upgrade, controle emocional, tática base e análise de derrotas.</p></article>
+          <article class="card"><div class="icon">2D</div><h3>Rotina de 2 dias</h3><p>Um ciclo simples para aplicar em partida, corrigir erro recorrente e medir evolução real sem trocar tudo toda hora.</p></article>
+        </div>
+      </section>
+
+      <section class="section" id="guia">
+        <h2>Guia completo liberado</h2>
+        <p class="sub">Leia como roteiro de treino. Aplique em jogo, volte no ponto específico e corrija uma coisa por vez.</p>
+
+        <article class="lesson">
+          <span class="phase">Pro Clubs 1</span>
+          <h3>Entenda sua função antes de buscar protagonismo</h3>
+          <ul>
+            <li>Atacante: ataque espaço, finalize simples e ofereça linha de passe vertical.</li>
+            <li>Meia: conecte defesa e ataque, jogue de frente quando possível e não force passe impossível.</li>
+            <li>Volante: proteja a zaga, acelere quando o time tiver vantagem e segure quando estiver exposto.</li>
+            <li>Zagueiro: primeiro protege profundidade, depois tenta passe bonito.</li>
+          </ul>
+        </article>
+
+        <article class="lesson">
+          <span class="phase">Pro Clubs 2</span>
+          <h3>Movimentação sem bola decide mais que drible</h3>
+          <ul>
+            <li>Abra linha de passe antes do companheiro receber a bola.</li>
+            <li>Não fique na mesma linha do marcador; dê opção em diagonal.</li>
+            <li>Se dois jogadores ocupam o mesmo espaço, um deles precisa sair imediatamente.</li>
+            <li>Depois de tocar, mova. Passe parado cria time previsível.</li>
+          </ul>
+        </article>
+
+        <article class="lesson">
+          <span class="phase">Ultimate Team 1</span>
+          <h3>Monte elenco por função, não por hype</h3>
+          <ul>
+            <li>Defina seu estilo: posse, contra-ataque, pressão ou equilíbrio.</li>
+            <li>Priorize posições que mais aparecem no jogo: meio-campo, zaga e ataque decisivo.</li>
+            <li>Não gaste tudo em um jogador se o resto do time ainda tem buracos claros.</li>
+            <li>Química importa, mas jogador adequado à função importa mais que nome famoso mal encaixado.</li>
+          </ul>
+        </article>
+
+        <article class="lesson">
+          <span class="phase">Ultimate Team 2</span>
+          <h3>Controle emocional salva vitórias e moedas</h3>
+          <ul>
+            <li>Depois de duas derrotas seguidas, pare antes de mexer no elenco.</li>
+            <li>Não venda jogador por raiva logo após partida ruim.</li>
+            <li>Revise gols sofridos: marcação, saída precipitada ou perda no meio.</li>
+            <li>Tenha uma formação base e uma variação, não cinco ideias por semana.</li>
+          </ul>
+        </article>
+
+        <article class="lesson">
+          <span class="phase">Treino prático</span>
+          <h3>Rotina de 2 dias para os dois modos</h3>
+          <ul>
+            <li>Dia 1 Pro Clubs: passe simples, movimentação curta e ocupação correta de espaço.</li>
+            <li>Dia 1 UT: jogue duas partidas sem mexer no time, anotando onde perdeu controle.</li>
+            <li>Dia 2 Pro Clubs: revise erros comuns, ajuste função e jogue priorizando decisão rápida.</li>
+            <li>Dia 2 UT: faça no máximo um ajuste de elenco ou tática baseado em problema real.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="section" id="planos">
+        <h2>Escolha seu plano</h2>
+        <p class="sub">Escolha o foco da sua evolução. O combo é para quem joga os dois modos e quer um roteiro único.</p>
+        <div class="plans">
+          <article class="plan-card"><h3>Ultimate Team</h3><p>Elenco, moedas, mentalidade, tática base e evolução de performance.</p><strong>R$ 9,99</strong></article>
+          <article class="plan-card"><h3>Pro Clubs</h3><p>Função, posicionamento, comunicação, tomada de decisão e jogo coletivo.</p><strong>R$ 9,99</strong></article>
+          <article class="plan-card"><h3>Combo completo</h3><p>Pro Clubs + Ultimate Team em um único roteiro de evolução.</p><strong>R$ 14,99</strong></article>
+        </div>
+
+        <div class="checkout">
+          <form id="leadForm">
+            <label>Nome do jogador<input name="name" placeholder="Seu nome ou apelido no EA FC" autocomplete="name" /></label>
+            <label>Plano desejado
+              <select name="plan" id="planSelect">
+                <option value="Ultimate Team" data-price="R$ 9,99">Ultimate Team - R$ 9,99</option>
+                <option value="Pro Clubs" data-price="R$ 9,99">Pro Clubs - R$ 9,99</option>
+                <option value="Combo Completo" data-price="R$ 14,99">Combo Completo - R$ 14,99</option>
+              </select>
+            </label>
+            <label>Nível atual
+              <select name="level">
+                <option>Iniciante</option>
+                <option>Intermediário</option>
+                <option>Avançado</option>
+              </select>
+            </label>
+            <button class="btn primary" type="submit" style="width:100%">Registrar acesso</button>
+          </form>
+
+          <aside class="summary">
+            <span class="badge">Resumo do acesso</span>
+            <h3 id="planName">Plano Ultimate Team</h3>
+            <div class="price" id="planPrice">R$ 9,99</div>
+            <p class="fine">Conteúdo completo, roteiro de treino e checklist prático para evoluir com método.</p>
+            <div class="notice">Foco em evolução real: fundamento, repetição consciente e decisão melhor em jogo.</div>
+          </aside>
+        </div>
+      </section>
+
+      <footer class="footer">EA FC Academy V2. Conteúdo prático para evoluir no Pro Clubs e no Ultimate Team.</footer>
+    </div>
+
+    <div class="modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-box">
+        <h2 id="modalTitle">Acesso registrado</h2>
+        <p class="fine">Seu plano V2 foi registrado. Comece pelo checklist e aplique a rotina de 2 dias no modo escolhido.</p>
+        <button class="btn primary" id="closeModal" type="button" style="width:100%">Continuar lendo</button>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('leadForm');
+      const modal = document.getElementById('successModal');
+      const closeModal = document.getElementById('closeModal');
+      const planSelect = document.getElementById('planSelect');
+      const planName = document.getElementById('planName');
+      const planPrice = document.getElementById('planPrice');
+      const updatePlan = () => {
+        const selected = planSelect.options[planSelect.selectedIndex];
+        planName.textContent = `Plano ${selected.value}`;
+        planPrice.textContent = selected.dataset.price;
+      };
+      planSelect.addEventListener('change', updatePlan);
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const data = Object.fromEntries(new FormData(form));
+        localStorage.setItem('ea-fc-academy-v2-lead', JSON.stringify({ ...data, createdAt: new Date().toISOString() }));
+        modal.classList.add('open');
+      });
+      closeModal.addEventListener('click', () => modal.classList.remove('open'));
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) modal.classList.remove('open');
+      });
+      updatePlan();
+    </script>
+  </body>
+</html>
