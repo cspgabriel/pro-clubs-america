@@ -1,0 +1,772 @@
+[
+  {
+    "url": "https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings",
+    "status": 200,
+    "content_type": "text/html; charset=UTF-8"
+  },
+  {
+    "url": "https://www.ea.com/newrelic.js",
+    "status": 200,
+    "content_type": "application/javascript; charset=UTF-8"
+  },
+  {
+    "url": "https://www.ea.com/resources/ec82eed248ffaf213a14e68c9aaa1748061679de37282",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://cdn.fonts.net/kit/c4731c60-dd16-11ec-b713-06e2001461d0/c4731c60-dd16-11ec-b713-06e2001461d0.css",
+    "status": 200,
+    "content_type": "text/css"
+  },
+  {
+    "url": "https://unpkg.com/@webcomponents/webcomponentsjs@2.2.7/webcomponents-loader.js",
+    "status": 200,
+    "content_type": "text/javascript; charset=utf-8"
+  },
+  {
+    "url": "https://w.soundcloud.com/player/api.js",
+    "status": 200,
+    "content_type": "application/javascript; charset=UTF-8"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-elements.min.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js",
+    "status": 200,
+    "content_type": "application/javascript; charset=utf-8"
+  },
+  {
+    "url": "https://cdn.fonts.net/t/1.css?apiType=css&projectid=c4731c60-dd16-11ec-b713-06e2001461d0",
+    "status": 200,
+    "content_type": "text/css"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/pt-br/common/ea-1-1b-medallion-mediumgray.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/ea/fc/common/global/fc24-primary-logo.svg",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://privacy-policy.truste.com/privacy-seal/seal?rid=61e7b218-4e4d-4fb6-b57c-22cbfc0dc067",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/ea/fc/fc-24/common/features/fc24-hero-md-welcome-to-clubs-light-bg-7x2-xl.jpg.adapt.1920w.jpg",
+    "status": 200,
+    "content_type": "image/jpeg"
+  },
+  {
+    "url": "https://www.ea.com/akam/13/45a6a284",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.ea.com/resources/ec82eed248ffaf213a14e68c9aaa1748061679de37282/e/64885_1825202492.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.ea.com/resources/ec82eed248ffaf213a14e68c9aaa1748061679de37282/e/65257_1825202430.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.ea.com/resources/ec82eed248ffaf213a14e68c9aaa1748061679de37282/e/65226_747628124.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.ea.com/resources/ec82eed248ffaf213a14e68c9aaa1748061679de37282/e/65319_1825142910.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/browser-support.min.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://consent.trustarc.com/notice?domain=ea.com&c=teconsent&js=nj&noticeType=bb&text=true&gtm=1&pn=1",
+    "status": 200,
+    "content_type": "text/javascript;charset=UTF-8"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-age-gate-ea-age-gate-js~ea-algs-challenger-circuit-leaderboard-ea-algs-challenger-circuit-leaderb.d48cc301.32c9422d7f604979e800.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-elements-loader-ea-elements-loader-js.75d60a4f.ffca2a0a8ee81cb2acbc.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-age-gate-ea-age-gate-js~ea-algs-challenger-circuit-leaderboard-ea-algs-challenger-circuit-leaderb.c02d90b6.493637998683c83b3735.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-TG32RCX",
+    "status": 200,
+    "content_type": "application/javascript; charset=UTF-8"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-algs-challenger-circuit-leaderboard-ea-algs-challenger-circuit-leaderboard-js~ea-algs-leaderboard.0f3edbed.ffba6c330b0f66f24a42.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-network-nav-ea-network-nav-js.b365f041.1763220178f4e48c8d3b.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-player-ea-player-js.b365f041.0e79859464d9428489d0.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-algs-challenger-circuit-leaderboard-ea-algs-challenger-circuit-leaderboard-js~ea-algs-leaderboard.6a8fe7ff.690ec58c3d162f4b89ea.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-algs-challenger-circuit-leaderboard-ea-algs-challenger-circuit-leaderboard-js~ea-algs-leaderboard.88e1d92a.43b15117b9c6f726c2c4.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-page-background-ea-page-background-js.b365f041.5bcc31ee7fd7767e64bf.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-type-kit-ea-type-kit-js.c2981ef3.56fde94dc89a8b8fd9b1.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-icons-ea-icons-js.727857f6.ae1a9cd7b9b650f945ef.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/hybrid-ea-hybrid-icons-ea-hybrid-icons-js.2dabccf0.39c0dca421eac1d0c88a.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-nav-advanced-ea-local-nav-advanced-js~ea-local-nav-drawer-sub-nav-advanced-ea-local-nav-dra.5c0c4774.35d01f64816679b6295b.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-cta-ea-cta-js.b365f041.72e5851b1c8c791b343e.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-nav-advanced-ea-local-nav-advanced-js.d6a5c661.644af8b06a5db6447c46.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/hybrid-ea-hybrid-mixins-ea-hybrid-modal-base-js.77f180b9.e997185e8d05fc955131.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-link-ea-link-js.b365f041.29874026339c6d7f1205.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-nav-advanced-ea-local-nav-advanced-js~ea-local-nav-shelf-sub-nav-ea-local-nav-shelf-sub-nav.f5796305.f2b1a67f2a681e63f5dc.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-game-box-ea-game-box-js.b365f041.83bdf4712f564ddfc024.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-nav-shelf-sub-nav-section-ea-local-nav-shelf-sub-nav-section-js.b365f041.39daf7cb9269181c13bf.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/hybrid-ea-hybrid-modal-invoker-ea-hybrid-modal-invoker-js.77f180b9.8473135b30c74f431875.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-nav-drawer-sub-nav-advanced-ea-local-nav-drawer-sub-nav-advanced-js.c2981ef3.0c24b2122353e7ea6a0d.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-spacer-ea-spacer-js.c2981ef3.fd3c6fc6ff0bcbfff1ce.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-nav-dropdown-ea-local-nav-dropdown-js.31ecd969.e3b2494ead471b4b908e.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-cta-dropdown-ea-cta-dropdown-js.b365f041.1e0a5334b17db6ecfc02.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-nav-shelf-sub-nav-section-link-ea-local-nav-shelf-sub-nav-section-link-js.b365f041.7c845e9c9bc0eb594249.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/eacom-icons-eacom-icons-js.f3846b68.afb8228d5d32c5243d0a.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-nav-shelf-sub-nav-ea-local-nav-shelf-sub-nav-js.b365f041.fb22b42569fc712f9ae3.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-section-column-ea-section-column-js.b365f041.63bd1d658549940fa401.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-tabs-ea-tabs-js.31ecd969.2a04d949b132a2772b35.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-section-ea-section-js.31ecd969.572a79f9888d2130df95.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-tab-ea-tab-js.b365f041.c80c552f7f90c5280315.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-buy-game-ea-buy-game-js~ea-buy-game-product-tabs-ea-buy-game-product-tabs-js~ea-buy-game-widget-e.f1a2b24d.fa4324dc240b5ee75ce8.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-leaderboard-ea-leaderboard-js~ea-player-ratings-card-ea-player-ratings-card-js~ea-player-ratings-.722be2e4.6b9510fa0d64b82fd3de.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-proclub-ranking-ea-proclub-ranking-js~ea-proclub-ranking-fc-ea-proclub-ranking-fc-js~ea-proclub-r.e88bac2d.e085c5b94f710f840864.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-proclub-ranking-nav-header-fc-ea-proclub-ranking-nav-header-fc-js.31ecd969.c76479eb03e3646e2a3a.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-proclub-ranking-fc-ea-proclub-ranking-fc-js.ec73658a.24ced4599cb71768a729.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-date-field-ea-date-field-js~ea-input-ea-input-js~ea-text-area-ea-text-area-js~eacom-sms-opt-in-ea.cebcaad8.04a6774d6e5fa6e3577a.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-connected-accounts-ea-connected-accounts-js.68dfa914.dbc2a48a2b2c7a2a47b6.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-subheading-ea-subheading-js.c2981ef3.240e3169da1a64a82346.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-newsletter-opt-in-ea-newsletter-opt-in-js.b365f041.55dd09f3d357002a75c9.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-input-ea-input-js.31ecd969.53b21c53ab109ee043c6.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-proclub-overview-fc-ea-proclub-overview-fc-js~ea-proclub-ranking-fc-ea-proclub-ranking-fc-js~ea-p.21601023.278da24c9e7f8eb3dfa1.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-date-field-ea-date-field-js~eacom-sms-opt-in-eacom-sms-opt-in-js.b365f041.72a48e5afbb77f33b5a8.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-select-ea-select-js.c2981ef3.164f2b7ca36c39a68694.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/hybrid-ea-hybrid-regional-rating-ea-hybrid-regional-rating-js.f71cff67.2c2d290066d51b73f86b.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/hybrid-ea-hybrid-price-query-ea-hybrid-price-query-js~hybrid-ea-hybrid-regional-rating-ea-hybrid-reg.ea009f63.60a75078cbbd2f7430ec.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-links-ea-local-links-js.c2981ef3.93fd9dbdca945d87be2a.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-checkbox-ea-checkbox-js.b365f041.531e802179dfd9eb023d.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-submit-ea-submit-js.b365f041.bce3c8760de5589c10e1.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-footer-ea-local-footer-js.31ecd969.87722057b46df987b1ec.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-link-ea-local-link-js.b365f041.5bff5c5f95974b220fe6.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-form-errors-ea-form-errors-js.c2981ef3.2956c0f1e93d6e48b1ce.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-social-links-ea-social-links-js.c2981ef3.33df6a072a4a874a4f38.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-date-field-ea-date-field-js.31ecd969.02c2b9c38b4a9572e84a.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-social-link-ea-social-link-js.b365f041.1c82b4083c070e37a4f9.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-studio-link-ea-studio-link-js.c2981ef3.27d8845c078f77c12a33.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-rating-link-ea-rating-link-js.c2981ef3.dd5bab321f66d06281c7.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-content-loader-ea-content-loader-js.68dfa914.5f563ba710b9176131d8.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-network-footer-ea-network-footer-js.c2981ef3.da37a8fc07d01d009304.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-play-comparison-ea-play-comparison-js~ea-regional-pricing-selector-ea-regional-pricing-selector-j.cfbec783.8cb236c940d4eec4334b.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-network-legal-ea-network-legal-js.b365f041.bf28a7d4d57e4ff52967.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-local-footer-ea-local-footer-js~ea-play-comparison-ea-play-comparison-js~hybrid-ea-hybrid-buy-wid.3eef87b3.7f98f11cb4ce8530db98.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-regional-pricing-selector-ea-regional-pricing-selector-js.31ecd969.20408b46d960bdad5562.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-truste-ea-truste-js.b365f041.2655151cc69b2061130c.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-locale-selector-ea-locale-selector-js.31ecd969.360f4d8cc07093b0884f.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-modal-ea-modal-js.b365f041.a7074b5985a71ec901e9.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-player-ratings-detail-view-mcs-ea-player-ratings-detail-view-mcs-js~ea-truste-ea-truste-js~ea-you.191d8768.355b96c5dd52c99a89de.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-age-gate-ea-age-gate-js.be26e2e0.5ac934b5cd669db01b01.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-modal-ea-modal-js~ea-modal-advance-ea-modal-advance-js~ea-player-ratings-detail-view-mcs-ea-playe.d51330b6.a6b4236809673a4046f1.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/ea/fc/fc-24/fonts/cruyffsans-regular.otf",
+    "status": 200,
+    "content_type": "application/x-font-otf"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/ea/fc/fc-24/fonts/cruyffsans-medium.otf",
+    "status": 200,
+    "content_type": "application/x-font-otf"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/ea/fc/fc-24/common/features/fc24-hero-md-welcome-to-clubs-light-bg-7x2-xl.jpg.adapt.1456w.jpg",
+    "status": 200,
+    "content_type": "image/jpeg"
+  },
+  {
+    "url": "https://www.ea.com/assets/fonts/ea-sports-fc/CruyffSansExpanded-Heavy.otf",
+    "status": 200,
+    "content_type": "application/vnd.oasis.opendocument.formula-template"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/fifa/pro-clubs/loading-animation.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/ea/fc/fc-24/fonts/martaserif-regular.otf",
+    "status": 200,
+    "content_type": "application/x-font-otf"
+  },
+  {
+    "url": "https://use.typekit.net/jjd6ead.js",
+    "status": 200,
+    "content_type": "text/javascript;charset=utf-8"
+  },
+  {
+    "url": "https://www.ea.com/user-data",
+    "status": 200,
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://www.ea.com/akam/13/pixel_45a6a284",
+    "status": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://www.ea.com/about/notice-at-collection/geotargeted-link",
+    "status": 200,
+    "content_type": "text/html; charset=UTF-8"
+  },
+  {
+    "url": "https://consent.trustarc.com/asset/notice.js/v/v1.7-2172",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://nds-network-nav.ea.com//pt-br/network-nav?authenticated=false",
+    "status": 200,
+    "content_type": "text/html; charset=UTF-8"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/ea/fc/common/global/tertiary-logo.svg",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/common/200429_global-nav/eaglobalnav-iconalert-white.svg",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/common/200429_global-nav/eaglobalnav-iconsignin.svg",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/common/200429_global-nav/eaglobalnav-iconregister.svg",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/common/200429_global-nav/ea-medallion-white.svg",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/common/200429_global-nav/eaglobalnav-iconlink-white.svg",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-player-avatar-ea-player-avatar-js.b365f041.f7fabd98a9ce70d7cabb.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://pl.ea.com/release/4.69.7/elements/ea-text-ea-text-js.68dfa914.984e3f3b7f951523053c.chunk.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://consent.trustarc.com/analytics?action=0&domain=ea.com&implied=1&session=6e9e366356f04321b1bdeb32ca12bfa3&new=1&referer=https://www.ea.com",
+    "status": 200,
+    "content_type": "image/gif"
+  },
+  {
+    "url": "https://service-aggregation-layer.juno.ea.com/graphql?operationName=gameRegionalRatingV2&variables=%7B%22slug%22%3A%22ea-sports-fc-24%22%2C%22locale%22%3A%22pt-BR%22%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22637aba2202c10e583045ed72f5d89c6e8c62a4454626de6c9f78ad69a7d2b0a0%22%7D%7D",
+    "status": 200,
+    "content_type": "application/json; charset=utf-8"
+  },
+  {
+    "url": "https://use.typekit.net/af/064c42/00000000000000003b9ace31/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/73b32b/00000000000000003b9ace35/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i7&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/41bb90/00000000000000003b9ace44/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/5a14d0/00000000000000003b9ace32/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=i4&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/f50d41/00000000000000003b9b2c84/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n3&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/cfbead/0000000000000000000146b3/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/f2d2d8/000000000000000000012518/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n7&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/76bc3b/00000000000000003b9b1369/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/ec8a3d/00000000000000003b9b136a/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n5&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/f6c05e/00000000000000003b9b29b5/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-NC64XZB&gtm=4e6852",
+    "status": 200,
+    "content_type": "application/javascript; charset=UTF-8"
+  },
+  {
+    "url": "https://use.typekit.net/af/6125b7/00000000000000003b9b29b2/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://use.typekit.net/af/827015/000000000000000000011c3b/27/l?primer=f592e0a4b9356877842506ce344308576437e4f677d7c9b78ca2162e6cad991a&fvd=n4&v=3",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://consent.trustarc.com/get?name=privacy_choices_icon.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://www.ea.com/assets/fonts/text/ElectronicArtsText-Regular.woff2",
+    "status": 200,
+    "content_type": "application/font-woff2"
+  },
+  {
+    "url": "https://app-images.ea.com/ps9x41qn6x3c/2Pepd3V1Ppi1iopii8sfMh/db32890e342b99977a3da6fb30513343/djctq-l.svg",
+    "status": 200,
+    "content_type": "image/svg+xml"
+  },
+  {
+    "url": "https://p.typekit.net/p.gif?s=1&k=jjd6ead&ht=tk&h=www.ea.com&f=7105.7106.7107.7108.10801.10802.14548.15815.37504.16382.10875.32265&a=366630&js=1.21.0&app=typekit&e=js&_=1786295669742",
+    "status": 200,
+    "content_type": "image/gif"
+  },
+  {
+    "url": "https://consent.trustarc.com/analytics?action=1&domain=ea.com&implied=1&session=6e9e366356f04321b1bdeb32ca12bfa3&new=1&referer=https://www.ea.com",
+    "status": 200,
+    "content_type": "image/gif"
+  },
+  {
+    "url": "https://www.ea.com/assets/images/favicon.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://js-agent.newrelic.com/nr-spa-1209.min.js",
+    "status": 200,
+    "content_type": "application/javascript"
+  },
+  {
+    "url": "https://proclubs.ea.com/api/fc/allTimeLeaderboard?platform=common-gen5",
+    "status": 200,
+    "content_type": "application/json"
+  },
+  {
+    "url": "https://bam-cell.nr-data.net/1/f701a6c63c?a=149134891&sa=1&v=1209.f04e2b9&t=Unnamed%20Transaction&rst=2498&ck=1&ref=https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings&be=516&fe=2412&dc=787&af=err,xhr,stn,ins,spa&perf=%7B%22timing%22:%7B%22of%22:1786295667471,%22n%22:0,%22f%22:1,%22dn%22:74,%22dne%22:90,%22c%22:90,%22s%22:107,%22ce%22:145,%22rq%22:145,%22rp%22:322,%22rpe%22:327,%22dl%22:329,%22di%22:656,%22ds%22:775,%22de%22:788,%22dc%22:2411,%22l%22:2412,%22le%22:2417%7D,%22navigation%22:%7B%7D%7D&fp=1096&fcp=1344&jsonp=NREUM.setToken",
+    "status": 200,
+    "content_type": "text/javascript"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/fc/pro-clubs/divisioncrest1.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/fc/pro-clubs/notfound-crest.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l73.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l1343.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l101047.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l99160501.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l1478.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l115998.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://bam-cell.nr-data.net/ins/1/f701a6c63c?a=149134891&sa=1&v=1209.f04e2b9&t=Unnamed%20Transaction&rst=2932&ck=1&ref=https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings",
+    "status": 204,
+    "content_type": "application/json; charset=UTF-8"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l114640.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l99160827.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l1.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l99120101.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l131125.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l1367.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://media.contentapi.ea.com/content/dam/eacom/martaserif/martaserif-regular.otf",
+    "status": 200,
+    "content_type": "application/x-font-otf"
+  },
+  {
+    "url": "https://eafc24.content.easports.com/fifa/fltOnlineAssets/24B23FDE-7835-41C2-87A2-F453DFDB2E82/2024/fcweb/crests/256x256/l1354.png",
+    "status": 200,
+    "content_type": "image/png"
+  },
+  {
+    "url": "https://bam-cell.nr-data.net/events/1/f701a6c63c?a=149134891&sa=1&v=1209.f04e2b9&t=Unnamed%20Transaction&rst=2942&ck=1&ref=https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings",
+    "status": 200,
+    "content_type": "image/gif"
+  },
+  {
+    "url": "https://bam-cell.nr-data.net/events/1/f701a6c63c?a=149134891&sa=1&v=1209.f04e2b9&t=Unnamed%20Transaction&rst=12505&ck=1&ref=https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings",
+    "status": 200,
+    "content_type": "image/gif"
+  }
+]
