@@ -1,10 +1,8 @@
 # Relatório Executivo: Extração Completa e Enriquecida de Dados EA Sports FC - Pro Clubs
 
-**Data da Extração:** 09 de Agosto de 2026
-
-**Fonte Oficial:** [EA Sports FC Pro Clubs Leaderboards](https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings)
-
-**Repositório Oficial:** [cspgabriel/pro-clubs-pro-player](https://github.com/cspgabriel/pro-clubs-pro-player)
+**Data da Extração:** 09 de Agosto de 2026  
+**Fonte Oficial:** [EA Sports FC Pro Clubs Leaderboards](https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings)  
+**Repositório Oficial:** [cspgabriel/pro-clubs-pro-player](https://github.com/cspgabriel/pro-clubs-pro-player)  
 
 ---
 
