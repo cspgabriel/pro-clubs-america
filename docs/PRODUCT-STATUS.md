@@ -31,7 +31,7 @@ gráficos e organização de amistosos verificados pela fonte pública.
 | Comunidades por país | funcional | 12 países, português, espanhol e inglês |
 | Página de partida e lobby | backend ativo | horário, escalações e chat em tempo real privado aos clubes participantes |
 | Mobile | pacotes gerados | APK/AAB v2 e projeto iOS/Xcode para `proclubsamerica.com`; chave Android reutilizável e Digital Asset Links correspondente |
-| Planos | mockup | Free, Pro e VIP sem cobrança habilitada |
+| Planos | backend implementado | catálogo, Checkout, Portal e webhook Stripe implementados; ativação live depende de credencial permanente validada |
 
 ## Fonte carregada
 
