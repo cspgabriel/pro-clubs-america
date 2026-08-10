@@ -9,6 +9,9 @@ export interface BillingEnv {
   SUPABASE_SERVICE_ROLE_KEY: string;
   EA_INGEST_SECRET?: string;
   SITE_URL?: string;
+  VAPID_SUBJECT?: string;
+  VAPID_PUBLIC_KEY?: string;
+  VAPID_PRIVATE_KEY?: string;
 }
 
 export interface FunctionContext {

@@ -5,6 +5,7 @@ interface ClaimRow { id: string; status: string; club_id: string; created_at: st
 
 async function profilePayload(env: BillingEnv, profile: SupabaseProfile) {
   const club = profile.club_id ? await findClubById(env, profile.club_id) : null;
+  const player = profile.player_id ? (await supabaseRest<Array<{ gamertag: string }>>(env, `players?id=eq.${encodeURIComponent(profile.player_id)}&select=gamertag&limit=1`))[0] : null;
   const claims = await supabaseRest<ClaimRow[]>(env, `club_claims?profile_id=eq.${encodeURIComponent(profile.id)}&order=created_at.desc&limit=1`);
   const pending = claims[0]?.status === "pending_review" ? await findClubById(env, claims[0].club_id) : null;
   return {
@@ -19,6 +20,8 @@ async function profilePayload(env: BillingEnv, profile: SupabaseProfile) {
     bonusAccessUntil: profile.bonus_access_until || undefined,
     clubId: club ? publicRouteId(club) : undefined,
     clubName: club?.name,
+    playerId: player?.gamertag,
+    playerName: player?.gamertag,
     pendingClubId: pending ? publicRouteId(pending) : undefined,
     pendingClubName: pending?.name,
     pendingClaimId: claims[0]?.status === "pending_review" ? claims[0].id : undefined,

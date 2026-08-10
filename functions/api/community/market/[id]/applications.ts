@@ -1,9 +1,10 @@
 import { apiError, assertSameOrigin, verifyFirebaseRequest, type FunctionContext } from "../../../../_lib/billing";
 import { ensureProfile, findClubById, supabaseRest } from "../../../../_lib/supabase";
+import { sendPushToProfiles } from "../../../../_lib/push";
 
 interface ListingRow { id: string; creator_id: string; is_active: boolean; }
 interface ApplicationRow { id: string; applicant_profile_id: string; message: string | null; contact: string | null; status: string; created_at: string; }
-interface ApplicantRow { id: string; full_name: string | null; email: string; role: string; club_id: string | null; }
+interface ApplicantRow { id: string; full_name: string | null; email: string; role: string; club_id: string | null; player_id: string | null; }
 
 async function contextData(context: FunctionContext) {
   const identity = await verifyFirebaseRequest(context.request, context.env);
@@ -22,6 +23,7 @@ export const onRequestPost = async (context: FunctionContext) => {
     if (listing.creator_id === profile.id) return apiError("Você não pode se candidatar ao próprio anúncio.", 409);
     const body = await context.request.json().catch(() => ({})) as { message?: string; contact?: string };
     const rows = await supabaseRest<ApplicationRow[]>(context.env, "market_applications?on_conflict=listing_id,applicant_profile_id", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=representation" }, body: JSON.stringify({ listing_id: listing.id, applicant_profile_id: profile.id, message: String(body.message || "Tenho interesse nesta oportunidade.").slice(0, 500), contact: String(body.contact || profile.email).slice(0, 240), status: "pending", updated_at: new Date().toISOString() }) });
+    context.waitUntil(sendPushToProfiles(context.env, [listing.creator_id], { title: "Nova candidatura", body: `${profile.full_name || "Um jogador"} se candidatou ao seu anúncio.`, url: "/mercado/", tag: `market-${listing.id}` }));
     return Response.json({ id: rows[0]?.id, status: "pending" }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "APPLICATION_FAILED";
@@ -37,7 +39,8 @@ export const onRequestGet = async (context: FunctionContext) => {
     const result = await Promise.all(applications.map(async (application) => {
       const applicant = (await supabaseRest<ApplicantRow[]>(context.env, `profiles?id=eq.${encodeURIComponent(application.applicant_profile_id)}&limit=1`))[0];
       const club = applicant?.club_id ? await findClubById(context.env, applicant.club_id) : null;
-      return applicant ? { id: application.id, name: applicant.full_name || "Jogador", email: applicant.email, role: applicant.role, clubName: club?.name, message: application.message, contact: application.contact, status: application.status, createdAt: application.created_at } : null;
+      const player = applicant?.player_id ? (await supabaseRest<Array<{ gamertag: string }>>(context.env, `players?id=eq.${encodeURIComponent(applicant.player_id)}&select=gamertag&limit=1`))[0] : null;
+      return applicant ? { id: application.id, profileId: applicant.id, playerId: player?.gamertag, name: applicant.full_name || "Jogador", email: applicant.email, role: applicant.role, clubName: club?.name, message: application.message, contact: application.contact, status: application.status, createdAt: application.created_at } : null;
     }));
     return Response.json(result.filter(Boolean), { headers: { "cache-control": "no-store" } });
   } catch (error) {

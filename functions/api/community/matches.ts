@@ -1,6 +1,7 @@
 import { apiError, assertSameOrigin, verifyFirebaseRequest, type FunctionContext } from "../../_lib/billing";
 import { matchPayload, resolveClubRoute, type MatchRow } from "../../_lib/community";
 import { ensureProfile, findClubById, supabaseRest } from "../../_lib/supabase";
+import { sendPushToProfiles } from "../../_lib/push";
 
 export const onRequestGet = async ({ env }: FunctionContext) => {
   try {
@@ -11,7 +12,7 @@ export const onRequestGet = async ({ env }: FunctionContext) => {
   }
 };
 
-export const onRequestPost = async ({ request, env }: FunctionContext) => {
+export const onRequestPost = async ({ request, env, waitUntil }: FunctionContext) => {
   try {
     assertSameOrigin(request, env.SITE_URL);
     const identity = await verifyFirebaseRequest(request, env);
@@ -30,6 +31,10 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
       headers: { Prefer: "return=representation" },
       body: JSON.stringify({ home_club_id: home.id, invited_club_id: invited?.id || null, creator_profile_id: profile.id, match_type: "Friendly", status: "open_challenge", challenge_mode: mode, scheduled_date: body.date, scheduled_time: body.time, region: String(body.region || "Brasil").slice(0, 80), featured: profile.plan !== "free", scheduled_at: `${body.date}T${body.time}:00-03:00`, updated_at: new Date().toISOString() }),
     });
+    if (invited) {
+      const recipients = await supabaseRest<Array<{ id: string }>>(env, `profiles?club_id=eq.${encodeURIComponent(invited.id)}&role=in.(owner,captain)&select=id`);
+      waitUntil(sendPushToProfiles(env, recipients.map((item) => item.id), { title: "Novo desafio recebido", body: `${home.name} convidou seu clube para um amistoso.`, url: `/partida/${rows[0].id}/`, tag: `match-${rows[0].id}` }));
+    }
     return Response.json(await matchPayload(env, rows[0]), { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "MATCH_CREATE_FAILED";

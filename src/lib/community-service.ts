@@ -17,6 +17,8 @@ export interface CommunityProfile {
   role: CommunityRole;
   clubId?: string;
   clubName?: string;
+  playerId?: string;
+  playerName?: string;
   pendingClubId?: string;
   pendingClubName?: string;
   pendingClaimId?: string;
@@ -52,7 +54,7 @@ export interface TransferPostRecord {
   hasApplied?: boolean;
   applicationCount?: number;
 }
-export interface MarketApplicationRecord { id: string; name: string; email: string; role: string; clubName?: string; message?: string; contact?: string; status: string; createdAt: string; }
+export interface MarketApplicationRecord { id: string; profileId: string; playerId?: string; name: string; email: string; role: string; clubName?: string; message?: string; contact?: string; status: string; createdAt: string; }
 
 export interface LobbyMessageRecord { id: string; authorUid: string; author: string; text: string; createdAt: string; }
 type WatchError = (error: Error) => void;
@@ -91,6 +93,26 @@ export async function getCommunityProfile(): Promise<CommunityProfile | null> {
 
 export function saveCommunityPreferences(input: { country: string; locale: string }) {
   return api<CommunityProfile>("/api/community/profile", { method: "PATCH", body: JSON.stringify(input) }, true);
+}
+
+export function getPushConfig() {
+  return api<{ publicKey: string }>("/api/push/config");
+}
+
+export function savePushSubscription(subscription: PushSubscriptionJSON) {
+  return api<{ subscribed: boolean }>("/api/push/subscribe", { method: "POST", body: JSON.stringify(subscription) }, true);
+}
+
+export function removePushSubscription(endpoint: string) {
+  return api<{ subscribed: boolean }>("/api/push/subscribe", { method: "DELETE", body: JSON.stringify({ endpoint }) }, true);
+}
+
+export function sendPushTest() {
+  return api<{ sent: boolean }>("/api/push/test", { method: "POST", body: "{}" }, true);
+}
+
+export function linkEaPlayer(input: { eaUrl: string; gamertag: string }) {
+  return api<{ playerId: string; playerName: string; clubId: string; clubName: string; matches: number; goals: number; assists: number; tackles: number }>("/api/community/player-link", { method: "POST", body: JSON.stringify(input) }, true);
 }
 
 export function getClubReferral() {

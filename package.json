@@ -8,13 +8,14 @@
     "start": "next start",
     "lint": "eslint",
     "check": "npm run lint && npm run build && npm run check:functions",
-    "check:functions": "wrangler pages functions build functions --outdir .wrangler/functions-check --compatibility-date 2026-08-06",
+    "check:functions": "wrangler pages functions build functions --outdir .wrangler/functions-check --compatibility-date 2026-08-06 --compatibility-flags nodejs_compat",
     "build:mobile": "node scripts/package-pwabuilder.mjs",
     "import:data": "node scripts/import-normalized.mjs",
     "import:supabase": "node scripts/import-supabase-catalog.mjs",
     "import:supabase:apply": "node scripts/import-supabase-catalog.mjs --apply"
   },
   "dependencies": {
+    "@block65/webcrypto-web-push": "^1.0.2",
     "@fontsource/chakra-petch": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/inter": "^5.3.0",

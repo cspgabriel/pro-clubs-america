@@ -25,7 +25,7 @@ async function packageAndroid(webManifest) {
   const options = {
     analysisId: null, appVersion: "1.0.0.0", appVersionCode: 1,
     backgroundColor: webManifest.background_color || "#061329", display: "standalone",
-    enableNotifications: false, enableSiteSettingsShortcut: true, fallbackType: "customtabs",
+    enableNotifications: true, enableSiteSettingsShortcut: true, fallbackType: "customtabs",
     features: { locationDelegation: { enabled: false }, playBilling: { enabled: false } },
     host: site.host, iconUrl, includeSourceCode: true, isChromeOSOnly: false, isMetaQuest: false,
     launcherName: "Clubs America", maskableIconUrl: iconUrl, monochromeIconUrl: "", name: "Pro Clubs America",

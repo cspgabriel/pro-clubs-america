@@ -21,6 +21,7 @@ export interface SupabaseProfile {
   referral_code?: string | null;
   referred_by_profile_id?: string | null;
   bonus_access_until?: string | null;
+  player_id?: string | null;
 }
 
 export interface SupabaseClub {

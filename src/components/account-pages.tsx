@@ -3,26 +3,32 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { ArrowRight, CalendarCheck, CheckCircle2, Globe2, LogOut, Mail, Settings2, Shield, UserRound, Users } from "lucide-react";
+import { ArrowRight, CalendarCheck, CheckCircle2, Globe2, Link2, LogOut, Mail, Settings2, Shield, Target, UserRound, Users } from "lucide-react";
 import { logout, observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
-import { getCommunityProfile, saveCommunityPreferences, type CommunityProfile } from "@/lib/community-service";
+import { getCommunityProfile, linkEaPlayer, saveCommunityPreferences, type CommunityProfile } from "@/lib/community-service";
 import { countries, locales } from "@/lib/i18n";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
 import { CountryFlag } from "./country-flag";
 import { BillingPortalButton } from "./billing-actions";
+import { NotificationSettings } from "./notification-settings";
 
 export function AccountPage() {
   const router = useRouter();
   const [user, setUser] = useState<AuthUserSnapshot | null>(null);
   const [profile, setProfile] = useState<CommunityProfile | null>(null);
+  const [playerLinkBusy, setPlayerLinkBusy] = useState(false);
+  const [playerLinkMessage, setPlayerLinkMessage] = useState("");
   const trialActive = Boolean(profile?.premiumAccess && profile.plan === "free");
   const planLabel = profile?.plan === "club_premium" ? "Premium Pro" : profile?.plan === "club_pro" ? "Clube Pro" : profile?.plan === "player_pro" ? "Jogador Pro" : trialActive ? "Premium · teste grátis" : "Gratuito";
   useEffect(() => observeAuth((value) => { setUser(value); if (value) getCommunityProfile().then(setProfile).catch(() => setProfile(null)); else setProfile(null); }), []);
   async function exit() { await logout(); router.push("/"); }
+  async function linkPlayer(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const form = new FormData(event.currentTarget); setPlayerLinkBusy(true); setPlayerLinkMessage(""); try { const linked = await linkEaPlayer({ eaUrl: String(form.get("eaUrl")), gamertag: String(form.get("gamertag")) }); setProfile((current) => current ? { ...current, playerId: linked.playerId, playerName: linked.playerName, clubId: current.clubId || linked.clubId, clubName: current.clubName || linked.clubName } : current); setPlayerLinkMessage("Jogador oficial vinculado e estatísticas carregadas."); } catch (error) { setPlayerLinkMessage(error instanceof Error ? error.message : "Não foi possível vincular o jogador."); } finally { setPlayerLinkBusy(false); } }
   return <main className="app-shell"><PlatformHeader /><section className="account-hero professional"><span className="account-avatar">{(user?.name ?? "J").slice(0, 1).toUpperCase()}</span><div><small>MINHA CONTA</small><h1>{user?.name ?? "Você ainda não entrou"}</h1><p>{user?.email ?? "Entre para aceitar desafios e representar seu clube."}</p></div></section><div className="account-grid professional">{user ? <>
     <article className="account-profile-card"><header><CheckCircle2 /><span>CONTA VERIFICADA</span></header><div className="account-identity"><span>{user.name.slice(0, 1).toUpperCase()}</span><div><h2 className="profile-country-title">{user.name} <CountryFlag country={profile?.country} /></h2><p><Mail /> {user.email}</p></div></div><dl><div><dt>Perfil</dt><dd>{profile?.role === "owner" ? "Dono" : profile?.role === "captain" ? "Capitão" : profile?.role === "player" ? "Jogador" : "Visitante"}</dd></div><div><dt>Plano</dt><dd>{planLabel}</dd></div>{profile?.bonusAccessUntil && <div><dt>Premium ativo até</dt><dd>{new Date(profile.bonusAccessUntil).toLocaleDateString("pt-BR")}</dd></div>}</dl><div className="account-card-actions"><Link href="/onboarding"><Settings2 /> País e idioma <ArrowRight /></Link>{profile?.plan === "player_pro" || profile?.plan === "club_pro" ? <BillingPortalButton /> : <Link href="/planos"><CalendarCheck /> {profile?.plan === "club_premium" ? "Ver benefícios Premium" : "Conhecer planos"} <ArrowRight /></Link>}</div></article>
     <article className="account-club-card"><header><Shield /><span>MEU CLUBE</span></header><h2 className="profile-country-title">{profile?.clubName ?? profile?.pendingClubName ?? "Vincule um time EA"}<CountryFlag country={profile?.country} /></h2><p>{profile?.clubId ? `Você faz parte deste clube como ${profile.role === "owner" ? "dono" : profile.role === "captain" ? "capitão" : "jogador"}.` : profile?.pendingClubId ? "O vínculo está sendo concluído automaticamente." : "Vincule o clube para aceitar desafios e convidar integrantes do elenco."}</p><div className="account-card-actions">{profile?.clubId && <Link href="/conta/time"><Users /> Gerenciar time <ArrowRight /></Link>}<Link href={profile?.clubId ? `/club/${profile.clubId}` : profile?.pendingClubId ? "/conta" : "/cadastro"}>{profile?.clubId ? "Abrir página do clube" : profile?.pendingClubId ? "Atualizar vínculo" : "Cadastrar meu time"} <ArrowRight /></Link></div></article>
+    <article className="player-link-card"><header><Target /><span>MEU JOGADOR EA</span></header>{profile?.playerId ? <><h2>{profile.playerName}</h2><p>Seu histórico público da EA está conectado ao perfil da comunidade.</p><Link href={`/jogador/${encodeURIComponent(profile.playerId)}`}>Ver gols, assistências e desarmes <ArrowRight /></Link></> : <form onSubmit={linkPlayer}><h2>Traga suas estatísticas</h2><p>Cole o link oficial da lista de integrantes do seu clube e informe seu nome exatamente como aparece na EA.</p><label>URL oficial do elenco EA<input required name="eaUrl" type="url" placeholder="https://www.ea.com/pt-br/.../member-list?clubId=..." /></label><label>Nome do jogador na EA<input required name="gamertag" placeholder="Ex.: MatthewsMendesx" /></label><button disabled={playerLinkBusy} type="submit"><Link2 /> {playerLinkBusy ? "Vinculando…" : "Vincular jogador e importar histórico"}</button>{playerLinkMessage && <small>{playerLinkMessage}</small>}</form>}</article>
+    <NotificationSettings />
     <button className="account-logout" onClick={exit}><LogOut /> Sair da conta</button>
   </> : <article><h2>Identificação necessária</h2><p>Crie uma conta ou entre com Google/e-mail.</p><Link href="/entrar">Entrar <ArrowRight /></Link></article>}</div><MobileNav /></main>;
 }

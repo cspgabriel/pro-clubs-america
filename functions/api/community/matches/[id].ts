@@ -1,6 +1,7 @@
 import { apiError, assertSameOrigin, verifyFirebaseRequest, type FunctionContext } from "../../../_lib/billing";
 import { matchPayload, type MatchRow } from "../../../_lib/community";
 import { ensureProfile, supabaseRest } from "../../../_lib/supabase";
+import { sendPushToProfiles } from "../../../_lib/push";
 
 type MatchContext = FunctionContext & { params: { id: string } };
 
@@ -11,7 +12,7 @@ export const onRequestGet = async ({ env, params }: MatchContext) => {
   } catch { return apiError("Não foi possível carregar a partida.", 500); }
 };
 
-export const onRequestPatch = async ({ request, env, params }: MatchContext) => {
+export const onRequestPatch = async ({ request, env, params, waitUntil }: MatchContext) => {
   try {
     assertSameOrigin(request, env.SITE_URL);
     const identity = await verifyFirebaseRequest(request, env);
@@ -29,6 +30,9 @@ export const onRequestPatch = async ({ request, env, params }: MatchContext) => 
       update = { status: "waiting_ea_verification", played_at: new Date().toISOString(), updated_at: new Date().toISOString() };
     } else return apiError("Ação inválida.");
     const rows = await supabaseRest<MatchRow[]>(env, `matches?id=eq.${encodeURIComponent(params.id)}`, { method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify(update) });
+    if (body.action === "accept" && current.creator_profile_id) {
+      waitUntil(sendPushToProfiles(env, [current.creator_profile_id], { title: "Desafio aceito", body: "Um clube aceitou seu amistoso. Confira os detalhes da partida.", url: `/partida/${current.id}/`, tag: `match-${current.id}` }));
+    }
     if (body.action === "played") {
       const clubIds = [current.home_club_id, current.away_club_id].filter(Boolean);
       await Promise.all(clubIds.map((clubId) => supabaseRest(env, "ea_crawl_queue?on_conflict=club_id", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ club_id: clubId, priority: 90, status: "queued", next_run_at: new Date().toISOString(), last_error: null, updated_at: new Date().toISOString() }) })));
