@@ -1,6 +1,6 @@
 import puppeteer from "@cloudflare/puppeteer";
 
-const PARSER_VERSION = "cloudflare-browser-public-page-v1";
+const PARSER_VERSION = "cloudflare-browser-public-page-v2";
 const USER_AGENT = "ProClubsAmericaCrawler/1.0 (+https://proclubsamerica.com)";
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const safeText = (value, fallback = "") => String(value ?? fallback).trim();
@@ -82,6 +82,7 @@ async function crawl(env, item) {
   if (!(await robotsAllows(new URL(sourceUrl).pathname))) return { status: "blocked", responseCount: 0, error: "ROBOTS_DISALLOW", matches: [] };
   const browser = await puppeteer.launch(env.BROWSER, { keep_alive: 120000 });
   const page = await browser.newPage();
+  await page.setViewport({ width: 1440, height: 1200, deviceScaleFactor: 1 });
   const observed = [];
   const responseTasks = [];
   page.on("response", (response) => {
@@ -97,6 +98,8 @@ async function crawl(env, item) {
     const response = await page.goto(sourceUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
     if (!response || response.status() >= 400) throw new Error(`PAGE_${response?.status() || "NO_RESPONSE"}`);
     await page.waitForSelector("ea-proclub-match-history-fc", { timeout: 12000 }).catch(() => undefined);
+    await page.evaluate(() => document.querySelector("ea-proclub-match-history-fc")?.scrollIntoView({ block: "center" })).catch(() => undefined);
+    await sleep(1200);
     for (let elapsed = 0; elapsed < 24000 && observed.length === 0; elapsed += 2000) await sleep(2000);
     await clickMode(page, ["friendly", "amistoso"]);
     for (let elapsed = 0; elapsed < 8000; elapsed += 2000) await sleep(2000);
