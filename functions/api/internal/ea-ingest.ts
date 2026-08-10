@@ -6,6 +6,7 @@ interface IncomingPlayer { playerId?: string; playerName?: string; position?: st
 interface IncomingMatch { mode?: MatchMode; playedAt?: string; homeClubId?: string; homeClubName?: string; awayClubId?: string; awayClubName?: string; homeScore?: number; awayScore?: number; competition?: string; sourceUrl?: string; players?: IncomingPlayer[]; }
 interface IngestBody { parserVersion?: string; source?: string; startedAt?: string; matches?: IncomingMatch[]; metadata?: Record<string, unknown>; }
 interface SnapshotRow { id: string; source_fingerprint: string; }
+interface QueueRow { id: string; priority: number; attempts: number; club_id: string; next_run_at: string; }
 
 const modes = new Set<MatchMode>(["leagueMatch", "friendlyMatch", "playoffMatch"]);
 const platforms = new Set(["common-gen5", "common-gen4", "nx"]);
@@ -22,6 +23,19 @@ async function authorized(request: Request, secret?: string) {
   if (!secret || !supplied) return false;
   return (await digest(supplied)) === (await digest(secret));
 }
+
+export const onRequestGet = async (context: FunctionContext) => {
+  if (!(await authorized(context.request, context.env.EA_INGEST_SECRET))) return apiError("INGEST_AUTH_REQUIRED", 401);
+  const requested = Number(new URL(context.request.url).searchParams.get("limit") || 3);
+  const limit = Math.max(1, Math.min(Number.isFinite(requested) ? requested : 3, 10));
+  const due = encodeURIComponent(new Date().toISOString());
+  const queue = await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?status=in.(queued,failed,succeeded)&next_run_at=lte.${due}&select=id,priority,attempts,club_id,next_run_at&order=priority.desc,next_run_at.asc&limit=${limit}`);
+  const items = await Promise.all(queue.map(async (item) => {
+    const club = (await supabaseRest<Array<{ id: string; ea_club_id: string; platform: string; name: string; ea_url: string }>>(context.env, `clubs?id=eq.${encodeURIComponent(item.club_id)}&select=id,ea_club_id,platform,name,ea_url&limit=1`))[0];
+    return club ? { queueId: item.id, priority: item.priority, attempts: item.attempts, clubId: club.ea_club_id, platform: club.platform, clubName: club.name, sourceUrl: club.ea_url } : null;
+  }));
+  return Response.json({ items: items.filter(Boolean) }, { headers: { "cache-control": "no-store" } });
+};
 
 function sourceUrl(value: unknown, homeClubId: string, platform: string) {
   const raw = safeText(value, 500);
@@ -48,7 +62,10 @@ export const onRequestPost = async (context: FunctionContext) => {
   const body = await context.request.json().catch(() => null) as IngestBody | null;
   const parserVersion = safeText(body?.parserVersion, 80);
   const input = Array.isArray(body?.matches) ? body.matches.slice(0, 500) : [];
-  if (!parserVersion || !input.length) return apiError("Informe parserVersion e ao menos uma partida normalizada.");
+  const queueId = safeText(body?.metadata?.queueId, 80);
+  const responseCount = safeNumber(body?.metadata?.responseCount, 0, 100) ?? 0;
+  const collectionStatus = ["succeeded", "failed", "blocked"].includes(String(body?.metadata?.collectionStatus)) ? String(body?.metadata?.collectionStatus) : "succeeded";
+  if (!parserVersion || (!input.length && !(queueId && (responseCount > 0 || collectionStatus !== "succeeded"))) || !["succeeded", "failed", "blocked"].includes(collectionStatus)) return apiError("Coleta inválida ou sem resposta observável da página pública.");
 
   const runs = await supabaseRest<Array<{ id: string }>>(context.env, "ea_crawl_runs", { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify({ source: safeText(body?.source || "authorized-import", 80), parser_version: parserVersion, status: "running", started_at: body?.startedAt || new Date().toISOString(), metadata: body?.metadata || {} }) });
   const runId = runs[0]?.id;
@@ -73,8 +90,12 @@ export const onRequestPost = async (context: FunctionContext) => {
   }
 
   const errors = results.filter((item) => item.error).length;
-  await supabaseRest(context.env, `ea_crawl_runs?id=eq.${encodeURIComponent(runId)}`, { method: "PATCH", body: JSON.stringify({ status: errors === input.length ? "failed" : errors ? "partial" : "succeeded", finished_at: new Date().toISOString(), matches_observed: input.length - errors, error_count: errors }) });
-  return Response.json({ runId, status: errors === input.length ? "failed" : errors ? "partial" : "succeeded", accepted: input.length - errors, errors, reconciled: results.filter((item) => item.reconciledMatchId).length, results }, { status: errors === input.length ? 422 : 202 });
+  const runStatus = collectionStatus !== "succeeded" ? collectionStatus : input.length > 0 && errors === input.length ? "failed" : errors ? "partial" : "succeeded";
+  const finishedAt = new Date();
+  await supabaseRest(context.env, `ea_crawl_runs?id=eq.${encodeURIComponent(runId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus, finished_at: finishedAt.toISOString(), clubs_processed: queueId ? 1 : 0, matches_observed: input.length - errors, error_count: errors + (collectionStatus === "succeeded" ? 0 : 1) }) });
+  if (queueId) {
+    const retryMinutes = runStatus === "succeeded" ? 360 : runStatus === "blocked" ? 1440 : 30;
+    await supabaseRest(context.env, `ea_crawl_queue?id=eq.${encodeURIComponent(queueId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus === "partial" ? "failed" : runStatus, last_attempt_at: finishedAt.toISOString(), last_success_at: runStatus === "succeeded" ? finishedAt.toISOString() : undefined, attempts: Number(body?.metadata?.attempts || 0) + 1, last_error: runStatus === "succeeded" ? null : safeText(body?.metadata?.error || runStatus, 500), next_run_at: new Date(finishedAt.getTime() + retryMinutes * 60000).toISOString(), updated_at: finishedAt.toISOString() }) });
+  }
+  return Response.json({ runId, status: runStatus, accepted: input.length - errors, errors, reconciled: results.filter((item) => item.reconciledMatchId).length, results }, { status: runStatus === "failed" || runStatus === "blocked" ? 422 : 202 });
 };
-
-export const onRequest = () => apiError("Método não permitido.", 405);

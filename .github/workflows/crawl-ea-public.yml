@@ -1,0 +1,37 @@
+name: Crawl public EA Clubs pages
+
+on:
+  schedule:
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Maximum clubs to crawl sequentially"
+        required: false
+        default: "3"
+
+concurrency:
+  group: ea-public-crawler
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PCA_SITE_URL: https://pro-clubs-america.pages.dev
+      EA_INGEST_SECRET: ${{ secrets.EA_INGEST_SECRET }}
+      CRAWL_LIMIT: ${{ inputs.limit || '3' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Crawl public pages and ingest verified observations
+        run: node scripts/crawl-ea-public.mjs
