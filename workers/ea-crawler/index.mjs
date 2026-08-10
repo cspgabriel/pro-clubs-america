@@ -1,9 +1,17 @@
 import puppeteer from "@cloudflare/puppeteer";
 
-const PARSER_VERSION = "cloudflare-browser-public-page-v5";
+const PARSER_VERSION = "cloudflare-browser-public-page-v12";
 const USER_AGENT = "ProClubsAmericaCrawler/1.0 (+https://proclubsamerica.com)";
+const BROWSER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-const safeText = (value, fallback = "") => String(value ?? fallback).trim();
+const safeText = (value, fallback = "") => {
+  const text = String(value ?? fallback).trim();
+  if (!/[ÃÂ]/.test(text) || [...text].some((character) => character.charCodeAt(0) > 255)) return text;
+  try {
+    const decoded = new TextDecoder("utf-8", { fatal: true }).decode(Uint8Array.from([...text].map((character) => character.charCodeAt(0))));
+    return decoded.includes("�") ? text : decoded;
+  } catch { return text; }
+};
 const safeNumber = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
 
 function listMatches(payload) {
@@ -59,28 +67,39 @@ async function robotsAllows(pathname) {
   return !disallowed.some((rule) => pathname.startsWith(rule));
 }
 
-async function clickMode(page, labels) {
-  return page.evaluate((wanted) => {
-    const elements = [];
-    const visit = (root) => {
-      for (const element of root.querySelectorAll("button,[role=tab],a")) {
-        elements.push(element);
-        if (element.shadowRoot) visit(element.shadowRoot);
+async function selectMode(page, value) {
+  for (let attempt = 0; attempt < 70; attempt += 1) {
+    const result = await page.evaluate((wanted) => {
+      const component = document.querySelector("ea-proclub-match-history-fc");
+      const roots = [component?.shadowRoot || component || document];
+      const elements = [];
+      while (roots.length) {
+        const root = roots.shift();
+        elements.push(...root.querySelectorAll("select,[value],[data-value]"));
+        for (const element of root.querySelectorAll("*")) if (element.shadowRoot) roots.push(element.shadowRoot);
       }
-      for (const element of root.querySelectorAll("*")) if (element.shadowRoot) visit(element.shadowRoot);
-    };
-    visit(document);
-    const target = elements.find((element) => wanted.some((label) => (element.textContent || "").trim().toLocaleLowerCase().includes(label)));
-    if (!target) return false;
-    target.click();
-    return true;
-  }, labels);
+      const select = elements.find((element) => element.tagName === "SELECT" && [...element.options].some((option) => option.value === wanted));
+      if (select) {
+        select.value = wanted;
+        select.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
+        select.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+        return "select";
+      }
+      const target = elements.find((element) => (element.getAttribute("value") || element.getAttribute("data-value")) === wanted);
+      if (!target) return "missing";
+      target.click();
+      return "click";
+    }, value).catch(() => "error");
+    if (result !== "missing") return result;
+    await sleep(500);
+  }
+  return "missing";
 }
 
 async function crawl(env, item) {
   const sourceUrl = `https://www.ea.com/pt-br/games/ea-sports-fc/clubs/match-history?clubId=${encodeURIComponent(item.clubId)}&platform=${encodeURIComponent(item.platform)}`;
   if (!(await robotsAllows(new URL(sourceUrl).pathname))) return { status: "blocked", responseCount: 0, error: "ROBOTS_DISALLOW", matches: [] };
-  const browser = await puppeteer.launch(env.BROWSER, { keep_alive: 120000 });
+  const browser = await puppeteer.launch(env.BROWSER, { keep_alive: 180000 });
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 1200, deviceScaleFactor: 1 });
   const observed = [];
@@ -89,6 +108,8 @@ async function crawl(env, item) {
   const failedRequests = [];
   const matchingResponses = [];
   const parseErrors = [];
+  let clickedFriendly = "pending";
+  let clickedPlayoff = "pending";
   page.on("request", (request) => {
     const url = request.url();
     if (/proclubs|clubs\/matches/i.test(url)) matchingRequests.push(url.slice(0, 240));
@@ -107,17 +128,18 @@ async function crawl(env, item) {
     }).catch(() => { parseErrors.push(`${response.status()}:${response.headers()["content-type"] || "unknown"}`); }));
   });
   try {
-    await page.setUserAgent(USER_AGENT);
+    await page.setUserAgent(BROWSER_USER_AGENT);
+    await page.setExtraHTTPHeaders({ "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7" });
     const response = await page.goto(sourceUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
     if (!response || response.status() >= 400) throw new Error(`PAGE_${response?.status() || "NO_RESPONSE"}`);
     await page.waitForSelector("ea-proclub-match-history-fc", { timeout: 12000 }).catch(() => undefined);
     await page.evaluate(() => document.querySelector("ea-proclub-match-history-fc")?.scrollIntoView({ block: "center" })).catch(() => undefined);
     await sleep(1200);
-    for (let elapsed = 0; elapsed < 24000 && observed.length === 0; elapsed += 2000) await sleep(2000);
-    await clickMode(page, ["friendly", "amistoso"]);
-    for (let elapsed = 0; elapsed < 8000; elapsed += 2000) await sleep(2000);
-    await clickMode(page, ["playoff", "mata-mata"]);
-    for (let elapsed = 0; elapsed < 8000; elapsed += 2000) await sleep(2000);
+    for (let elapsed = 0; elapsed < 50000 && observed.length === 0; elapsed += 2000) await sleep(2000);
+    clickedFriendly = await selectMode(page, "friendlyMatch");
+    for (let elapsed = 0; elapsed < 15000 && !observed.some((entry) => entry.mode === "friendlyMatch"); elapsed += 1500) await sleep(1500);
+    clickedPlayoff = await selectMode(page, "playoffMatch");
+    for (let elapsed = 0; elapsed < 15000 && !observed.some((entry) => entry.mode === "playoffMatch"); elapsed += 1500) await sleep(1500);
     await Promise.allSettled(responseTasks);
     const matches = observed.flatMap((entry) => normalize(entry.payload, entry.mode, sourceUrl, item.clubId));
     const componentState = await page.evaluate(() => {
@@ -127,30 +149,33 @@ async function crawl(env, item) {
       return `${state}:${location.search.slice(0, 100)}`;
     }).catch(() => "unknown");
     const networkState = [...parseErrors.slice(-2), ...failedRequests.slice(-2), ...matchingResponses.slice(-4), ...matchingRequests.slice(-4)].join("|") || "no-matching-request";
-    return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, error: observed.length ? undefined : `PUBLIC_PAGE_DATA_NOT_OBSERVED:NET=${networkState}:COMP=${componentState}`.slice(0, 400), matches };
+    return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, modes: [...new Set(observed.map((entry) => entry.mode))], clickedFriendly, clickedPlayoff, error: observed.length ? undefined : `PUBLIC_PAGE_DATA_NOT_OBSERVED:NET=${networkState}:COMP=${componentState}`.slice(0, 400), matches };
   } catch (error) {
     const message = error instanceof Error ? error.message : "CRAWL_FAILED";
-    return { status: /captcha|access denied|forbidden/i.test(message) ? "blocked" : "failed", responseCount: observed.length, error: message.slice(0, 400), matches: [] };
+    return { status: /captcha|access denied|forbidden/i.test(message) ? "blocked" : "failed", responseCount: observed.length, modes: [...new Set(observed.map((entry) => entry.mode))], clickedFriendly, clickedPlayoff, error: message.slice(0, 400), matches: [] };
   } finally { await browser.close().catch(() => undefined); }
 }
 
 async function ingest(env, item, result) {
-  const response = await fetch(`${env.PCA_SITE_URL}/api/internal/ea-ingest`, { method: "POST", headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}`, "content-type": "application/json" }, body: JSON.stringify({ parserVersion: PARSER_VERSION, source: "cloudflare-browser-public-page", startedAt: new Date().toISOString(), matches: result.matches, metadata: { queueId: item.queueId, attempts: item.attempts, clubId: item.clubId, platform: item.platform, responseCount: result.responseCount, collectionStatus: result.status, error: result.error } }) });
+  const response = await fetch(`${env.PCA_SITE_URL}/api/internal/ea-ingest`, { method: "POST", headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}`, "content-type": "application/json" }, body: JSON.stringify({ parserVersion: PARSER_VERSION, source: "cloudflare-browser-public-page", startedAt: new Date().toISOString(), matches: result.matches, metadata: { queueId: item.queueId, attempts: item.attempts, clubId: item.clubId, platform: item.platform, responseCount: result.responseCount, modes: result.modes, clickedFriendly: result.clickedFriendly, clickedPlayoff: result.clickedPlayoff, collectionStatus: result.status, error: result.error } }) });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok && result.status === "succeeded") throw new Error(`INGEST_${response.status}:${payload.error || "unknown"}`);
   return { httpStatus: response.status, ...payload };
 }
 
-async function run(env) {
+async function run(env, requestedClubId = "") {
   if (!env.EA_INGEST_SECRET) throw new Error("EA_INGEST_SECRET_REQUIRED");
-  const queueResponse = await fetch(`${env.PCA_SITE_URL}/api/internal/ea-ingest?limit=1`, { headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}` } });
+  const queueUrl = new URL("/api/internal/ea-ingest", env.PCA_SITE_URL);
+  queueUrl.searchParams.set("limit", "1");
+  if (requestedClubId) queueUrl.searchParams.set("clubId", requestedClubId);
+  const queueResponse = await fetch(queueUrl, { headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}` } });
   if (!queueResponse.ok) throw new Error(`QUEUE_${queueResponse.status}`);
   const queue = await queueResponse.json();
   const item = queue.items?.[0];
   if (!item) return { status: "idle", processed: 0 };
   const result = await crawl(env, item);
   const stored = await ingest(env, item, result);
-  return { status: result.status, processed: 1, clubId: item.clubId, responses: result.responseCount, matches: result.matches.length, ingestStatus: stored.status || stored.httpStatus };
+  return { status: result.status, processed: 1, clubId: item.clubId, responses: result.responseCount, modes: result.modes, clickedFriendly: result.clickedFriendly, clickedPlayoff: result.clickedPlayoff, matches: result.matches.length, ingestStatus: stored.status || stored.httpStatus };
 }
 
 const worker = {
@@ -158,7 +183,7 @@ const worker = {
   async fetch(request, env) {
     const supplied = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") || "";
     if (!env.EA_INGEST_SECRET || supplied !== env.EA_INGEST_SECRET) return Response.json({ error: "AUTH_REQUIRED" }, { status: 401 });
-    try { return Response.json(await run(env)); } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "CRAWLER_FAILED" }, { status: 500 }); }
+    try { return Response.json(await run(env, new URL(request.url).searchParams.get("clubId") || "")); } catch (error) { return Response.json({ error: error instanceof Error ? error.message : "CRAWLER_FAILED" }, { status: 500 }); }
   },
 };
 

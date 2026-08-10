@@ -1,5 +1,6 @@
 import { apiError, type FunctionContext } from "../../_lib/billing";
 import { findClubByEa, supabaseRest } from "../../_lib/supabase";
+import { repairPublicText } from "../../_lib/text";
 
 type MatchMode = "leagueMatch" | "friendlyMatch" | "playoffMatch";
 interface IncomingPlayer { playerId?: string; playerName?: string; position?: string; goals?: number; assists?: number; rating?: number; shots?: number; passesMade?: number; passAttempts?: number; tacklesMade?: number; tackleAttempts?: number; redCards?: number; saves?: number; cleanSheet?: boolean; }
@@ -10,7 +11,7 @@ interface QueueRow { id: string; priority: number; attempts: number; club_id: st
 
 const modes = new Set<MatchMode>(["leagueMatch", "friendlyMatch", "playoffMatch"]);
 const platforms = new Set(["common-gen5", "common-gen4", "nx"]);
-const safeText = (value: unknown, max: number) => String(value ?? "").trim().slice(0, max);
+const safeText = (value: unknown, max: number) => repairPublicText(value).slice(0, max);
 const safeNumber = (value: unknown, min = 0, max = 99) => { const number = Number(value); return Number.isFinite(number) && number >= min && number <= max ? number : null; };
 
 async function digest(value: string) {
@@ -26,8 +27,18 @@ async function authorized(request: Request, secret?: string) {
 
 export const onRequestGet = async (context: FunctionContext) => {
   if (!(await authorized(context.request, context.env.EA_INGEST_SECRET))) return apiError("INGEST_AUTH_REQUIRED", 401);
-  const requested = Number(new URL(context.request.url).searchParams.get("limit") || 3);
+  const requestUrl = new URL(context.request.url);
+  const requested = Number(requestUrl.searchParams.get("limit") || 3);
   const limit = Math.max(1, Math.min(Number.isFinite(requested) ? requested : 3, 10));
+  const forcedEaClubId = safeText(requestUrl.searchParams.get("clubId"), 20);
+  const forcedPlatform = safeText(requestUrl.searchParams.get("platform") || "common-gen5", 30);
+  if (forcedEaClubId) {
+    if (!/^\d{1,12}$/.test(forcedEaClubId) || !platforms.has(forcedPlatform)) return apiError("FORCED_CLUB_INVALID", 422);
+    const club = await findClubByEa(context.env, forcedPlatform, forcedEaClubId);
+    if (!club) return apiError("FORCED_CLUB_NOT_FOUND", 404);
+    const item = (await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?club_id=eq.${encodeURIComponent(club.id)}&select=id,priority,attempts,club_id,next_run_at&limit=1`))[0];
+    return Response.json({ items: item ? [{ queueId: item.id, priority: item.priority, attempts: item.attempts, clubId: club.ea_club_id, platform: club.platform, clubName: club.name, sourceUrl: club.ea_url }] : [] }, { headers: { "cache-control": "no-store" } });
+  }
   const due = encodeURIComponent(new Date().toISOString());
   const [claims, matches] = await Promise.all([
     supabaseRest<Array<{ club_id: string }>>(context.env, "club_claims?status=eq.approved&select=club_id&limit=1000"),
@@ -101,7 +112,7 @@ export const onRequestPost = async (context: FunctionContext) => {
   const finishedAt = new Date();
   await supabaseRest(context.env, `ea_crawl_runs?id=eq.${encodeURIComponent(runId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus, finished_at: finishedAt.toISOString(), clubs_processed: queueId ? 1 : 0, matches_observed: input.length - errors, error_count: errors + (collectionStatus === "succeeded" ? 0 : 1) }) });
   if (queueId) {
-    const retryMinutes = runStatus === "succeeded" ? 360 : runStatus === "blocked" ? 1440 : 30;
+    const retryMinutes = runStatus === "succeeded" ? 120 : runStatus === "blocked" ? 1440 : 30;
     await supabaseRest(context.env, `ea_crawl_queue?id=eq.${encodeURIComponent(queueId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus === "partial" ? "failed" : runStatus, last_attempt_at: finishedAt.toISOString(), last_success_at: runStatus === "succeeded" ? finishedAt.toISOString() : undefined, attempts: Number(body?.metadata?.attempts || 0) + 1, last_error: runStatus === "succeeded" ? null : safeText(body?.metadata?.error || runStatus, 500), next_run_at: new Date(finishedAt.getTime() + retryMinutes * 60000).toISOString(), updated_at: finishedAt.toISOString() }) });
   }
   return Response.json({ runId, status: runStatus, accepted: input.length - errors, errors, reconciled: results.filter((item) => item.reconciledMatchId).length, results }, { status: runStatus === "failed" || runStatus === "blocked" ? 422 : 202 });

@@ -1,5 +1,6 @@
 import { apiError, type FunctionContext } from "../../_lib/billing";
 import { findClubByEa, supabaseRest } from "../../_lib/supabase";
+import { repairPublicText } from "../../_lib/text";
 
 interface SnapshotPlayer {
   playerId?: string;
@@ -53,7 +54,7 @@ export const onRequestGet = async ({ request, env }: FunctionContext) => {
         id: match.id,
         playedAt: match.played_at,
         mode: match.mode,
-        opponent: isHome ? match.away_club_name : match.home_club_name,
+        opponent: repairPublicText(isHome ? match.away_club_name : match.home_club_name),
         score: `${ownScore} × ${opponentScore}`,
         result: ownScore > opponentScore ? "V" : ownScore === opponentScore ? "E" : "D",
         goals: Number(player.goals || 0),

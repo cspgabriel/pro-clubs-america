@@ -24,7 +24,7 @@ gráficos e organização de amistosos verificados pela fonte pública.
 | Tema e navegação | funcional | dark padrão, sidebar e menu inferior |
 | Importador | funcional para `171630` | estrutura mínima e duplicidade de partidas |
 | Ingestão EA | backend ativo | fila, snapshots, deduplicação, health e endpoint assinado no Supabase |
-| Coletor automático | ativo, parser em observação | Cloudflare Browser Rendering a cada 2h; execução real ainda sem dados observados e corretamente marcada como falha |
+| Coletor automático | funcional | Cloudflare Browser Rendering a cada 2h; parser v12 provado em Liga, Friendly e Playoff, com 10 partidas e atletas persistidos |
 | Banco comunitário | funcional | Firebase Auth para identidade e Supabase para toda persistência; autorização por dono/capitão nas Pages Functions |
 | Autenticação | funcional | Google e e-mail/senha no projeto Firebase de produção |
 | Domínio | funcional | `proclubsamerica.com` e `www` com SSL; `www` redireciona por 301 ao domínio raiz |
@@ -58,8 +58,8 @@ vinculadas aos seus clubes no Supabase.
 
 ## Próximas entregas recomendadas
 
-1. Obter uma resposta completa da fonte pública no Browser Rendering e provar uma execução real `succeeded`; o componente já resolve e dispara as três requisições esperadas, mas a saída Cloudflare ainda não recebe a resposta antes do timeout.
-2. Generalizar a coleta por página de Overview e Member List, além das partidas.
+1. Generalizar a coleta por página de Overview e Member List, além das partidas.
+2. Acompanhar as próximas execuções agendadas e alertar regressão de parser ou idade do dado.
 3. Adicionar painel administrativo para atribuir capitães e moderar cadastros.
 4. Adicionar fixtures sanitizadas e testes de regressão para cada versão do parser.
 5. Configurar alertas sobre idade do dado e quebra de parser.

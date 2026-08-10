@@ -99,8 +99,9 @@ O cron atual é `17 */2 * * *`. Valide o resultado em `/api/health` e na tabela
 `ea_crawl_runs`; HTTP 200 do Worker não significa sucesso de coleta quando o
 campo `status` for `failed` ou `blocked`.
 
-Em 10/08/2026 o parser `cloudflare-browser-public-page-v5` confirmou que o
-componente público da EA foi resolvido e disparou as requisições de resumo,
-informações e partidas de Liga. Essas requisições permaneceram pendentes na
-saída do Browser Rendering e nenhuma resposta de dados foi observada antes do
-timeout. O run é, corretamente, registrado como falha e não substitui snapshots.
+Em 10/08/2026 o parser `cloudflare-browser-public-page-v12` concluiu uma
+execução real nos três modos. Cinco partidas de Liga e cinco de Playoff do
+Villathinaikos, com estatísticas individuais, foram persistidas; a resposta de
+Friendly estava válida e vazia. A configuração mantém o User-Agent identificável
+para `robots.txt`, usa uma identidade Chrome real no navegador e aguarda a
+montagem tardia do seletor de modo antes de disparar `input/change`.
