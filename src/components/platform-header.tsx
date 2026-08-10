@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { BarChart3, BriefcaseBusiness, Search, Swords, UserPlus } from "lucide-react";
-import { ThemeToggle } from "./theme-toggle";
 import { AuthStatus } from "./auth-status";
 import { BrandLogo } from "./brand-logo";
 import { MobileMenuButton } from "./mobile-sidebar";
@@ -19,7 +18,7 @@ export function PlatformHeader() {
         <Link href="/partidas"><Swords size={16} /> Partidas</Link>
         <Link href="/cadastro"><UserPlus size={16} /> Cadastrar time</Link>
       </nav>
-      <div className="header-actions"><AuthStatus /><ThemeToggle /></div>
+      <div className="header-actions"><AuthStatus /></div>
     </header>
   );
 }

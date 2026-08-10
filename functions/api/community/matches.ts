@@ -28,7 +28,7 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
     const rows = await supabaseRest<MatchRow[]>(env, "matches", {
       method: "POST",
       headers: { Prefer: "return=representation" },
-      body: JSON.stringify({ home_club_id: home.id, invited_club_id: invited?.id || null, creator_profile_id: profile.id, match_type: "Friendly", status: "open_challenge", challenge_mode: mode, scheduled_date: body.date, scheduled_time: body.time, region: String(body.region || "Brasil").slice(0, 80), host_elo: profile.elo || 1000, featured: profile.plan !== "free", scheduled_at: `${body.date}T${body.time}:00-03:00`, updated_at: new Date().toISOString() }),
+      body: JSON.stringify({ home_club_id: home.id, invited_club_id: invited?.id || null, creator_profile_id: profile.id, match_type: "Friendly", status: "open_challenge", challenge_mode: mode, scheduled_date: body.date, scheduled_time: body.time, region: String(body.region || "Brasil").slice(0, 80), featured: profile.plan !== "free", scheduled_at: `${body.date}T${body.time}:00-03:00`, updated_at: new Date().toISOString() }),
     });
     return Response.json(await matchPayload(env, rows[0]), { status: 201 });
   } catch (error) {

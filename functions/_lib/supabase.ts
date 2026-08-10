@@ -18,6 +18,9 @@ export interface SupabaseProfile {
   stripe_customer_id?: string | null;
   stripe_subscription_id?: string | null;
   subscription_status?: string | null;
+  referral_code?: string | null;
+  referred_by_profile_id?: string | null;
+  bonus_access_until?: string | null;
 }
 
 export interface SupabaseClub {
@@ -56,23 +59,49 @@ export async function findProfile(env: SupabaseEnv, firebaseUid: string) {
   return rows[0] ?? null;
 }
 
+async function findProfileByEmail(env: SupabaseEnv, email: string) {
+  const rows = await supabaseRest<SupabaseProfile[]>(env, `profiles?email=ilike.${encodeURIComponent(email)}&limit=1`);
+  return rows[0] ?? null;
+}
+
+function createReferralCode() {
+  return crypto.randomUUID().replaceAll("-", "").slice(0, 10).toUpperCase();
+}
+
 export async function ensureProfile(env: SupabaseEnv, identity: { uid: string; email?: string }, displayName?: string) {
   const existing = await findProfile(env, identity.uid);
-  if (existing) return existing;
+  if (existing) {
+    if (existing.referral_code) return existing;
+    const rows = await supabaseRest<SupabaseProfile[]>(env, `profiles?id=eq.${encodeURIComponent(existing.id)}`, {
+      method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify({ referral_code: createReferralCode(), updated_at: new Date().toISOString() }),
+    });
+    return rows[0] ?? existing;
+  }
+  const normalizedEmail = identity.email?.trim().toLocaleLowerCase("en-US");
+  if (normalizedEmail) {
+    const emailProfile = await findProfileByEmail(env, normalizedEmail);
+    if (emailProfile) {
+      const rows = await supabaseRest<SupabaseProfile[]>(env, `profiles?id=eq.${encodeURIComponent(emailProfile.id)}`, {
+        method: "PATCH",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify({ firebase_uid: identity.uid, full_name: displayName || emailProfile.full_name, referral_code: emailProfile.referral_code || createReferralCode(), updated_at: new Date().toISOString() }),
+      });
+      return rows[0] ?? emailProfile;
+    }
+  }
   const rows = await supabaseRest<SupabaseProfile[]>(env, "profiles", {
     method: "POST",
     headers: { Prefer: "return=representation" },
     body: JSON.stringify({
       firebase_uid: identity.uid,
-      email: identity.email || `${identity.uid}@firebase.local`,
+      email: normalizedEmail || `${identity.uid}@firebase.local`,
       full_name: displayName || identity.email?.split("@")[0] || "Jogador",
       country_code: "BR",
       country_slug: "brasil",
       locale: "pt-br",
       role: "visitor",
       plan: "free",
-      reliability: 100,
-      elo: 1000,
+      referral_code: createReferralCode(),
     }),
   });
   if (!rows[0]) throw new Error("SUPABASE_PROFILE_CREATE_FAILED");

@@ -5,7 +5,7 @@ interface RawClubInfo { customKit?: { crestAssetId?: string; stadName?: string }
 interface RawClub {
   rank?: number | string; skillRating?: string; wins?: string; ties?: string; losses?: string; gamesPlayed?: string; goals?: string; goalsAgainst?: string; cleanSheets?: string; goalsPerGame?: string; clubName?: string; clubId?: string; currentDivision?: string; bestDivision?: string; platform?: string; clubInfo?: RawClubInfo;
 }
-interface RawMember { name: string; gamesPlayed?: string; goals?: string; assists?: string; manOfTheMatch?: string; ratingAve?: string; favoritePosition?: string; }
+interface RawMember { name: string; gamesPlayed?: string; goals?: string; assists?: string; manOfTheMatch?: string; ratingAve?: string; favoritePosition?: string; passesMade?: string; passSuccessRate?: string; tacklesMade?: string; tackleSuccessRate?: string; cleanSheetsDef?: string; cleanSheetsGK?: string; }
 interface DetailedClub {
   metadata: { platform: string; clubId: string; clubName: string; all_time_rank?: number; seasonal_rank?: number; all_time_raw?: RawClub; seasonal_raw?: RawClub };
   club_info?: Record<string, { customKit?: RawClubInfo["customKit"] }>;
@@ -51,7 +51,7 @@ export const publicPlayers: PublicPlayer[] = Object.values(detailed).flatMap((en
     const goals = numeric(member.goals);
     const assists = numeric(member.assists);
     return {
-      id: `ea-${platform}-${rawClubId}-${slug(name)}-${index}`, name, position: cleanText(member.favoritePosition) || "—", matches, goals, assists, goalContributions: goals + assists, averageRating: numeric(member.ratingAve) || null, cleanSheets: 0, overallRating: null, passesMade: null, passSuccessRate: null, tacklesMade: null, tackleSuccessRate: null, winRate: null, clubId, clubName: cleanText(entry.metadata.clubName), platform, manOfTheMatch: numeric(member.manOfTheMatch), statsReliable: matches === 0 ? goals === 0 : goals <= matches * 5 && assists <= matches * 5, sourceUrl: `https://www.ea.com/pt-br/games/ea-sports-fc/clubs/member-list?clubId=${rawClubId}&platform=${platform}`,
+      id: `ea-${platform}-${rawClubId}-${slug(name)}-${index}`, name, position: cleanText(member.favoritePosition) || "—", matches, goals, assists, goalContributions: goals + assists, averageRating: numeric(member.ratingAve) || null, cleanSheets: numeric(member.cleanSheetsDef) + numeric(member.cleanSheetsGK), overallRating: null, passesMade: numeric(member.passesMade) || null, passSuccessRate: numeric(member.passSuccessRate) || null, tacklesMade: numeric(member.tacklesMade) || null, tackleSuccessRate: numeric(member.tackleSuccessRate) || null, winRate: null, clubId, clubName: cleanText(entry.metadata.clubName), platform, manOfTheMatch: numeric(member.manOfTheMatch), statsReliable: matches === 0 ? goals === 0 : goals <= matches * 5 && assists <= matches * 5, sourceUrl: `https://www.ea.com/pt-br/games/ea-sports-fc/clubs/member-list?clubId=${rawClubId}&platform=${platform}`,
     };
   });
 });

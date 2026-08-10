@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Goal, Grid2X2, Search, Shield, Target, Users } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { PlayerRanking } from "@/types/domain";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
@@ -16,10 +16,11 @@ export function DirectoryPage({ mode, players, availableClubs }: { mode: "search
   const [clubPage, setClubPage] = useState(1);
   const [playerPage, setPlayerPage] = useState(1);
   const [position, setPosition] = useState("all");
+  useEffect(() => { const initial = new URLSearchParams(window.location.search).get("termo"); if (!initial) return; const timer = window.setTimeout(() => setQuery(initial), 0); return () => window.clearTimeout(timer); }, []);
   const term = query.trim().toLocaleLowerCase("pt-BR");
   const clubs = useMemo(() => availableClubs.filter((club) => club.name.toLocaleLowerCase("pt-BR").includes(term) || club.id.includes(term)), [availableClubs, term]);
   const filteredPlayers = useMemo(() => players.filter((player) => {
-    if (!player.name.toLocaleLowerCase("pt-BR").includes(term)) return false;
+    if (!player.name.toLocaleLowerCase("pt-BR").includes(term) && !player.clubName?.toLocaleLowerCase("pt-BR").includes(term)) return false;
     if (position === "all") return true;
     return player.position.toLocaleLowerCase("pt-BR").includes(position);
   }), [players, position, term]);

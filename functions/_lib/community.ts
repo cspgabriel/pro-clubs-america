@@ -13,8 +13,6 @@ export interface MatchRow {
   scheduled_date: string | null;
   scheduled_time: string | null;
   region: string | null;
-  host_elo: number | null;
-  away_elo: number | null;
   featured: boolean | null;
   created_at: string;
 }
@@ -49,8 +47,6 @@ export async function matchPayload(env: BillingEnv, row: MatchRow) {
     opponentClubName: away?.name,
     acceptedBy: accepted?.full_name || undefined,
     acceptedByUid: accepted?.firebase_uid,
-    hostElo: row.host_elo || 1000,
-    opponentElo: row.away_elo || undefined,
     featured: Boolean(row.featured),
     createdAt: row.created_at,
   };

@@ -23,7 +23,7 @@ export const onRequestPatch = async ({ request, env, params }: MatchContext) => 
     let update: Record<string, unknown>;
     if (body.action === "accept") {
       if (current.status !== "open_challenge" || current.home_club_id === profile.club_id || (current.challenge_mode === "invite" && current.invited_club_id !== profile.club_id)) return apiError("Este desafio não pode ser aceito por seu clube.", 409);
-      update = { away_club_id: profile.club_id, accepted_by_profile_id: profile.id, away_elo: profile.elo || 1000, status: "accepted", updated_at: new Date().toISOString() };
+      update = { away_club_id: profile.club_id, accepted_by_profile_id: profile.id, status: "accepted", updated_at: new Date().toISOString() };
     } else if (body.action === "played") {
       if (current.status !== "accepted" || ![current.home_club_id, current.away_club_id].includes(profile.club_id)) return apiError("CLUB_PERMISSION_REQUIRED", 403);
       update = { status: "waiting_ea_verification", played_at: new Date().toISOString(), updated_at: new Date().toISOString() };

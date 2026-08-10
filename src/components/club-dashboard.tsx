@@ -25,7 +25,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { DashboardData } from "@/types/domain";
-import { ThemeToggle } from "./theme-toggle";
 import { BrandLogo } from "./brand-logo";
 
 const number = new Intl.NumberFormat("pt-BR");
@@ -67,7 +66,6 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
         <a className="source-link" href={data.club.sourceUrl} target="_blank" rel="noreferrer">
           Fonte pública <ArrowUpRight size={15} />
         </a>
-        <ThemeToggle />
       </header>
 
       <section className="hero" id="inicio">

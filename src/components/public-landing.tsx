@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight, BarChart3, Check, CheckCircle2, Globe2, Shield, Sparkles, Swords, Trophy, UserPlus, Users } from "lucide-react";
 import { planCatalog } from "@/lib/plans";
 import { BrandLogo } from "./brand-logo";
-import { ThemeToggle } from "./theme-toggle";
 
 interface LandingClub { id: string; name: string; crestUrl: string; skillRating: number; }
 interface LandingPlayer { id: string; name: string; clubName: string; goals: number | null; }
@@ -13,7 +12,7 @@ export function PublicLanding({ clubs, players, clubCount, playerCount }: { club
     <header className="landing-header">
       <Link href="/" className="landing-brand"><BrandLogo size={52} /><span>PRO CLUBS<strong>AMERICA</strong></span></Link>
       <nav aria-label="Navegação pública"><a href="#recursos">Recursos</a><a href="#como-funciona">Como funciona</a><Link href="/rankings/jogadores/artilharia">Rankings</Link></nav>
-      <div><ThemeToggle /><Link className="landing-login" href="/entrar">Entrar</Link><Link className="landing-join" href="/criar-conta">Criar conta <ArrowRight /></Link></div>
+      <div><Link className="landing-login" href="/entrar">Entrar</Link><Link className="landing-join" href="/criar-conta">Criar conta <ArrowRight /></Link></div>
     </header>
 
     <section className="landing-hero">

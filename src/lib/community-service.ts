@@ -20,8 +20,17 @@ export interface CommunityProfile {
   pendingClubName?: string;
   pendingClaimId?: string;
   plan: CommunityPlan;
-  reliability: number;
-  elo: number;
+  bonusAccessUntil?: string;
+}
+
+export interface ClubReferralSummary {
+  code: string;
+  inviteUrl: string;
+  clubId?: string;
+  clubName?: string;
+  bonusAccessUntil?: string;
+  invitedCount: number;
+  members: Array<{ id: string; name: string; role: string; avatarUrl?: string }>;
 }
 
 export interface TransferPostRecord {
@@ -37,7 +46,11 @@ export interface TransferPostRecord {
   authorUid: string;
   plan: CommunityPlan;
   createdAt: string;
+  isOwner?: boolean;
+  hasApplied?: boolean;
+  applicationCount?: number;
 }
+export interface MarketApplicationRecord { id: string; name: string; email: string; role: string; clubName?: string; message?: string; contact?: string; status: string; createdAt: string; }
 
 export interface LobbyMessageRecord { id: string; authorUid: string; author: string; text: string; createdAt: string; }
 type WatchError = (error: Error) => void;
@@ -78,6 +91,14 @@ export function saveCommunityPreferences(input: { country: string; locale: strin
   return api<CommunityProfile>("/api/community/profile", { method: "PATCH", body: JSON.stringify(input) }, true);
 }
 
+export function getClubReferral() {
+  return api<ClubReferralSummary>("/api/community/referral", {}, true);
+}
+
+export function redeemClubReferral(code: string) {
+  return api<{ joined: boolean; clubId?: string; clubName?: string; bonusDays: number }>("/api/community/referral", { method: "POST", body: JSON.stringify({ code }) }, true);
+}
+
 export function registerCommunityClub(input: Omit<TeamRegistration, "id" | "submittedAt" | "status">) {
   return api<TeamRegistration>("/api/community/clubs/claim", { method: "POST", body: JSON.stringify(input) }, true);
 }
@@ -111,7 +132,15 @@ export function publishTransferPost(input: Omit<TransferPostRecord, "id" | "auth
 }
 
 export function watchTransferPosts(callback: (items: TransferPostRecord[]) => void, onError?: WatchError): Unsubscribe {
-  return poll(() => api<TransferPostRecord[]>("/api/community/market"), callback, onError, 30_000);
+  return poll(() => api<TransferPostRecord[]>("/api/community/market", {}, Boolean(getFirebaseAuth()?.currentUser)), callback, onError, 30_000);
+}
+
+export function applyToTransferPost(id: string) {
+  return api<{ id: string; status: string }>(`/api/community/market/${encodeURIComponent(id)}/applications`, { method: "POST", body: "{}" }, true);
+}
+
+export function getTransferApplications(id: string) {
+  return api<MarketApplicationRecord[]>(`/api/community/market/${encodeURIComponent(id)}/applications`, {}, true);
 }
 
 export function sendLobbyMessage(matchId: string, text: string) {
