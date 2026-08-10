@@ -13,11 +13,11 @@ O arquivo `scripts/download_by_club_id.py`, recebido no commit de dados
 o crawler de produção aprovado e não é executado pela aplicação. Sua presença é
 mantida para rastreabilidade do snapshot importado.
 
-## Pipeline proposto
+## Pipeline implantado
 
 ```mermaid
 flowchart TD
-    Q["Fila de clubIds"] --> O["Overview"]
+    Q["ea_crawl_queue"] --> O["Coletor autorizado"]
     O --> R["Member list"]
     R --> H["Match history"]
     H --> L["Liga"]
@@ -27,8 +27,10 @@ flowchart TD
     F --> V
     P --> V
     V --> D["Deduplicação"]
-    D --> S["Snapshot"]
+    D --> S["ea_match_snapshots"]
     S --> I["Indexação da PWA"]
+    F --> X["Reconciliador de amistoso"]
+    X --> I
 ```
 
 ## Etapas de uma coleta
@@ -77,11 +79,15 @@ flowchart TD
 - reprocessamento manual após mudança de parser;
 - cache e ETag/Last-Modified quando a fonte fornecer suporte.
 
-Não há agendador implementado no estado atual do repositório.
+A fila, snapshots, submissões de URL, ingestão assinada e reconciliação estão
+implantados no Supabase. O coletor/agendador que abre páginas da EA permanece
+desativado até existir autorização compatível com as regras publicadas pela
+fonte. Enquanto isso, membros dos dois clubes podem enviar a URL oficial da
+partida; a submissão prioriza o clube na fila, mas não permite informar placar.
 
 ## Observabilidade
 
-Cada execução futura deve produzir:
+Cada execução de ingestão produz:
 
 - `runId`, início, fim e versão do parser;
 - clube/plataforma e URLs visitadas;
@@ -91,8 +97,19 @@ Cada execução futura deve produzir:
 - erros classificados;
 - taxa de sucesso, duração e idade do último dado válido.
 
-O endpoint `/api/health` deverá evoluir para incluir `lastSuccessfulCrawl`,
-`dataAge`, `queueDepth` e versão do parser quando o crawler existir.
+O endpoint `/api/health` publica `lastSuccessfulCrawl`, `lastObservation`,
+`dataAgeSeconds`, `queueDepth` e a versão do parser. A entrada normalizada é
+`POST /api/internal/ea-ingest`, protegida por `EA_INGEST_SECRET`.
+
+## Estratégia incremental
+
+- o catálogo histórico já importado funciona como base inicial;
+- após essa base, o pipeline aceita apenas observações novas e deduplica pelo
+  fingerprint da partida;
+- uma partida comunitária marcada como realizada coloca os dois clubes na fila;
+- uma URL enviada por membro participante recebe prioridade máxima;
+- somente um snapshot `friendlyMatch` com os dois clubes e janela de 36 horas
+  pode preencher o placar e concluir o desafio.
 
 ## Segurança e conformidade
 

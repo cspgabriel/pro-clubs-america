@@ -7,7 +7,7 @@ import { CalendarDays, CheckCircle2, Clock3, Goal, LockKeyhole, MapPin, Radio, S
 import type { CommunityMatchClub } from "@/lib/friendlies-data";
 import { type ChallengeMode, type FriendlyRequest } from "@/lib/friendlies";
 import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
-import { acceptFriendly, createFriendly, getCommunityProfile, markFriendlyPlayed, watchFriendlies, type CommunityProfile } from "@/lib/community-service";
+import { acceptFriendly, createFriendly, getCommunityProfile, markFriendlyPlayed, watchFriendlies, watchOfficialMatches, type CommunityProfile } from "@/lib/community-service";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
 
@@ -29,6 +29,7 @@ function formatValue(value: number | null, suffix = "") { return value == null ?
 export function FriendliesBoard({ matches, communityClubs, initialChallengeTarget = null, view = "all" }: { matches: PublicMatch[]; communityClubs: CommunityMatchClub[]; initialChallengeTarget?: { id: string; name: string } | null; view?: "all" | "history" | "friendlies" }) {
   const registeredClubs = communityClubs;
   const [requests, setRequests] = useState<FriendlyRequest[]>([]);
+  const [officialMatches, setOfficialMatches] = useState<PublicMatch[]>(matches);
   const [authUser, setAuthUser] = useState<AuthUserSnapshot | null>(null);
   const [profile, setProfile] = useState<CommunityProfile | null>(null);
   const [activeClubId, setActiveClubId] = useState("");
@@ -41,7 +42,7 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
   const [notice, setNotice] = useState("");
   const [busyId, setBusyId] = useState("");
   const [matchMode, setMatchMode] = useState<"all" | PublicMatch["mode"]>("all");
-  const visibleMatches = useMemo(() => matches.filter((match) => matchMode === "all" || match.mode === matchMode), [matches, matchMode]);
+  const visibleMatches = useMemo(() => officialMatches.filter((match) => matchMode === "all" || match.mode === matchMode), [officialMatches, matchMode]);
   const activeClub = registeredClubs.find((club) => club.id === activeClubId);
   const opponentOptions = useMemo(() => registeredClubs.filter((club) => club.id !== activeClubId && club.platform === activeClub?.platform && (!opponentQuery.trim() || club.name.toLocaleLowerCase("pt-BR").includes(opponentQuery.trim().toLocaleLowerCase("pt-BR")))).slice(0, 12), [registeredClubs, activeClubId, activeClub?.platform, opponentQuery]);
   const canManage = Boolean(authUser && profile?.clubId && activeClub && ["owner", "captain"].includes(profile.role));
@@ -54,7 +55,21 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
       setActiveClubId(nextProfile?.clubId ?? "");
     });
     const stopMatches = watchFriendlies(setRequests, () => setNotice("Não foi possível carregar o mural em tempo real."));
-    return () => { stopAuth(); stopMatches(); };
+    const stopOfficial = watchOfficialMatches((live) => {
+      const normalized: PublicMatch[] = live.map((match) => ({
+        id: match.id,
+        mode: match.mode ?? "leagueMatch",
+        playedAt: match.playedAt,
+        homeClubName: match.homeClubName,
+        awayClubName: match.awayClubName,
+        homeScore: match.homeScore,
+        awayScore: match.awayScore,
+        competition: match.competition,
+        sourceUrl: match.sourceUrl,
+      }));
+      setOfficialMatches((current) => [...normalized, ...current.filter((item) => !normalized.some((next) => next.id === item.id))].sort((a, b) => b.playedAt.localeCompare(a.playedAt)));
+    }, () => undefined);
+    return () => { stopAuth(); stopMatches(); stopOfficial(); };
   }, []);
 
   async function submit(event: FormEvent) {

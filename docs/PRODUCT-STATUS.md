@@ -1,6 +1,6 @@
 # Produto e estado atual
 
-Atualizado em 9 de agosto de 2026.
+Atualizado em 10 de agosto de 2026.
 
 ## Objetivo
 
@@ -21,13 +21,15 @@ gráficos e organização de amistosos verificados pela fonte pública.
 | Amistosos | backend ativo | convite direcionado, desafio aberto, aceite e estado aguardando EA persistem no Supabase |
 | Mercado | backend ativo | vagas e jogadores livres em tempo real; anúncios Pro/VIP têm prioridade |
 | Cadastro | backend ativo | conta autenticada, URL EA obrigatória, vínculo de dono e fila pública de até 24 horas |
-| Tema e navegação | funcional | claro/escuro, sidebar e menu inferior |
+| Tema e navegação | funcional | dark padrão, sidebar e menu inferior |
 | Importador | funcional para `171630` | estrutura mínima e duplicidade de partidas |
-| Crawler automático | não implementado | especificado em `CRAWLER-OPERATIONS.md` |
+| Ingestão EA | backend ativo | fila, snapshots, deduplicação, health e endpoint assinado no Supabase |
+| Coletor automático | bloqueado para ativação | requer autorização compatível com as regras publicadas pela EA |
 | Banco comunitário | funcional | Firebase Auth para identidade e Supabase para toda persistência; autorização por dono/capitão nas Pages Functions |
 | Autenticação | funcional | Google e e-mail/senha no projeto Firebase de produção |
 | Comunidades por país | funcional | 12 países, português, espanhol e inglês |
 | Página de partida e lobby | backend ativo | horário, escalações e chat em tempo real privado aos clubes participantes |
+| Mobile | pacotes gerados | APK/AAB via PWABuilder e projeto iOS/Xcode, sem Capacitor |
 | Planos | mockup | Free, Pro e VIP sem cobrança habilitada |
 
 ## Fonte carregada
@@ -55,14 +57,12 @@ vinculadas aos seus clubes no Supabase.
 
 ## Próximas entregas recomendadas
 
-1. Extrair o crawler para um worker independente.
-2. Generalizar o importador para qualquer `clubId`/plataforma.
-3. Persistir snapshots esportivos e histórico de mudanças no backend operacional.
-4. Criar fila de clubes e descoberta controlada de adversários.
-5. Adicionar painel administrativo para atribuir capitães e moderar cadastros.
-6. Fazer o reconciliador de amistosos com a aba Friendly.
-7. Adicionar testes de parser com fixtures sanitizadas e testes E2E das rotas.
-8. Publicar telemetria de atualização e idade dos dados.
+1. Obter autorização para ativar o coletor externo e seu agendamento.
+2. Generalizar a coleta autorizada de Overview e Member List, além das partidas.
+3. Adicionar painel administrativo para atribuir capitães e moderar cadastros.
+4. Adicionar fixtures sanitizadas e testes de regressão para cada versão do parser.
+5. Configurar alertas sobre idade do dado e quebra de parser.
+6. Regenerar os pacotes mobile para `proclubsamerica.com` quando o domínio estiver ativo.
 
 ## Critério para produção comunitária
 

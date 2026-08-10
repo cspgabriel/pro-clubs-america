@@ -18,6 +18,8 @@
 /out/
 /.wrangler/
 /.tmp-visual/
+/mobile-packages/
+/firebase-debug.log
 .dev.vars*
 
 # production

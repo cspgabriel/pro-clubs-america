@@ -4,9 +4,9 @@
 
 ```mermaid
 flowchart LR
-    EA["Páginas públicas da EA"] --> C["Crawler com navegador"]
-    C --> N["Normalização e validação"]
-    N --> S["Snapshot versionado"]
+    EA["Fonte EA autorizada"] --> C["Coletor externo"]
+    C --> N["Ingestão assinada e validação"]
+    N --> S["Snapshots no Supabase"]
     S --> M["Métricas derivadas"]
     M --> P["PWA Next.js"]
     P --> U["Clubes e jogadores"]
@@ -19,8 +19,9 @@ flowchart LR
     G["Google Play Billing"] --> R
 ```
 
-O repositório atualmente contém a camada de normalização/importação, snapshot,
-métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
+O repositório contém normalização/importação, fila de clubes, snapshots de
+partidas, reconciliador de Friendly, métricas e PWA. O coletor recorrente que
+acessa a EA é externo e só deve ser ativado com autorização compatível.
 
 ## Stack
 
@@ -30,7 +31,7 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 - Zod disponível para evolução da validação;
 - Outfit para títulos, Inter para leitura e sistema visual mobile-first;
 - manifesto e service worker para instalação PWA.
-- tema claro/escuro, sidebar desktop e menu inferior mobile.
+- tema escuro, sidebar desktop e menu inferior mobile.
 - Firebase Auth somente para Google/e-mail. Perfis, vínculos de clube,
   amistosos, mercado e lobby ficam no PostgreSQL do Supabase, acessado apenas
   pelas Pages Functions após validar o token Firebase.
@@ -78,12 +79,16 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 9. `src/lib/community-service.ts` envia o token Firebase às Pages Functions; o
    backend valida a identidade e persiste no Supabase com autorização por perfil,
    vínculo e função.
+10. Partidas realizadas entram em `ea_crawl_queue`; URLs oficiais enviadas por
+    participantes também priorizam essa fila.
+11. O endpoint interno assinado grava `ea_match_snapshots` deduplicados e chama
+    `reconcile_ea_friendly`, que confirma o placar sem entrada manual.
 
 ## Limites atuais
 
 - o importador está temporariamente restrito ao clube `171630`;
-- não há agendador/crawler de produção no repositório;
-- o endpoint de saúde verifica a aplicação, não a atualização da fonte;
+- não há coletor/agendador da EA ativado sem autorização da fonte;
+- o endpoint de saúde mede banco, fila, última ingestão e idade do último dado;
 - o service worker usa estratégia simples network-first e exige evolução antes
   de um grande volume de rotas dinâmicas.
 - contas de serviço nunca entram no cliente; o frontend usa apenas a

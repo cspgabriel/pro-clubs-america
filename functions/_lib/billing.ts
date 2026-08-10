@@ -7,6 +7,7 @@ export interface BillingEnv {
   FIREBASE_PROJECT_ID: string;
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
+  EA_INGEST_SECRET?: string;
   SITE_URL?: string;
 }
 

@@ -9,6 +9,7 @@
     "lint": "eslint",
     "check": "npm run lint && npm run build && npm run check:functions",
     "check:functions": "wrangler pages functions build functions --outdir .wrangler/functions-check --compatibility-date 2026-08-06",
+    "build:mobile": "node scripts/package-pwabuilder.mjs",
     "import:data": "node scripts/import-normalized.mjs",
     "import:supabase": "node scripts/import-supabase-catalog.mjs",
     "import:supabase:apply": "node scripts/import-supabase-catalog.mjs --apply"

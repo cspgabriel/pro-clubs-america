@@ -29,6 +29,10 @@ export const onRequestPatch = async ({ request, env, params }: MatchContext) => 
       update = { status: "waiting_ea_verification", played_at: new Date().toISOString(), updated_at: new Date().toISOString() };
     } else return apiError("Ação inválida.");
     const rows = await supabaseRest<MatchRow[]>(env, `matches?id=eq.${encodeURIComponent(params.id)}`, { method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify(update) });
+    if (body.action === "played") {
+      const clubIds = [current.home_club_id, current.away_club_id].filter(Boolean);
+      await Promise.all(clubIds.map((clubId) => supabaseRest(env, "ea_crawl_queue?on_conflict=club_id", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ club_id: clubId, priority: 90, status: "queued", next_run_at: new Date().toISOString(), last_error: null, updated_at: new Date().toISOString() }) })));
+    }
     return Response.json(await matchPayload(env, rows[0]));
   } catch (error) {
     const message = error instanceof Error ? error.message : "MATCH_UPDATE_FAILED";

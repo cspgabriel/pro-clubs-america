@@ -3,6 +3,7 @@
 import { getFirebaseAuth } from "./firebase";
 import type { ChallengeMode, FriendlyRequest } from "./friendlies";
 import type { TeamRegistration } from "./community";
+import type { MatchRecord } from "@/types/domain";
 
 export type CommunityRole = "owner" | "captain" | "player" | "visitor" | "admin";
 export type CommunityPlan = "free" | "pro" | "vip" | "player_pro" | "club_pro" | "club_premium";
@@ -119,8 +120,20 @@ export function markFriendlyPlayed(match: FriendlyRequest) {
   return api<FriendlyRequest>(`/api/community/matches/${encodeURIComponent(match.id)}`, { method: "PATCH", body: JSON.stringify({ action: "played" }) }, true);
 }
 
+export function submitEaMatchSource(matchId: string, url: string) {
+  return api<{ id: string; status: string; eaUrl: string; message: string }>(`/api/community/matches/${encodeURIComponent(matchId)}/ea-source`, { method: "POST", body: JSON.stringify({ url }) }, true);
+}
+
 export function watchFriendlies(callback: (items: FriendlyRequest[]) => void, onError?: WatchError): Unsubscribe {
   return poll(() => api<FriendlyRequest[]>("/api/community/matches"), callback, onError);
+}
+
+export function watchOfficialMatches(callback: (items: MatchRecord[]) => void, onError?: WatchError): Unsubscribe {
+  return poll(() => api<MatchRecord[]>("/api/community/official-matches"), callback, onError, 30_000);
+}
+
+export function getOfficialMatch(matchId: string) {
+  return api<MatchRecord>(`/api/community/official-matches?id=${encodeURIComponent(matchId)}`);
 }
 
 export function watchFriendly(matchId: string, callback: (item: FriendlyRequest | null) => void, onError?: WatchError): Unsubscribe {

@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.proclubsamerica.app",
+      "sha256_cert_fingerprints": [
+        "BE:88:88:9E:68:32:13:98:38:6E:56:BC:3F:B3:6B:EA:7F:56:51:C0:8E:C9:A3:86:CE:3B:74:A6:82:BB:01:D6"
+      ]
+    }
+  }
+]
