@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 -- 2. TABELA DE CLUBES DA COMUNIDADE
 CREATE TABLE IF NOT EXISTS public.clubs (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     ea_club_id VARCHAR(50) NOT NULL UNIQUE,
     platform VARCHAR(20) NOT NULL CHECK (platform IN ('common-gen5', 'common-gen4', 'nx')),
     name TEXT NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS public.clubs (
 
 -- 3. TABELA DE JOGADORES E ESTATÍSTICAS DE CARREIRA
 CREATE TABLE IF NOT EXISTS public.players (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     club_id UUID REFERENCES public.clubs(id) ON DELETE CASCADE,
     gamertag TEXT NOT NULL,
     favorite_position VARCHAR(20) DEFAULT 'Midfielder',
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS public.players (
 
 -- 4. TABELA DE PARTIDAS E DESAFIOS DE AMISTOSOS
 CREATE TABLE IF NOT EXISTS public.matches (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     home_club_id UUID NOT NULL REFERENCES public.clubs(id) ON DELETE CASCADE,
     away_club_id UUID REFERENCES public.clubs(id) ON DELETE SET NULL,
     match_type VARCHAR(20) DEFAULT 'Friendly' CHECK (match_type IN ('Friendly', 'League', 'Playoff')),
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS public.matches (
 
 -- 5. TABELA DO MERCADO DE TRANSFERÊNCIAS
 CREATE TABLE IF NOT EXISTS public.market_listings (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     creator_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
     club_id UUID REFERENCES public.clubs(id) ON DELETE CASCADE,
     listing_type VARCHAR(30) NOT NULL CHECK (listing_type IN ('club_seeking_player', 'player_seeking_club')),

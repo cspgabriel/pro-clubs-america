@@ -24,7 +24,7 @@ export function MobileNav() {
       <Link className={isActive("/inicio") ? "active" : ""} aria-current={isActive("/inicio") ? "page" : undefined} href="/inicio"><Home /><span>Início</span></Link>
       <MobileMenuButton className="mobile-nav-menu" />
       <button className="mobile-market-action" type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-haspopup="dialog" aria-label="Abrir menu para criar"><Plus /><span>Criar</span></button>
-      <Link className={isActive("/partidas") ? "active" : ""} aria-current={isActive("/partidas") ? "page" : undefined} href="/partidas/amistosos#desafios-abertos"><Swords /><span>Desafios</span></Link>
+      <Link className={isActive("/partidas") ? "active" : ""} aria-current={isActive("/partidas") ? "page" : undefined} href="/partidas"><Swords /><span>Partidas</span></Link>
       <Link className={isActive("/conta") ? "active" : ""} aria-current={isActive("/conta") ? "page" : undefined} href="/conta"><User /><span>Minha conta</span></Link>
     </nav>
     {open && <div className="create-sheet" role="dialog" aria-modal="true" aria-label="Criar novo">

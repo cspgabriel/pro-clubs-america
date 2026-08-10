@@ -44,18 +44,15 @@ SDK no navegador, no repositório ou nas variáveis `NEXT_PUBLIC_*`.
 Sem a configuração Web, login, cadastro, mercado e amistosos ficam indisponíveis;
 o produto não cria identidades ou dados comunitários de demonstração.
 
-As regras devem passar antes da publicação:
-
-```powershell
-npm run test:rules
-```
-
 ## Supabase + Firebase Auth
 
 O Firebase é o provedor de identidade; o Supabase é o banco relacional da
 plataforma. Nunca envie `service_role` ao navegador. A migration da ponte de
 identidade remove a leitura pública de `profiles.email` e associa perfis pelo
 `firebase_uid` validado no backend.
+
+Antes da publicação, execute `npm run check` e confirme as migrations com
+`npx supabase migration list`.
 
 ```powershell
 npx supabase login

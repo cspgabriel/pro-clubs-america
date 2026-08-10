@@ -13,18 +13,18 @@ gráficos e organização de amistosos verificados pela fonte pública.
 | Módulo | Estado | Observação |
 | --- | --- | --- |
 | PWA | funcional | manifesto, service worker e navegação móvel |
-| Busca | funcional | 552 clubes e 8.111 jogadores vinculados |
+| Busca | funcional | 553 clubes e 8.098 jogadores válidos e únicos vinculados |
 | Clube | funcional | perfis globais; painel detalhado para `171630` |
 | Jogador | funcional | perfis globais e recorte detalhado quando disponível |
 | Rankings | funcional | gols, assistências, tackles, win rate e comunidade |
 | Partidas | funcional | histórico oficial e filtros por modo |
-| Amistosos | backend ativo | convite direcionado, desafio aberto, aceite e estado aguardando EA persistem e sincronizam via Firestore |
+| Amistosos | backend ativo | convite direcionado, desafio aberto, aceite e estado aguardando EA persistem no Supabase |
 | Mercado | backend ativo | vagas e jogadores livres em tempo real; anúncios Pro/VIP têm prioridade |
 | Cadastro | backend ativo | conta autenticada, URL EA obrigatória, vínculo de dono e fila pública de até 24 horas |
 | Tema e navegação | funcional | claro/escuro, sidebar e menu inferior |
 | Importador | funcional para `171630` | estrutura mínima e duplicidade de partidas |
 | Crawler automático | não implementado | especificado em `CRAWLER-OPERATIONS.md` |
-| Banco comunitário | funcional | Firebase Auth + Firestore com regras por dono/capitão; snapshots esportivos continuam versionados |
+| Banco comunitário | funcional | Firebase Auth para identidade e Supabase para toda persistência; autorização por dono/capitão nas Pages Functions |
 | Autenticação | funcional | Google e e-mail/senha no projeto Firebase de produção |
 | Comunidades por país | funcional | 12 países, português, espanhol e inglês |
 | Página de partida e lobby | backend ativo | horário, escalações e chat em tempo real privado aos clubes participantes |
@@ -33,7 +33,8 @@ gráficos e organização de amistosos verificados pela fonte pública.
 ## Fonte carregada
 
 O Villathinaikos é o primeiro clube completo. A base global enriquecida contém
-552 clubes em três plataformas e 8.111 jogadores vinculados aos seus clubes.
+553 clubes em três plataformas e 8.098 identidades válidas e únicas de jogadores
+vinculadas aos seus clubes no Supabase.
 
 ## Regras do produto
 

@@ -9,7 +9,7 @@ drop policy if exists "Captains Can Manage Clubs" on public.clubs;
 drop policy if exists "Users Can Manage Market Listings" on public.market_listings;
 
 alter table public.profiles drop constraint if exists profiles_id_fkey;
-alter table public.profiles alter column id set default uuid_generate_v4();
+alter table public.profiles alter column id set default gen_random_uuid();
 alter table public.profiles add column if not exists firebase_uid text;
 alter table public.profiles add column if not exists locale varchar(10) default 'pt-br';
 alter table public.profiles add column if not exists plan text default 'free'
@@ -21,7 +21,7 @@ create unique index if not exists profiles_firebase_uid_key
   on public.profiles(firebase_uid) where firebase_uid is not null;
 
 create table if not exists public.match_messages (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   match_id uuid not null references public.matches(id) on delete cascade,
   author_profile_id uuid not null references public.profiles(id) on delete cascade,
   author_name text not null,

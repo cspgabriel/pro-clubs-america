@@ -57,7 +57,17 @@ const clubs = clubRows.map((row) => {
 const duplicateClubs = clubs.filter((club, index) => clubs.findIndex((candidate) => key(candidate.platform, candidate.ea_club_id) === key(club.platform, club.ea_club_id)) !== index);
 if (duplicateClubs.length) throw new Error(`Clubes duplicados por plataforma/ID: ${duplicateClubs.length}`);
 const knownClubs = new Set(clubs.map((club) => key(club.platform, club.ea_club_id)));
-const orphanPlayers = playerRows.filter((row) => !knownClubs.has(key(row["Platform Code"], row["Club ID"])));
+const deduplicatedPlayers = new Map();
+let blankPlayerRows = 0;
+for (const row of playerRows) {
+  const gamertag = row["Player Name"].trim();
+  if (!gamertag) { blankPlayerRows += 1; continue; }
+  const identity = playerKey(row["Platform Code"], row["Club ID"], gamertag);
+  const current = deduplicatedPlayers.get(identity);
+  if (!current || integer(row["Games Played"]) > integer(current["Games Played"])) deduplicatedPlayers.set(identity, row);
+}
+const uniquePlayerRows = [...deduplicatedPlayers.values()];
+const orphanPlayers = uniquePlayerRows.filter((row) => !knownClubs.has(key(row["Platform Code"], row["Club ID"])));
 if (orphanPlayers.length) throw new Error(`Jogadores sem clube correspondente: ${orphanPlayers.length}`);
 
 const catalogFileNames = (await readdir(dataDirectory)).filter((name) => /\.(csv|json)$/i.test(name)).sort();
@@ -67,7 +77,16 @@ const sourceFiles = await Promise.all(catalogFileNames.map(async (name) => {
   try { records = name.endsWith(".csv") ? parseCsv(content).length : Array.isArray(JSON.parse(content)) ? JSON.parse(content).length : Object.keys(JSON.parse(content)).length; } catch {}
   return { name, bytes: Buffer.byteLength(content), records, sha256: createHash("sha256").update(content).digest("hex") };
 }));
-const report = { clubs: clubs.length, players: playerRows.length, matches: Array.isArray(matches) ? matches.length : Object.keys(matches).length, detailedClubs: Object.keys(detailed).length, sourceFiles };
+const report = {
+  clubs: clubs.length,
+  players: uniquePlayerRows.length,
+  sourcePlayerRows: playerRows.length,
+  blankPlayerRows,
+  duplicatePlayerRows: playerRows.length - blankPlayerRows - uniquePlayerRows.length,
+  matches: Array.isArray(matches) ? matches.length : Object.keys(matches).length,
+  detailedClubs: Object.keys(detailed).length,
+  sourceFiles,
+};
 
 const apply = process.argv.includes("--apply");
 if (!apply) {
@@ -95,7 +114,7 @@ const importedClubs = await upsert("clubs", clubs, "platform,ea_club_id");
 const clubIds = new Map(importedClubs.map((club) => [key(club.platform, club.ea_club_id), club.id]));
 if (clubIds.size !== clubs.length) throw new Error(`Supabase retornou ${clubIds.size} clubes para ${clubs.length} entradas.`);
 
-const players = playerRows.map((row) => {
+const players = uniquePlayerRows.map((row) => {
   const platform = row["Platform Code"].trim(); const eaClubId = row["Club ID"].trim(); const gamertag = row["Player Name"].trim(); const games = integer(row["Games Played"]); const detail = detailByPlayer.get(playerKey(platform, eaClubId, gamertag));
   const goals = integer(row.Goals); const assists = integer(row.Assists); const tackles = integer(row["Tackles Made"]);
   return { club_id: clubIds.get(key(platform, eaClubId)), gamertag, favorite_position: row["Position / Rating"] || detail?.favoritePosition || "Midfielder", rating: number(detail?.ratingAve), games_played: games, goals, assists, passes_made: integer(row["Passes Made"]), pass_success_rate: number(row["Pass Success %"]) ?? 0, tackles_made: tackles, tackle_success_rate: number(row["Tackle Success %"]) ?? 0, clean_sheets_def: integer(row["Clean Sheets (Def)"]), clean_sheets_gk: integer(row["Clean Sheets (GK)"]), man_of_the_match: integer(row["MoTM (Melhor em Campo)"]), win_rate: null, country_code: null, source_url: sourceUrl(platform, eaClubId, "member-list"), source_payload: { ...row, detail: detail ?? null }, goals_per_game: games ? goals / games : 0, assists_per_game: games ? assists / games : 0, tackles_per_game: games ? tackles / games : 0, last_synced_at: new Date().toISOString(), updated_at: new Date().toISOString() };

@@ -7,15 +7,14 @@
 
 ## Estado de implementação
 
-O projeto Supabase `mdqtlkvkpacjouwgtibr` e o schema inicial existem. A
+O projeto Supabase `mdqtlkvkpacjouwgtibr` e o schema estão implantados. A
 migration `20260809204500_firebase_identity_bridge.sql` corrige a fronteira de
 identidade para Firebase Auth e remove e-mails da leitura pública. Ela só pode
-ser considerada ativa depois de um `supabase db push` confirmado.
+está ativa após `supabase db push` confirmado.
 
-O schema Supabase versionado em `supabase/migrations/` será o banco relacional
-da plataforma, mas ainda não está conectado ao frontend. O
-backend comunitário atualmente ativo é Firebase Auth + Cloud Firestore, em
-conformidade com a autenticação solicitada e com atualização em tempo real.
+O schema Supabase versionado em `supabase/migrations/` é o banco relacional da
+plataforma. O Firebase é usado exclusivamente para autenticação; as Pages
+Functions validam o ID token e executam no Supabase as operações autorizadas.
 
 ## 🏆 1. Alternativa relacional: SUPABASE (PostgreSQL Serverless)
 
@@ -30,8 +29,9 @@ conformidade com a autenticação solicitada e com atualização em tempo real.
 
 ## 📐 2. Modelo de Dados (Database Schema Proposals)
 
-### 📄 Tabela: `users` (Usuários & Autenticação)
-- `id` (UUID, PK) — ID gerado pelo Supabase Auth / Google.
+### 📄 Tabela: `profiles` (Perfil associado à identidade Firebase)
+- `id` (UUID, PK) — ID interno do Supabase.
+- `firebase_uid` (TEXT, Unique) — identidade validada pelo Firebase Auth.
 - `email` (TEXT, Unique) — E-mail do usuário.
 - `full_name` (TEXT) — Nome / Gamertag.
 - `country_code` (TEXT) — Código do país (ex: `BR`, `AR`, `CO`, `CL`, `UY`, `PE`).

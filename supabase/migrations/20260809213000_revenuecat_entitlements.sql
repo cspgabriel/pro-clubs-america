@@ -4,7 +4,7 @@
 begin;
 
 create table if not exists public.subscription_entitlements (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   profile_id uuid not null references public.profiles(id) on delete cascade,
   revenuecat_customer_id text not null,
   entitlement_id text not null check (entitlement_id in ('player_pro', 'club_pro', 'club_premium')),

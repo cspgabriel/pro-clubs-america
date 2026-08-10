@@ -57,7 +57,6 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 | `npm run lint` | Verificação ESLint |
 | `npm run build` | Build de produção |
 | `npm run check` | Lint seguido de build |
-| `npm run test:rules` | Testes de autorização do Firestore no emulador |
 | `npm run import:data -- arquivo.json` | Valida e importa uma base normalizada |
 
 ## Rotas do produto
@@ -90,8 +89,8 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 
 ## Base atual
 
-- 552 clubes detalhados nas plataformas coletadas;
-- 8.111 jogadores vinculados aos respectivos clubes;
+- 553 registros de clubes nas plataformas coletadas;
+- 8.098 identidades válidas e únicas de jogadores vinculadas aos respectivos clubes;
 - resumo oficial detalhado do Villathinaikos;
 - nove integrantes com estatísticas de carreira no clube;
 - cinco partidas recentes de Liga com dados individuais disponíveis;
@@ -136,7 +135,8 @@ esportivas publicamente exibidas pela fonte.
 O commit `3f974173` adicionou os arquivos `pro_clubs_rankings_all_time.*`,
 `pro_clubs_top_teams_players.*` e `pro_clubs_platforms_leagues.json`. A atualização
 de 09/08/2026 acrescentou `pro_clubs_all_teams_detailed.json` e os arquivos
-enriquecidos de 552 times e 8.111 jogadores. O site lê esses JSONs em
+enriquecidos e o catálogo operacional atual possui 553 clubes e 8.098 jogadores
+válidos e únicos. O site lê esses JSONs em
 `src/lib/public-data.ts`. O helper Python incluído nesse commit usa
 endpoints HTTP internos da EA e **não integra o fluxo de produção definido por
 este projeto**, que permanece baseado em crawl das páginas públicas conforme a

@@ -1,4 +1,4 @@
-import { apiError, entitlement, formBody, stripeRequest, updateFirebaseEntitlement, verifyStripeWebhook, type FunctionContext } from "../../_lib/billing";
+import { apiError, entitlement, formBody, stripeRequest, updateSupabaseEntitlement, verifyStripeWebhook, type FunctionContext } from "../../_lib/billing";
 
 interface StripeEvent { type: string; data: { object: StripeObject } }
 interface StripeObject {
@@ -42,7 +42,7 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
 
     if (!uid || !paidPlan) return Response.json({ received: true, ignored: true });
     const hasAccess = accessStatuses.has(status) && event.type !== "customer.subscription.deleted";
-    await updateFirebaseEntitlement(env, {
+    await updateSupabaseEntitlement(env, {
       uid,
       plan: hasAccess ? paidPlan : "free",
       customerId,

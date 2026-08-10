@@ -82,14 +82,14 @@ O mural pode avançar de `searching` para `scheduled` e `waiting_ea`. O estado
 `friendlyMatch` coletada da EA, usando clubes, janela de data/hora e placar
 publicado. Não existe entrada manual de resultado verificado.
 
-## Coleções comunitárias no Firestore
+## Dados comunitários no Supabase
 
-- `users/{uid}`: perfil, país, idioma, função, plano, ELO, confiabilidade e clube;
-- `clubs/{platform-clubId}`: solicitação, dono, capitães, status e URL pública EA;
-- `friendlies/{id}`: convite/desafio, horário, participantes e estado de validação;
-- `friendlies/{id}/messages/{id}`: lobby privado dos dois clubes;
-- `marketPosts/{id}`: vagas e jogadores disponíveis.
+- `profiles`: perfil, país, idioma, função, plano, ELO, confiabilidade e clube;
+- `clubs` e `club_claims`: catálogo EA, solicitação e vínculo de responsável;
+- `matches`: convite/desafio, horário, participantes e estado de validação;
+- `match_messages`: lobby privado dos clubes participantes;
+- `market_listings`: vagas e jogadores disponíveis.
 
-As regras impedem autoelevação de cargo, troca arbitrária de clube e aceite por
-contas que não representam o adversário elegível. O teste local é executado por
-`npm run test:rules`.
+As Pages Functions validam o ID token Firebase e impedem autoelevação de cargo,
+troca arbitrária de clube e aceite por contas que não representam o adversário
+elegível. O navegador não acessa a chave de serviço do Supabase.

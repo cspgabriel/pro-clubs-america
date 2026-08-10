@@ -2,9 +2,9 @@
 
 ## Arquitetura
 
-O PWA Web usa Stripe Checkout para assinaturas recorrentes. O Firebase continua
-sendo a identidade canônica e o Firestore guarda o entitlement confirmado. O
-navegador nunca recebe a chave do Stripe nem a service account do Firebase.
+O PWA Web usa Stripe Checkout para assinaturas recorrentes. O Firebase é a
+identidade canônica e o Supabase guarda o entitlement confirmado. O navegador
+nunca recebe a chave do Stripe nem a chave de serviço do Supabase.
 
 Fluxo de confiança:
 
@@ -14,7 +14,7 @@ Fluxo de confiança:
 3. a Pages Function seleciona um Price ID previamente autorizado e cria uma
    Checkout Session hospedada pelo Stripe;
 4. somente `POST /api/billing/webhook`, após validar `Stripe-Signature`, altera
-   `users/{firebase_uid}.plan` no Firestore;
+   `profiles.plan` no Supabase para o `firebase_uid` correspondente;
 5. cancelamentos e atualizações de pagamento usam o Customer Portal hospedado.
 
 Os planos comerciais atuais são:
@@ -37,8 +37,9 @@ Pages `pro-clubs-america`:
 - `STRIPE_PRICE_PLAYER_PRO_MONTHLY`;
 - `STRIPE_PRICE_PLAYER_PRO_ANNUAL`;
 - `STRIPE_PRICE_CLUB_PRO_MONTHLY`;
-- `FIREBASE_SERVICE_ACCOUNT_JSON` (secret);
-- `FIREBASE_WEB_API_KEY`;
+- `FIREBASE_PROJECT_ID`;
+- `SUPABASE_URL`;
+- `SUPABASE_SERVICE_ROLE_KEY` (secret);
 - `SITE_URL=https://proclubsamerica.com`.
 
 Nunca use `vars` ou arquivos versionados para chaves. Use Pages secrets. A chave
@@ -57,10 +58,9 @@ Eventos inscritos no webhook:
 
 ```powershell
 npm run check
-npm run test:rules
 ```
 
 O smoke seguro usa modo de teste, uma identidade Firebase descartável e uma
-Checkout Session não paga. Ao final, a sessão deve ficar `expired`, o usuário e
-o documento temporários devem ser removidos e o webhook assinado deve provar a
+Checkout Session não paga. Ao final, a sessão deve ficar `expired`, o perfil
+temporário deve ser removido e o webhook assinado deve provar a
 transição `free -> player_pro`.

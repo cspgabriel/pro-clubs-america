@@ -10,7 +10,8 @@ flowchart LR
     S --> M["Métricas derivadas"]
     M --> P["PWA Next.js"]
     P --> U["Clubes e jogadores"]
-    P <--> F["Firebase Auth + Firestore"]
+    P <--> F["Firebase Auth"]
+    P <--> D["Pages Functions + Supabase"]
     F --> R["RevenueCat app_user_id = Firebase UID"]
     R --> E["Entitlements"]
     W["Stripe Web"] --> R
@@ -30,8 +31,9 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 - Outfit para títulos, Inter para leitura e sistema visual mobile-first;
 - manifesto e service worker para instalação PWA.
 - tema claro/escuro, sidebar desktop e menu inferior mobile.
-- Firebase Auth para Google/e-mail e Firestore para cadastros, amistosos,
-  mercado, perfis e lobby em tempo real.
+- Firebase Auth somente para Google/e-mail. Perfis, vínculos de clube,
+  amistosos, mercado e lobby ficam no PostgreSQL do Supabase, acessado apenas
+  pelas Pages Functions após validar o token Firebase.
 - RevenueCat planejado como fonte de verdade de assinaturas; Stripe cobra na
   Web e as lojas nativas cobrarão nos apps. O Firebase UID será o `app_user_id`.
 
@@ -66,15 +68,16 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
 2. `scripts/import-normalized.mjs` verifica a estrutura mínima, o clube e IDs de
    partidas duplicados.
 3. O snapshot é salvo em `src/data/club.json`.
-4. `src/lib/public-data.ts` adapta 552 clubes e 8.111 jogadores dos snapshots
+4. `src/lib/public-data.ts` adapta os clubes e jogadores dos snapshots
    globais enriquecidos versionados.
 5. `src/lib/stats.ts` combina carreira e partidas sem duplicar totais oficiais.
 6. Server Components carregam os snapshots e entregam os dados aos componentes.
 7. Componentes client-side renderizam busca, filtros, formulários e gráficos.
 8. `src/lib/friendlies-data.ts` prepara snapshots compactos de times, elencos e
    estatísticas para convites e desafios abertos.
-9. `src/lib/community-service.ts` aplica identidade Firebase e persistência em
-   tempo real; `firestore.rules` valida vínculo e função em cada mutação.
+9. `src/lib/community-service.ts` envia o token Firebase às Pages Functions; o
+   backend valida a identidade e persiste no Supabase com autorização por perfil,
+   vínculo e função.
 
 ## Limites atuais
 
@@ -87,8 +90,8 @@ métricas e PWA. O serviço recorrente de crawl ainda é um item planejado.
   configuração pública do aplicativo Web Firebase.
 - o deploy Pages usa `output: export`, perfis pré-renderizados e fallback estático
   para URLs criadas pela comunidade.
-- checkout não está ativo: faltam projeto/chaves RevenueCat, produtos Stripe e
-  endpoints de webhook. O cliente nunca pode alterar entitlements diretamente.
+- o cliente nunca recebe a chave de serviço do Supabase e nunca pode alterar
+  entitlements diretamente.
 
 ## Direção para múltiplos clubes
 

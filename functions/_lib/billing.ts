@@ -4,8 +4,9 @@ export interface BillingEnv {
   STRIPE_PRICE_PLAYER_PRO_MONTHLY: string;
   STRIPE_PRICE_PLAYER_PRO_ANNUAL: string;
   STRIPE_PRICE_CLUB_PRO_MONTHLY: string;
-  FIREBASE_WEB_API_KEY: string;
-  FIREBASE_SERVICE_ACCOUNT_JSON: string;
+  FIREBASE_PROJECT_ID: string;
+  SUPABASE_URL: string;
+  SUPABASE_SERVICE_ROLE_KEY: string;
   SITE_URL?: string;
 }
 
@@ -18,6 +19,7 @@ export interface FunctionContext {
 export interface FirebaseIdentity {
   uid: string;
   email?: string;
+  name?: string;
 }
 
 export type PaidEntitlement = "player_pro" | "club_pro";
@@ -57,9 +59,10 @@ export async function verifyFirebaseRequest(request: Request, env: BillingEnv): 
   if (parts.length !== 3) throw new Error("AUTH_INVALID");
   const header = JSON.parse(new TextDecoder().decode(decodeBase64Url(parts[0]))) as { alg?: string; kid?: string };
   const payload = JSON.parse(new TextDecoder().decode(decodeBase64Url(parts[1]))) as {
-    aud?: string; email?: string; exp?: number; iat?: number; iss?: string; sub?: string;
+    aud?: string; email?: string; exp?: number; iat?: number; iss?: string; name?: string; sub?: string;
   };
-  const projectId = (JSON.parse(env.FIREBASE_SERVICE_ACCOUNT_JSON) as { project_id: string }).project_id;
+  const projectId = env.FIREBASE_PROJECT_ID;
+  if (!projectId) throw new Error("AUTH_PROJECT_MISSING");
   const now = Math.floor(Date.now() / 1000);
   if (header.alg !== "RS256" || !header.kid || payload.aud !== projectId || payload.iss !== `https://securetoken.google.com/${projectId}` || !payload.sub || payload.sub.length > 128 || !payload.exp || payload.exp < now || !payload.iat || payload.iat > now + 60) throw new Error("AUTH_INVALID");
 
@@ -74,7 +77,7 @@ export async function verifyFirebaseRequest(request: Request, env: BillingEnv): 
   const publicKey = await crypto.subtle.importKey("jwk", jwk, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["verify"]);
   const valid = await crypto.subtle.verify("RSASSA-PKCS1-v1_5", publicKey, decodeBase64Url(parts[2]), new TextEncoder().encode(`${parts[0]}.${parts[1]}`));
   if (!valid) throw new Error("AUTH_INVALID");
-  return { uid: payload.sub, email: payload.email };
+  return { uid: payload.sub, email: payload.email, name: payload.name };
 }
 
 export async function stripeRequest<T>(env: BillingEnv, path: string, init: RequestInit = {}): Promise<T> {
@@ -127,53 +130,13 @@ export async function verifyStripeWebhook(rawBody: string, signatureHeader: stri
   return signatures.some((signature) => constantTimeEqual(expected, signature));
 }
 
-function base64Url(data: Uint8Array) {
-  let binary = "";
-  for (const byte of data) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-
 function decodeBase64Url(value: string) {
   const normalized = value.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
   const binary = atob(normalized);
   return Uint8Array.from(binary, (character) => character.charCodeAt(0));
 }
 
-function pemBytes(pem: string) {
-  const binary = atob(pem.replace(/-----[^-]+-----/g, "").replace(/\s/g, ""));
-  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
-}
-
-let cachedGoogleToken: { token: string; expiresAt: number } | null = null;
-
-async function googleAccessToken(serviceAccountJson: string) {
-  if (cachedGoogleToken && cachedGoogleToken.expiresAt > Date.now() + 60_000) return cachedGoogleToken.token;
-  const serviceAccount = JSON.parse(serviceAccountJson) as { client_email: string; private_key: string; token_uri: string; project_id: string };
-  const issuedAt = Math.floor(Date.now() / 1000);
-  const header = base64Url(new TextEncoder().encode(JSON.stringify({ alg: "RS256", typ: "JWT" })));
-  const claim = base64Url(new TextEncoder().encode(JSON.stringify({
-    iss: serviceAccount.client_email,
-    scope: "https://www.googleapis.com/auth/datastore",
-    aud: serviceAccount.token_uri,
-    iat: issuedAt,
-    exp: issuedAt + 3600,
-  })));
-  const unsigned = `${header}.${claim}`;
-  const privateKey = await crypto.subtle.importKey("pkcs8", pemBytes(serviceAccount.private_key), { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["sign"]);
-  const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", privateKey, new TextEncoder().encode(unsigned));
-  const assertion = `${unsigned}.${base64Url(new Uint8Array(signature))}`;
-  const response = await fetch(serviceAccount.token_uri, {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: formBody({ grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer", assertion }),
-  });
-  const payload = await response.json() as { access_token?: string; expires_in?: number; error_description?: string };
-  if (!response.ok || !payload.access_token) throw new Error(payload.error_description ?? "GOOGLE_TOKEN_FAILED");
-  cachedGoogleToken = { token: payload.access_token, expiresAt: Date.now() + (payload.expires_in ?? 3600) * 1000 };
-  return payload.access_token;
-}
-
-export async function updateFirebaseEntitlement(env: BillingEnv, input: {
+export async function updateSupabaseEntitlement(env: BillingEnv, input: {
   uid: string;
   plan: "free" | PaidEntitlement;
   customerId?: string;
@@ -181,24 +144,23 @@ export async function updateFirebaseEntitlement(env: BillingEnv, input: {
   status: string;
 }) {
   if (!/^[A-Za-z0-9_-]{1,128}$/.test(input.uid)) throw new Error("INVALID_FIREBASE_UID");
-  const serviceAccount = JSON.parse(env.FIREBASE_SERVICE_ACCOUNT_JSON) as { project_id: string };
-  const token = await googleAccessToken(env.FIREBASE_SERVICE_ACCOUNT_JSON);
-  const fields: Record<string, { stringValue?: string; timestampValue?: string }> = {
-    plan: { stringValue: input.plan },
-    subscriptionStatus: { stringValue: input.status },
-    entitlementSource: { stringValue: "stripe" },
-    subscriptionUpdatedAt: { timestampValue: new Date().toISOString() },
-  };
-  if (input.customerId) fields.stripeCustomerId = { stringValue: input.customerId };
-  if (input.subscriptionId) fields.stripeSubscriptionId = { stringValue: input.subscriptionId };
-  const masks = Object.keys(fields).map((field) => `updateMask.fieldPaths=${encodeURIComponent(field)}`).join("&");
-  const url = `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(serviceAccount.project_id)}/databases/(default)/documents/users/${encodeURIComponent(input.uid)}?${masks}`;
-  const response = await fetch(url, {
+  const response = await fetch(`${env.SUPABASE_URL.replace(/\/$/, "")}/rest/v1/profiles?firebase_uid=eq.${encodeURIComponent(input.uid)}`, {
     method: "PATCH",
-    headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
-    body: JSON.stringify({ fields }),
+    headers: {
+      apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+      authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+      "content-type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      plan: input.plan,
+      subscription_status: input.status,
+      stripe_customer_id: input.customerId ?? null,
+      stripe_subscription_id: input.subscriptionId ?? null,
+      updated_at: new Date().toISOString(),
+    }),
   });
-  if (!response.ok) throw new Error(`FIRESTORE_UPDATE_${response.status}`);
+  if (!response.ok) throw new Error(`SUPABASE_ENTITLEMENT_${response.status}`);
 }
 
 export function entitlement(value: unknown): PaidEntitlement | null {

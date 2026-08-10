@@ -21,7 +21,7 @@ ALTER TABLE public.players ADD COLUMN IF NOT EXISTS tackles_per_game NUMERIC(8,3
 ALTER TABLE public.players ADD COLUMN IF NOT EXISTS last_synced_at TIMESTAMPTZ;
 
 CREATE TABLE IF NOT EXISTS public.catalog_import_runs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   source_commit TEXT,
   club_count INT NOT NULL,
   player_count INT NOT NULL,

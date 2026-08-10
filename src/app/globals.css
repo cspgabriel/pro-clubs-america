@@ -438,3 +438,35 @@ html[data-theme="light"] .landing-hero-copy>small{color:#405a7b}
 
 .plan-checkout-actions{display:grid;gap:8px}.billing-action{display:grid;gap:5px}.billing-action button{min-height:43px;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 12px;border:1px solid var(--color-cta);background:transparent;color:var(--color-cta);font:700 9px "Inter",sans-serif;cursor:pointer}.featured .billing-action:first-child button{background:var(--color-cta);color:#071a36}.billing-action button:disabled{cursor:wait;opacity:.72}.billing-action button svg{width:15px}.billing-action small{color:#fda4af!important;font-size:8px;line-height:1.45}.billing-spinner{animation:billing-spin .8s linear infinite}.billing-portal{margin-top:10px}.billing-portal button{width:100%}@keyframes billing-spin{to{transform:rotate(360deg)}}
 html[data-theme="light"] .billing-action button{background:#fff}
+
+/* Compact navigation requested for the member home and match hub. */
+.quick-links{grid-template-columns:repeat(4,minmax(105px,1fr))!important}
+.member-status{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.partidas-hub-grid{width:min(1100px,calc(100% - 40px));grid-template-columns:repeat(4,minmax(0,1fr))}
+.partidas-hub-grid>a,.partidas-hub-grid>article{min-height:230px;padding:20px;border:1px solid var(--soft-line);background:var(--surface)}
+.partidas-hub-grid>article>span{width:50px;height:50px;display:grid;place-items:center;background:var(--color-cta);color:#06120c}
+.partidas-coming-soon{position:relative;overflow:hidden}
+.partidas-coming-soon:after{content:"EM BREVE";position:absolute;top:16px;right:-34px;width:126px;padding:5px 0;transform:rotate(38deg);background:var(--color-cta);color:#06120c;text-align:center;font:800 7px "Inter",sans-serif;letter-spacing:.12em}
+.partidas-coming-soon>span{opacity:.72}
+html[data-theme="light"] .partidas-hub-grid>article{background:#fff}
+@media(max-width:800px){
+  .quick-links{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .quick-links a:last-child{grid-column:auto!important;min-height:66px!important;flex-direction:column!important}
+  .member-status{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .partidas-hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .partidas-hub-grid>a,.partidas-hub-grid>article{min-height:158px!important;padding:14px!important}
+  .partidas-hub-grid>article>span{width:42px;height:42px}
+  .partidas-hub-grid>a:last-of-type{grid-column:auto!important}
+  .partidas-hub-grid>a,.partidas-hub-grid>article{min-width:0;overflow-wrap:anywhere}
+  .partidas-hub-hero h1,.partidas-hub-hero p{max-width:100%}
+  .mobile-nav{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+  .mobile-nav>a,.mobile-nav>button{grid-column:auto!important}
+  .mobile-market-action{
+    position:relative!important;
+    top:auto!important;
+    left:auto!important;
+    grid-column:3!important;
+    place-self:center;
+    transform:translateY(-18px)!important;
+  }
+}
