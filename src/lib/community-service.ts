@@ -19,6 +19,12 @@ export interface CommunityProfile {
   clubName?: string;
   playerId?: string;
   playerName?: string;
+  playerGames?: number;
+  playerGoals?: number;
+  playerAssists?: number;
+  playerTackles?: number;
+  playerEaUrl?: string;
+  playerEaLinkedAt?: string;
   pendingClubId?: string;
   pendingClubName?: string;
   pendingClaimId?: string;

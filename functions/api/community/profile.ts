@@ -5,7 +5,7 @@ interface ClaimRow { id: string; status: string; club_id: string; created_at: st
 
 async function profilePayload(env: BillingEnv, profile: SupabaseProfile) {
   const club = profile.club_id ? await findClubById(env, profile.club_id) : null;
-  const player = profile.player_id ? (await supabaseRest<Array<{ gamertag: string }>>(env, `players?id=eq.${encodeURIComponent(profile.player_id)}&select=gamertag&limit=1`))[0] : null;
+  const player = profile.player_id ? (await supabaseRest<Array<{ gamertag: string; games_played: number; goals: number; assists: number; tackles_made: number }>>(env, `players?id=eq.${encodeURIComponent(profile.player_id)}&select=gamertag,games_played,goals,assists,tackles_made&limit=1`))[0] : null;
   const claims = await supabaseRest<ClaimRow[]>(env, `club_claims?profile_id=eq.${encodeURIComponent(profile.id)}&order=created_at.desc&limit=1`);
   const pending = claims[0]?.status === "pending_review" ? await findClubById(env, claims[0].club_id) : null;
   return {
@@ -22,6 +22,12 @@ async function profilePayload(env: BillingEnv, profile: SupabaseProfile) {
     clubName: club?.name,
     playerId: player?.gamertag,
     playerName: player?.gamertag,
+    playerGames: player?.games_played,
+    playerGoals: player?.goals,
+    playerAssists: player?.assists,
+    playerTackles: player?.tackles_made,
+    playerEaUrl: profile.player_ea_url || undefined,
+    playerEaLinkedAt: profile.player_ea_linked_at || undefined,
     pendingClubId: pending ? publicRouteId(pending) : undefined,
     pendingClubName: pending?.name,
     pendingClaimId: claims[0]?.status === "pending_review" ? claims[0].id : undefined,
