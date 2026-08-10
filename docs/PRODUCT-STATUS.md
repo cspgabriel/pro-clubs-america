@@ -30,7 +30,7 @@ gráficos e organização de amistosos verificados pela fonte pública.
 | Domínio | funcional | `proclubsamerica.com` e `www` com SSL; `www` redireciona por 301 ao domínio raiz |
 | Comunidades por país | funcional | 12 países, português, espanhol e inglês |
 | Página de partida e lobby | backend ativo | horário, escalações e chat em tempo real privado aos clubes participantes |
-| Mobile | pacotes gerados | APK/AAB via PWABuilder e projeto iOS/Xcode, sem Capacitor |
+| Mobile | pacotes gerados | APK/AAB v2 e projeto iOS/Xcode para `proclubsamerica.com`; chave Android reutilizável e Digital Asset Links correspondente |
 | Planos | mockup | Free, Pro e VIP sem cobrança habilitada |
 
 ## Fonte carregada

@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import yauzl from "yauzl";
 
 const site = new URL(process.env.PWA_URL || process.argv[2] || "https://pro-clubs-america.pages.dev/");
 const outputDir = path.resolve(process.env.MOBILE_OUTPUT_DIR || "mobile-packages");
@@ -21,9 +22,51 @@ async function loadManifest() {
   return value;
 }
 
+function readZipEntries(archivePath, requestedNames) {
+  return new Promise((resolve, reject) => {
+    yauzl.open(archivePath, { lazyEntries: true }, (openError, zip) => {
+      if (openError) { reject(openError); return; }
+      const result = new Map();
+      zip.on("error", reject);
+      zip.on("entry", (entry) => {
+        if (!requestedNames.has(entry.fileName)) { zip.readEntry(); return; }
+        zip.openReadStream(entry, (streamError, stream) => {
+          if (streamError) { reject(streamError); return; }
+          const chunks = [];
+          stream.on("data", (chunk) => chunks.push(chunk));
+          stream.on("error", reject);
+          stream.on("end", () => { result.set(entry.fileName, Buffer.concat(chunks)); zip.readEntry(); });
+        });
+      });
+      zip.on("end", () => resolve(result));
+      zip.readEntry();
+    });
+  });
+}
+
+async function loadExistingAndroidSigning(archivePath) {
+  try {
+    const entries = await readZipEntries(archivePath, new Set(["signing.keystore", "signing-key-info.txt", "source/app/build.gradle"]));
+    const key = entries.get("signing.keystore");
+    const info = entries.get("signing-key-info.txt")?.toString("utf8") || "";
+    const gradle = entries.get("source/app/build.gradle")?.toString("utf8") || "";
+    const field = (label) => info.match(new RegExp(`^${label}:\\s*(.+)$`, "m"))?.[1]?.trim() || "";
+    const versionCode = Number(gradle.match(/versionCode\s+(\d+)/)?.[1] || 0);
+    if (!key || !field("Key alias") || !field("Key password") || !field("Key store password")) throw new Error("ANDROID_SIGNING_ARCHIVE_INVALID");
+    return { file: `data:application/octet-stream;base64,${key.toString("base64")}`, alias: field("Key alias"), keyPassword: field("Key password"), storePassword: field("Key store password"), versionCode };
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 async function packageAndroid(webManifest) {
+  const target = path.join(outputDir, "pro-clubs-america-android.zip");
+  const existingSigning = await loadExistingAndroidSigning(target);
+  const appVersionCode = Number(process.env.MOBILE_VERSION_CODE || (existingSigning ? existingSigning.versionCode + 1 : 1));
+  if (!Number.isSafeInteger(appVersionCode) || appVersionCode < 1) throw new Error("ANDROID_VERSION_CODE_INVALID");
   const options = {
-    analysisId: null, appVersion: "1.0.0.0", appVersionCode: 1,
+    analysisId: null, appVersion: process.env.MOBILE_APP_VERSION || `1.0.0.${appVersionCode - 1}`, appVersionCode,
     backgroundColor: webManifest.background_color || "#061329", display: "standalone",
     enableNotifications: true, enableSiteSettingsShortcut: true, fallbackType: "customtabs",
     features: { locationDelegation: { enabled: false }, playBilling: { enabled: false } },
@@ -31,8 +74,8 @@ async function packageAndroid(webManifest) {
     launcherName: "Clubs America", maskableIconUrl: iconUrl, monochromeIconUrl: "", name: "Pro Clubs America",
     navigationColor: "#061329", navigationColorDark: "#061329", navigationDividerColor: "#061329", navigationDividerColorDark: "#061329",
     orientation: "portrait", packageId: "com.proclubsamerica.app", shortcuts: webManifest.shortcuts || [],
-    signing: { file: null, alias: "proclubsamerica", fullName: "Pro Clubs America", organization: "Pro Clubs America", organizationalUnit: "Mobile", countryCode: "BR", keyPassword: "", storePassword: "" },
-    signingMode: "new", splashScreenFadeOutDuration: 300, startUrl: "/",
+    signing: existingSigning ? { file: existingSigning.file, alias: existingSigning.alias, keyPassword: existingSigning.keyPassword, storePassword: existingSigning.storePassword, countryCode: null } : { file: null, alias: "proclubsamerica", fullName: "Pro Clubs America", organization: "Pro Clubs America", organizationalUnit: "Mobile", countryCode: "BR", keyPassword: "", storePassword: "" },
+    signingMode: existingSigning ? "mine" : "new", splashScreenFadeOutDuration: 300, startUrl: "/",
     themeColor: webManifest.theme_color || "#0d2347", themeColorDark: "#061329",
     webManifestUrl: manifestUrl, pwaUrl: site.toString(), fullScopeUrl: site.toString(), minSdkVersion: 23,
   };
@@ -50,9 +93,8 @@ async function packageAndroid(webManifest) {
   }
   if (job?.status !== "Completed") throw new Error("ANDROID_TIMEOUT");
   const archive = await checked(await fetch(`${androidService}/downloadPackageZip?id=${encodeURIComponent(jobId)}`), "ANDROID_DOWNLOAD");
-  const target = path.join(outputDir, "pro-clubs-america-android.zip");
   await writeFile(target, Buffer.from(await archive.arrayBuffer()));
-  return { target, jobId };
+  return { target, jobId, versionCode: appVersionCode, reusedSigningKey: Boolean(existingSigning) };
 }
 
 async function packageIos(webManifest) {

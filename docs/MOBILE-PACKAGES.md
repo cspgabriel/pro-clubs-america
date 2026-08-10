@@ -8,8 +8,8 @@ chama diretamente os empacotadores oficiais usados pelo site PWABuilder.
 npm run build:mobile
 ```
 
-Por padrão, a origem é `https://pro-clubs-america.pages.dev/`. Para empacotar o
-domínio próprio depois da ativação:
+Por padrão, a origem de desenvolvimento do script é a URL técnica do Pages. Os
+pacotes de produção atuais foram gerados para o domínio canônico ativo:
 
 ```bash
 PWA_URL=https://proclubsamerica.com npm run build:mobile
@@ -25,6 +25,19 @@ Artefatos em `mobile-packages/`:
 O Android pode ser testado imediatamente com o APK contido no ZIP. Antes da
 publicação, preserve a chave de assinatura e publique o `assetlinks.json`
 fornecido no pacote em `/.well-known/assetlinks.json`.
+
+Depois da primeira geração, o script reutiliza automaticamente a chave contida
+no ZIP Android ignorado pelo Git e incrementa o `versionCode`. Isso evita trocar
+a identidade criptográfica do aplicativo em uma atualização. Não apague o ZIP,
+o `signing.keystore` ou o arquivo local de informações da chave antes de guardar
+uma cópia segura fora do repositório.
+
+Estado verificado em 10/08/2026:
+
+- Android para `proclubsamerica.com`: APK assinado, AAB assinado e projeto TWA;
+- iOS para `proclubsamerica.com`: projeto Xcode/WKWebView;
+- Digital Asset Links publicado para `com.proclubsamerica.app` com o certificado
+  do pacote Android atual.
 
 O pacote iOS contém o projeto, mas a Apple exige macOS, Xcode, conta Apple
 Developer e assinatura para produzir o IPA e enviar à App Store.
