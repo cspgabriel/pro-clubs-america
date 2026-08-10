@@ -17,6 +17,7 @@
 /.next/
 /out/
 /.wrangler/
+**/.wrangler/
 /.tmp-visual/
 /mobile-packages/
 /firebase-debug.log
