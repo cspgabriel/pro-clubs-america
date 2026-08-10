@@ -29,7 +29,14 @@ export const onRequestGet = async (context: FunctionContext) => {
   const requested = Number(new URL(context.request.url).searchParams.get("limit") || 3);
   const limit = Math.max(1, Math.min(Number.isFinite(requested) ? requested : 3, 10));
   const due = encodeURIComponent(new Date().toISOString());
-  const queue = await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?status=in.(queued,failed,succeeded)&next_run_at=lte.${due}&select=id,priority,attempts,club_id,next_run_at&order=priority.desc,next_run_at.asc&limit=${limit}`);
+  const [claims, matches] = await Promise.all([
+    supabaseRest<Array<{ club_id: string }>>(context.env, "club_claims?status=eq.approved&select=club_id&limit=1000"),
+    supabaseRest<Array<{ home_club_id: string; away_club_id: string | null; invited_club_id: string | null }>>(context.env, "matches?status=in.(open_challenge,accepted,waiting_ea_verification)&select=home_club_id,away_club_id,invited_club_id&limit=1000"),
+  ]);
+  const activeClubIds = [...new Set([...claims.map((item) => item.club_id), ...matches.flatMap((item) => [item.home_club_id, item.away_club_id, item.invited_club_id]).filter((value): value is string => Boolean(value))])];
+  if (!activeClubIds.length) return Response.json({ items: [] }, { headers: { "cache-control": "no-store" } });
+  const clubFilter = activeClubIds.map(encodeURIComponent).join(",");
+  const queue = await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?club_id=in.(${clubFilter})&status=in.(queued,failed,succeeded)&next_run_at=lte.${due}&select=id,priority,attempts,club_id,next_run_at&order=priority.desc,next_run_at.asc&limit=${limit}`);
   const items = await Promise.all(queue.map(async (item) => {
     const club = (await supabaseRest<Array<{ id: string; ea_club_id: string; platform: string; name: string; ea_url: string }>>(context.env, `clubs?id=eq.${encodeURIComponent(item.club_id)}&select=id,ea_club_id,platform,name,ea_url&limit=1`))[0];
     return club ? { queueId: item.id, priority: item.priority, attempts: item.attempts, clubId: club.ea_club_id, platform: club.platform, clubName: club.name, sourceUrl: club.ea_url } : null;
