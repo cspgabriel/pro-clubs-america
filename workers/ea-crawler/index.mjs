@@ -1,6 +1,6 @@
 import puppeteer from "@cloudflare/puppeteer";
 
-const PARSER_VERSION = "cloudflare-browser-public-page-v2";
+const PARSER_VERSION = "cloudflare-browser-public-page-v3";
 const USER_AGENT = "ProClubsAmericaCrawler/1.0 (+https://proclubsamerica.com)";
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const safeText = (value, fallback = "") => String(value ?? fallback).trim();
@@ -85,6 +85,16 @@ async function crawl(env, item) {
   await page.setViewport({ width: 1440, height: 1200, deviceScaleFactor: 1 });
   const observed = [];
   const responseTasks = [];
+  const matchingRequests = [];
+  const failedRequests = [];
+  page.on("request", (request) => {
+    const url = request.url();
+    if (/proclubs|clubs\/matches/i.test(url)) matchingRequests.push(url.slice(0, 240));
+  });
+  page.on("requestfailed", (request) => {
+    const url = request.url();
+    if (/proclubs|clubs\/matches/i.test(url)) failedRequests.push(`${url.slice(0, 180)}:${request.failure()?.errorText || "failed"}`);
+  });
   page.on("response", (response) => {
     const url = response.url();
     if (!url.startsWith("https://proclubs.ea.com/") || !url.includes("/clubs/matches")) return;
@@ -109,9 +119,13 @@ async function crawl(env, item) {
     const matches = observed.flatMap((entry) => normalize(entry.payload, entry.mode, sourceUrl, item.clubId));
     const componentState = await page.evaluate(() => {
       const element = document.querySelector("ea-proclub-match-history-fc");
-      return element ? (element.hasAttribute("unresolved") ? "unresolved" : "resolved") : "missing";
+      if (!element) return "missing";
+      const state = element.hasAttribute("unresolved") ? "unresolved" : "resolved";
+      const text = (element.shadowRoot?.textContent || element.textContent || "").replace(/\s+/g, " ").trim().slice(0, 120);
+      return `${state}:${location.search.slice(0, 100)}:${text}`;
     }).catch(() => "unknown");
-    return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, error: observed.length ? undefined : `PUBLIC_PAGE_DATA_NOT_OBSERVED:${componentState}`, matches };
+    const networkState = failedRequests[0] || matchingRequests[0] || "no-matching-request";
+    return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, error: observed.length ? undefined : `PUBLIC_PAGE_DATA_NOT_OBSERVED:${componentState}:${networkState}`.slice(0, 400), matches };
   } catch (error) {
     const message = error instanceof Error ? error.message : "CRAWL_FAILED";
     return { status: /captcha|access denied|forbidden/i.test(message) ? "blocked" : "failed", responseCount: observed.length, error: message.slice(0, 400), matches: [] };
