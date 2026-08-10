@@ -112,7 +112,7 @@ export function sendPushTest() {
 }
 
 export function linkEaPlayer(input: { eaUrl: string; gamertag: string }) {
-  return api<{ playerId: string; playerName: string; clubId: string; clubName: string; matches: number; goals: number; assists: number; tackles: number }>("/api/community/player-link", { method: "POST", body: JSON.stringify(input) }, true);
+  return api<{ playerId: string; playerName: string; clubId: string; clubName: string; matches: number; goals: number; assists: number; tackles: number; sourceUrl: string; historyStatus: "queued" }>("/api/community/player-link", { method: "POST", body: JSON.stringify(input) }, true);
 }
 
 export function getClubReferral() {

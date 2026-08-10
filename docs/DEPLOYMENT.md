@@ -78,3 +78,17 @@ npm run check:functions
 Não publique uma chave `sk_*` ou `rk_*` no GitHub. Configure-a como secret no
 projeto Pages e use uma restricted key permanente, com o menor conjunto de
 permissões necessário.
+
+## Coletor público da EA
+
+O crawler de produção fica em `workers/ea-crawler/` e usa o binding Browser
+Rendering do Cloudflare. O mesmo `EA_INGEST_SECRET` deve existir no Pages, no
+Worker e, para o fallback, nos secrets do repositório GitHub.
+
+```powershell
+npx wrangler deploy --config workers/ea-crawler/wrangler.jsonc
+```
+
+O cron atual é `17 */2 * * *`. Valide o resultado em `/api/health` e na tabela
+`ea_crawl_runs`; HTTP 200 do Worker não significa sucesso de coleta quando o
+campo `status` for `failed` ou `blocked`.

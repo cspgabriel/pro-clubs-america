@@ -96,14 +96,19 @@ async function crawl(env, item) {
     await page.setUserAgent(USER_AGENT);
     const response = await page.goto(sourceUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
     if (!response || response.status() >= 400) throw new Error(`PAGE_${response?.status() || "NO_RESPONSE"}`);
-    await sleep(6500);
+    await page.waitForSelector("ea-proclub-match-history-fc", { timeout: 12000 }).catch(() => undefined);
+    for (let elapsed = 0; elapsed < 24000 && observed.length === 0; elapsed += 2000) await sleep(2000);
     await clickMode(page, ["friendly", "amistoso"]);
-    await sleep(3000);
+    for (let elapsed = 0; elapsed < 8000; elapsed += 2000) await sleep(2000);
     await clickMode(page, ["playoff", "mata-mata"]);
-    await sleep(3000);
+    for (let elapsed = 0; elapsed < 8000; elapsed += 2000) await sleep(2000);
     await Promise.allSettled(responseTasks);
     const matches = observed.flatMap((entry) => normalize(entry.payload, entry.mode, sourceUrl, item.clubId));
-    return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, error: observed.length ? undefined : "PUBLIC_PAGE_DATA_NOT_OBSERVED", matches };
+    const componentState = await page.evaluate(() => {
+      const element = document.querySelector("ea-proclub-match-history-fc");
+      return element ? (element.hasAttribute("unresolved") ? "unresolved" : "resolved") : "missing";
+    }).catch(() => "unknown");
+    return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, error: observed.length ? undefined : `PUBLIC_PAGE_DATA_NOT_OBSERVED:${componentState}`, matches };
   } catch (error) {
     const message = error instanceof Error ? error.message : "CRAWL_FAILED";
     return { status: /captcha|access denied|forbidden/i.test(message) ? "blocked" : "failed", responseCount: observed.length, error: message.slice(0, 400), matches: [] };

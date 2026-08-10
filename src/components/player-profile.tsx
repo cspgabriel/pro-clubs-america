@@ -46,7 +46,9 @@ const number = new Intl.NumberFormat("pt-BR");
 const decimal = (value: number | null, matches: number) => value == null || !matches ? "—" : (value / matches).toLocaleString("pt-BR", { maximumFractionDigits: 2 });
 
 export function PlayerProfile({ player, club, recentMatches, limitedData = false }: PlayerProfileProps) {
-  const chronological = recentMatches.slice().reverse();
+  const [officialMatches, setOfficialMatches] = useState<PlayerRecentMatch[]>(recentMatches);
+  const [historySyncing, setHistorySyncing] = useState(true);
+  const chronological = officialMatches.slice().reverse();
   const [premium, setPremium] = useState(false);
   useEffect(() => observeAuth((user) => {
     if (!user) { setPremium(false); return; }
@@ -54,6 +56,21 @@ export function PlayerProfile({ player, club, recentMatches, limitedData = false
       setPremium(Boolean(profile?.premiumAccess));
     }).catch(() => setPremium(false));
   }), []);
+  useEffect(() => {
+    let active = true;
+    const query = new URLSearchParams({ gamertag: player.name, clubId: club.id });
+    fetch(`/api/community/player-history?${query.toString()}`)
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("PLAYER_HISTORY_UNAVAILABLE")))
+      .then((payload: { matches?: Array<Omit<PlayerRecentMatch, "label"> & { playedAt: string }> }) => {
+        if (!active || !Array.isArray(payload.matches)) return;
+        const live = payload.matches.map((match) => ({ ...match, label: new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(match.playedAt)) }));
+        const merged = [...live, ...recentMatches].filter((match, index, list) => list.findIndex((item) => item.id === match.id) === index).slice(0, 10);
+        setOfficialMatches(merged);
+      })
+      .catch(() => undefined)
+      .finally(() => { if (active) setHistorySyncing(false); });
+    return () => { active = false; };
+  }, [club.id, player.name, recentMatches]);
 
   return (
     <main className="app-shell player-page">
@@ -100,7 +117,7 @@ export function PlayerProfile({ player, club, recentMatches, limitedData = false
           </aside>
 
           <article className="player-panel player-trend">
-            <header><div><small>RECORTE CONFIRMADO</small><h2>Desempenho recente</h2></div><span>{recentMatches.length} jogos encontrados</span></header>
+            <header><div><small>RECORTE CONFIRMADO</small><h2>Desempenho recente</h2></div><span>{historySyncing ? "Atualizando EA…" : `${officialMatches.length} jogos encontrados`}</span></header>
             {chronological.length ? <div className="player-chart">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chronological} margin={{ top: 10, right: 8, left: -22, bottom: 0 }}>
@@ -133,7 +150,7 @@ export function PlayerProfile({ player, club, recentMatches, limitedData = false
 
         <section className="player-panel player-match-list">
           <header><div><small>FONTE: HISTÓRICO DO CLUBE</small><h2>Partidas com dados individuais</h2></div><a href={club.sourceUrl} target="_blank" rel="noreferrer">Fonte pública <ExternalLink size={14} /></a></header>
-          {recentMatches.length ? recentMatches.map((match) => <article key={match.id}>
+          {officialMatches.length ? officialMatches.map((match) => <article key={match.id}>
             <span className={`player-result ${match.result}`}>{match.result}</span>
             <div><strong>{match.opponent}</strong><small>{match.label} · {match.score}</small></div>
             <dl><div><dt>G</dt><dd>{match.goals}</dd></div><div><dt>A</dt><dd>{match.assists}</dd></div><div><dt>NOTA</dt><dd>{match.rating ?? "—"}</dd></div><div><dt>PASSES</dt><dd>{match.passes ?? "—"}</dd></div></dl>

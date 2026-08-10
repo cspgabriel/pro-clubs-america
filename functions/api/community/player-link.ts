@@ -7,10 +7,14 @@ function parseEaUrl(value: string) {
   try {
     const url = new URL(value);
     const validHost = ["ea.com", "www.ea.com"].includes(url.hostname);
-    const validPath = /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?games\/ea-sports-fc\/clubs\/(?:overview|member-list)$/.test(url.pathname);
+    const validPath = /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?games\/ea-sports-fc\/clubs\/(?:overview|member-list|match-history)$/.test(url.pathname);
     const clubId = url.searchParams.get("clubId") || "";
     const platform = url.searchParams.get("platform") || "";
-    return validHost && validPath && /^\d+$/.test(clubId) && platform ? { clubId, platform } : null;
+    if (!validHost || !validPath || !/^\d{1,12}$/.test(clubId) || !["common-gen5", "common-gen4", "nx"].includes(platform)) return null;
+    url.protocol = "https:";
+    url.hostname = "www.ea.com";
+    url.hash = "";
+    return { clubId, platform, url: url.toString() };
   } catch { return null; }
 }
 
@@ -25,12 +29,17 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
     if (!parsed || !gamertag) return apiError("Informe o link oficial do elenco EA e o nome exato do jogador.");
     const club = await findClubByEa(env, parsed.platform, parsed.clubId);
     if (!club) return apiError("Este clube ainda não está indexado na comunidade.", 404);
-    const player = (await supabaseRest<PlayerRow[]>(env, `players?club_id=eq.${encodeURIComponent(club.id)}&gamertag=ilike.${encodeURIComponent(gamertag)}&select=id,gamertag,club_id,games_played,goals,assists,tackles_made&limit=1`))[0];
+    const roster = await supabaseRest<PlayerRow[]>(env, `players?club_id=eq.${encodeURIComponent(club.id)}&select=id,gamertag,club_id,games_played,goals,assists,tackles_made&limit=100`);
+    const player = roster.find((item) => item.gamertag.localeCompare(gamertag, "pt-BR", { sensitivity: "accent" }) === 0);
     if (!player) return apiError("Jogador não encontrado no elenco oficial indexado.", 404);
     const linked = await supabaseRest<Array<{ id: string }>>(env, `profiles?player_id=eq.${encodeURIComponent(player.id)}&id=neq.${encodeURIComponent(profile.id)}&select=id&limit=1`);
     if (linked.length) return apiError("Este jogador já está vinculado a outra conta.", 409);
-    await supabaseRest<SupabaseProfile[]>(env, `profiles?id=eq.${encodeURIComponent(profile.id)}`, { method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify({ player_id: player.id, club_id: profile.club_id || club.id, role: profile.role === "visitor" ? "player" : profile.role, updated_at: new Date().toISOString() }) });
-    return Response.json({ playerId: player.gamertag, playerName: player.gamertag, clubId: publicRouteId(club), clubName: club.name, matches: player.games_played, goals: player.goals, assists: player.assists, tackles: player.tackles_made });
+    const now = new Date().toISOString();
+    await Promise.all([
+      supabaseRest<SupabaseProfile[]>(env, `profiles?id=eq.${encodeURIComponent(profile.id)}`, { method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify({ player_id: player.id, player_ea_url: parsed.url, player_ea_linked_at: now, club_id: profile.club_id || club.id, role: profile.role === "visitor" ? "player" : profile.role, updated_at: now }) }),
+      supabaseRest(env, "ea_crawl_queue?on_conflict=club_id", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ club_id: club.id, priority: 95, status: "queued", next_run_at: now, last_error: null, updated_at: now }) }),
+    ]);
+    return Response.json({ playerId: player.gamertag, playerName: player.gamertag, clubId: publicRouteId(club), clubName: club.name, matches: player.games_played, goals: player.goals, assists: player.assists, tackles: player.tackles_made, sourceUrl: parsed.url, historyStatus: "queued" });
   } catch (error) {
     const message = error instanceof Error ? error.message : "PLAYER_LINK_FAILED";
     const status = message.startsWith("AUTH_") ? 401 : message === "ORIGIN_NOT_ALLOWED" ? 403 : 500;

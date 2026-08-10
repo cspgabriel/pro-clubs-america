@@ -17,7 +17,7 @@ mantida para rastreabilidade do snapshot importado.
 
 ```mermaid
 flowchart TD
-    Q["ea_crawl_queue"] --> O["Coletor autorizado"]
+    Q["ea_crawl_queue"] --> O["Cloudflare Browser Rendering"]
     O --> R["Member list"]
     R --> H["Match history"]
     H --> L["Liga"]
@@ -80,10 +80,18 @@ flowchart TD
 - cache e ETag/Last-Modified quando a fonte fornecer suporte.
 
 A fila, snapshots, submissões de URL, ingestão assinada e reconciliação estão
-implantados no Supabase. O coletor/agendador que abre páginas da EA permanece
-desativado até existir autorização compatível com as regras publicadas pela
-fonte. Enquanto isso, membros dos dois clubes podem enviar a URL oficial da
-partida; a submissão prioriza o clube na fila, mas não permite informar placar.
+implantados no Supabase. O Worker `pro-clubs-america-ea-crawler` abre somente a
+página pública da EA com Browser Rendering, em série, a cada duas horas. Ele
+observa as respostas produzidas pela própria página e nunca recebe credencial ou
+cookie de usuário. Falhas não substituem o último snapshot válido.
+
+O workflow `.github/workflows/crawl-ea-public.yml` é um fallback operacional.
+Em 10/08/2026 o GitHub não iniciou o runner por bloqueio de cobrança da conta;
+por isso o agendamento ativo está no Cloudflare. A primeira execução real do
+Browser Rendering alcançou a página, mas foi registrada como
+`PUBLIC_PAGE_DATA_NOT_OBSERVED`; isso é falha de parser/renderização observável,
+não uma coleta bem-sucedida. Até existir um run real `succeeded`, o health não
+deve anunciar a base como atualizada.
 
 ## Observabilidade
 
@@ -108,6 +116,9 @@ O endpoint `/api/health` publica `lastSuccessfulCrawl`, `lastObservation`,
   fingerprint da partida;
 - uma partida comunitária marcada como realizada coloca os dois clubes na fila;
 - uma URL enviada por membro participante recebe prioridade máxima;
+- a URL de Integrantes ou Histórico enviada pelo próprio jogador vincula a
+  carreira já indexada e prioriza o histórico do clube para o recorte jogo a
+  jogo;
 - somente um snapshot `friendlyMatch` com os dois clubes e janela de 36 horas
   pode preencher o placar e concluir o desafio.
 

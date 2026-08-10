@@ -22,6 +22,8 @@ export interface SupabaseProfile {
   referred_by_profile_id?: string | null;
   bonus_access_until?: string | null;
   player_id?: string | null;
+  player_ea_url?: string | null;
+  player_ea_linked_at?: string | null;
 }
 
 export interface SupabaseClub {

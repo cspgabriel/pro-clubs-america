@@ -1,12 +1,13 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "pro-clubs-america-ea-crawler",
+  "account_id": "8c4f3b0ccc2ee9001b6dd8322b8b6ca9",
   "main": "index.mjs",
   "compatibility_date": "2026-08-10",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "browser": { "binding": "BROWSER" },
-  "triggers": { "crons": ["17 * * * *"] },
+  "triggers": { "crons": ["17 */2 * * *"] },
   "vars": { "PCA_SITE_URL": "https://pro-clubs-america.pages.dev" },
   "observability": { "enabled": true, "head_sampling_rate": 1 }
 }

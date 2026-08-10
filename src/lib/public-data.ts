@@ -58,4 +58,8 @@ export const publicPlayers: PublicPlayer[] = Object.values(detailed).flatMap((en
 
 export const publicClubRosterTotals = new Map(Object.values(detailed).map((entry) => [routeClubId(entry.metadata.platform, entry.metadata.clubId), { assists: (entry.player_stats?.members ?? []).reduce((total, player) => total + numeric(player.assists), 0) }]));
 export function findPublicClub(id: string) { return publicClubs.find((club) => club.id === id); }
-export function findPublicPlayer(id: string) { return publicPlayers.find((player) => player.id === id); }
+export function findPublicPlayer(id: string) {
+  const normalized = decodeURIComponent(id).toLocaleLowerCase("pt-BR");
+  return publicPlayers.find((player) => player.id.toLocaleLowerCase("pt-BR") === normalized)
+    ?? publicPlayers.find((player) => player.name.toLocaleLowerCase("pt-BR") === normalized);
+}

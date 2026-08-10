@@ -26,6 +26,14 @@ O cadastro da comunidade aceita somente URLs públicas de `overview`,
 `member-list` ou `match-history` que contenham `clubId` numérico e `platform`.
 Quem ainda não tem o link pode procurar o time na página pública de Rankings.
 
+Na área **Minha conta**, um jogador pode informar a URL pública de Integrantes
+ou Histórico e o gamertag exatamente como aparece no elenco. O backend confirma
+que o nome pertence ao clube indexado, impede que o mesmo atleta seja vinculado
+a duas contas, salva a proveniência e coloca o histórico do clube na fila
+prioritária. O perfil combina a carreira do elenco com até dez atuações
+individuais existentes nos snapshots de partidas; ausência de atuação continua
+sendo exibida como dado indisponível, nunca inventado.
+
 ## Villathinaikos — URLs cadastradas
 
 - [Visão geral](https://www.ea.com/pt-br/games/ea-sports-fc/clubs/overview?clubId=171630&platform=common-gen5)
