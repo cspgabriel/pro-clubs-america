@@ -27,6 +27,7 @@ gráficos e organização de amistosos verificados pela fonte pública.
 | Coletor automático | ativo, parser em observação | Cloudflare Browser Rendering a cada 2h; execução real ainda sem dados observados e corretamente marcada como falha |
 | Banco comunitário | funcional | Firebase Auth para identidade e Supabase para toda persistência; autorização por dono/capitão nas Pages Functions |
 | Autenticação | funcional | Google e e-mail/senha no projeto Firebase de produção |
+| Domínio | funcional | `proclubsamerica.com` e `www` com SSL; `www` redireciona por 301 ao domínio raiz |
 | Comunidades por país | funcional | 12 países, português, espanhol e inglês |
 | Página de partida e lobby | backend ativo | horário, escalações e chat em tempo real privado aos clubes participantes |
 | Mobile | pacotes gerados | APK/AAB via PWABuilder e projeto iOS/Xcode, sem Capacitor |
@@ -57,12 +58,12 @@ vinculadas aos seus clubes no Supabase.
 
 ## Próximas entregas recomendadas
 
-1. Ajustar e provar o parser do componente público da EA até obter uma execução real `succeeded`.
+1. Obter uma resposta completa da fonte pública no Browser Rendering e provar uma execução real `succeeded`; o componente já resolve e dispara as três requisições esperadas, mas a saída Cloudflare ainda não recebe a resposta antes do timeout.
 2. Generalizar a coleta por página de Overview e Member List, além das partidas.
 3. Adicionar painel administrativo para atribuir capitães e moderar cadastros.
 4. Adicionar fixtures sanitizadas e testes de regressão para cada versão do parser.
 5. Configurar alertas sobre idade do dado e quebra de parser.
-6. Regenerar os pacotes mobile para `proclubsamerica.com` quando o domínio estiver ativo.
+6. Regenerar os pacotes mobile usando o domínio canônico `proclubsamerica.com`.
 
 ## Critério para produção comunitária
 

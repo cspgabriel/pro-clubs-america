@@ -4,7 +4,8 @@
 
 - GitHub: `cspgabriel/pro-clubs-america`
 - Cloudflare Pages: `pro-clubs-america`
-- URL ativa: `https://pro-clubs-america.pages.dev`
+- URL canônica ativa: `https://proclubsamerica.com`
+- URL técnica Pages: `https://pro-clubs-america.pages.dev`
 - Banco Supabase: `mdqtlkvkpacjouwgtibr` (`sa-east-1`)
 
 A branch `main` publica no projeto Pages existente pelo workflow
@@ -29,14 +30,19 @@ fallback client-side.
 npx wrangler pages deploy out --project-name pro-clubs-america --branch main
 ```
 
-O domínio de produção é `proclubsamerica.com`. Ele precisa estar na mesma conta
-Cloudflare do projeto Pages antes de ser associado em **Custom domains**.
+Os domínios `proclubsamerica.com` e `www.proclubsamerica.com` estão associados
+ao mesmo projeto Pages, com DNS proxy e SSL ativos. Uma Redirect Rule permanente
+leva `www` ao domínio raiz, preservando caminho e query string. O secret
+`SITE_URL` do Pages usa `https://proclubsamerica.com` como origem canônica.
 
 ## Firebase Auth
 
 Copie `.env.example` para `.env.local` e preencha as variáveis
 `NEXT_PUBLIC_FIREBASE_*` do aplicativo Web Firebase. Ative Email/Senha e Google
 no console do Firebase e inclua `proclubsamerica.com` nos domínios autorizados.
+O host técnico `pro-clubs-america.pages.dev` também permanece autorizado para
+smokes e rollback; o host `www` não inicia autenticação porque redireciona antes
+para a origem canônica.
 
 Não use `private_key`, arquivo JSON de service account ou credenciais do Admin
 SDK no navegador, no repositório ou nas variáveis `NEXT_PUBLIC_*`.
@@ -92,3 +98,9 @@ npx wrangler deploy --config workers/ea-crawler/wrangler.jsonc
 O cron atual é `17 */2 * * *`. Valide o resultado em `/api/health` e na tabela
 `ea_crawl_runs`; HTTP 200 do Worker não significa sucesso de coleta quando o
 campo `status` for `failed` ou `blocked`.
+
+Em 10/08/2026 o parser `cloudflare-browser-public-page-v5` confirmou que o
+componente público da EA foi resolvido e disparou as requisições de resumo,
+informações e partidas de Liga. Essas requisições permaneceram pendentes na
+saída do Browser Rendering e nenhuma resposta de dados foi observada antes do
+timeout. O run é, corretamente, registrado como falha e não substitui snapshots.

@@ -87,11 +87,13 @@ cookie de usuário. Falhas não substituem o último snapshot válido.
 
 O workflow `.github/workflows/crawl-ea-public.yml` é um fallback operacional.
 Em 10/08/2026 o GitHub não iniciou o runner por bloqueio de cobrança da conta;
-por isso o agendamento ativo está no Cloudflare. A primeira execução real do
-Browser Rendering alcançou a página, mas foi registrada como
-`PUBLIC_PAGE_DATA_NOT_OBSERVED`; isso é falha de parser/renderização observável,
-não uma coleta bem-sucedida. Até existir um run real `succeeded`, o health não
-deve anunciar a base como atualizada.
+por isso o agendamento ativo está no Cloudflare. A versão
+`cloudflare-browser-public-page-v5` alcança a página, resolve o componente
+público e observa o disparo das requisições `overallStats`, `info` e `matches`
+(Liga). Nenhuma delas concluiu na saída do Browser Rendering antes do timeout;
+portanto a execução permanece registrada como `PUBLIC_PAGE_DATA_NOT_OBSERVED`,
+e não como sucesso. Até existir um run real `succeeded`, o health não deve
+anunciar a base como atualizada.
 
 ## Observabilidade
 
