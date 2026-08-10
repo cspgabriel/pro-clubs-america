@@ -1,6 +1,6 @@
 import puppeteer from "@cloudflare/puppeteer";
 
-const PARSER_VERSION = "cloudflare-browser-public-page-v3";
+const PARSER_VERSION = "cloudflare-browser-public-page-v4";
 const USER_AGENT = "ProClubsAmericaCrawler/1.0 (+https://proclubsamerica.com)";
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const safeText = (value, fallback = "") => String(value ?? fallback).trim();
@@ -87,6 +87,7 @@ async function crawl(env, item) {
   const responseTasks = [];
   const matchingRequests = [];
   const failedRequests = [];
+  const matchingResponses = [];
   page.on("request", (request) => {
     const url = request.url();
     if (/proclubs|clubs\/matches/i.test(url)) matchingRequests.push(url.slice(0, 240));
@@ -97,6 +98,7 @@ async function crawl(env, item) {
   });
   page.on("response", (response) => {
     const url = response.url();
+    if (/proclubs|clubs\/matches/i.test(url)) matchingResponses.push(`${response.status()}:${url.slice(0, 180)}`);
     if (!url.startsWith("https://proclubs.ea.com/") || !url.includes("/clubs/matches")) return;
     responseTasks.push(response.json().then((payload) => {
       const rawMode = new URL(url).searchParams.get("matchType") || "leagueMatch";
@@ -124,7 +126,7 @@ async function crawl(env, item) {
       const text = (element.shadowRoot?.textContent || element.textContent || "").replace(/\s+/g, " ").trim().slice(0, 120);
       return `${state}:${location.search.slice(0, 100)}:${text}`;
     }).catch(() => "unknown");
-    const networkState = failedRequests[0] || matchingRequests[0] || "no-matching-request";
+    const networkState = [...failedRequests.slice(-2), ...matchingResponses.slice(-4), ...matchingRequests.slice(-4)].join("|") || "no-matching-request";
     return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, error: observed.length ? undefined : `PUBLIC_PAGE_DATA_NOT_OBSERVED:${componentState}:${networkState}`.slice(0, 400), matches };
   } catch (error) {
     const message = error instanceof Error ? error.message : "CRAWL_FAILED";
