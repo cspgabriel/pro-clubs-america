@@ -7,13 +7,15 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { parseEaClubUrl, type TeamRegistration } from "@/lib/community";
 import { countries } from "@/lib/i18n";
 import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
-import { registerCommunityClub } from "@/lib/community-service";
+import { getCommunityProfile, registerCommunityClub } from "@/lib/community-service";
+import { useRouter } from "next/navigation";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
 
 interface IndexedClubOption { id: string; rawClubId: string; name: string; platform: string; crestUrl: string; sourceUrl: string; skillRating: number; rank: number; }
 
 export function RegistrationPage({ indexedClubs }: { indexedClubs: IndexedClubOption[] }) {
+  const router = useRouter();
   const [submitted, setSubmitted] = useState<TeamRegistration | null>(null);
   const [error, setError] = useState("");
   const [user, setUser] = useState<AuthUserSnapshot | null>(null);
@@ -22,12 +24,20 @@ export function RegistrationPage({ indexedClubs }: { indexedClubs: IndexedClubOp
   const [clubName, setClubName] = useState("");
   const [eaUrl, setEaUrl] = useState("");
   const [selectedClub, setSelectedClub] = useState<IndexedClubOption | null>(null);
+  const [checkingProfile, setCheckingProfile] = useState(true);
   const clubMatches = useMemo(() => {
     const term = clubQuery.trim().toLocaleLowerCase("pt-BR");
     if (term.length < 2) return [];
     return indexedClubs.filter((club) => club.name.toLocaleLowerCase("pt-BR").includes(term) || club.id.includes(term) || club.rawClubId.includes(term)).slice(0, 8);
   }, [clubQuery, indexedClubs]);
-  useEffect(() => observeAuth(setUser), []);
+  useEffect(() => observeAuth((nextUser) => {
+    setUser(nextUser);
+    if (!nextUser) { setCheckingProfile(false); return; }
+    getCommunityProfile().then((profile) => {
+      if (profile?.clubId || profile?.pendingClubId) router.replace("/conta");
+      else setCheckingProfile(false);
+    }).catch(() => setCheckingProfile(false));
+  }), [router]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,10 +54,11 @@ export function RegistrationPage({ indexedClubs }: { indexedClubs: IndexedClubOp
     finally { setBusy(false); }
   }
 
+  if (checkingProfile) return <main className="member-home-loading"><ShieldCheck /><span>Verificando seu clube…</span></main>;
   return <main className="app-shell registration-page"><PlatformHeader />
-    <section className="registration-hero"><div><small>ENTRE PARA A COMUNIDADE</small><h1>Cadastre seu time</h1><p>Vincule um responsável ao clube público da EA. Após a validação, os dados esportivos entram nos diretórios e rankings da comunidade.</p></div><UserPlus /></section>
+    <section className="registration-hero"><div><small>ENTRE PARA A COMUNIDADE</small><h1>Cadastre seu time</h1><p>Vincule sua conta ao clube público da EA. O acesso é liberado imediatamente e os dados esportivos entram nos diretórios e rankings após a coleta oficial.</p></div><UserPlus /></section>
     <div className="registration-layout">
-      {submitted ? <section className="registration-success"><CheckCircle2 /><small>SOLICITAÇÃO RECEBIDA</small><h2>{submitted.clubName}</h2><p>Clube EA ID <b>{submitted.clubId}</b> registrado para análise. A previsão exibida pela plataforma é de indexação em até 24 horas após uma coleta válida.</p><div><Clock3 /><span>STATUS ATUAL<strong>Aguardando validação e coleta</strong></span></div><Link href="/rankings/times">Acompanhar ranking de times</Link></section> : <form className="registration-form" onSubmit={submit}>
+      {submitted ? <section className="registration-success"><CheckCircle2 /><small>TIME VINCULADO</small><h2>{submitted.clubName}</h2><p>Você agora representa o clube EA ID <b>{submitted.clubId}</b> como dono. O vínculo é imediato; resultados e estatísticas continuam validados pela fonte oficial.</p><div><Clock3 /><span>STATUS ATUAL<strong>Vínculo ativo · coleta na fila</strong></span></div><Link href="/conta/time">Gerenciar meu time</Link></section> : <form className="registration-form" onSubmit={submit}>
         <header><ShieldCheck /><div><small>CADASTRO DE USUÁRIO + TIME</small><h2>Identificação obrigatória</h2></div></header>
         {!user && <p className="registration-error">Você precisa <Link href="/entrar">entrar ou criar uma conta</Link> antes de vincular o clube.</p>}
         <div className="registration-pair"><label>Nome do responsável<input required name="responsibleName" autoComplete="name" defaultValue={user?.name ?? ""} /></label><label>E-mail<input required name="email" type="email" autoComplete="email" defaultValue={user?.email ?? ""} /></label></div>

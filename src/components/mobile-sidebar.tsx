@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Percent, X } from "lucide-react";
+import { ExternalLink, Menu, Percent, ShoppingBag, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "./brand-logo";
@@ -37,7 +37,8 @@ export function MobileSidebar() {
     <button className="mobile-sidebar-backdrop" type="button" onClick={() => setOpen(false)} aria-label="Fechar menu" />
     <aside className="mobile-sidebar-panel">
       <header><Link href="/inicio" onClick={() => setOpen(false)}><BrandLogo size={54} /><span><strong>PRO CLUBS</strong><b>AMERICA</b></span></Link><button type="button" onClick={() => setOpen(false)} aria-label="Fechar"><X /></button></header>
-      <nav>{navigationGroups.map((group) => <section key={group.label}><small>{group.label}</small><div>{group.items.map((item) => { const Icon = item.icon; const path = item.href.split("#")[0]; const active = !item.href.includes("#") && pathname === path; return <Link className={active ? "active" : ""} href={item.href} onClick={() => setOpen(false)} key={item.label}><Icon /><span>{item.label}</span></Link>; })}</div></section>)}</nav>
+      <nav>{navigationGroups.map((group) => <section key={group.label}><small>{group.label}</small><div>{group.items.map((item) => { const Icon = item.icon; const path = item.href.split("#")[0]; const active = !item.href.includes("#") && pathname === path; return <Link className={`${active ? "active " : ""}nav-tone-${item.tone}`} href={item.href} onClick={() => setOpen(false)} key={item.label}><Icon /><span>{item.label}</span></Link>; })}</div></section>)}</nav>
+      <a className="mobile-sidebar-buy" href="https://www.ea.com/pt-br/games/ea-sports-fc/fc-26/buy" target="_blank" rel="noreferrer"><ShoppingBag /><span>Comprar EA FC 26</span><ExternalLink /></a>
       <footer><Percent /><span>EA SPORTS FC 26<strong>common-gen5 e common-gen4</strong></span></footer>
     </aside>
   </div>;

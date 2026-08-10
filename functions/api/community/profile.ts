@@ -15,6 +15,7 @@ async function profilePayload(env: BillingEnv, profile: SupabaseProfile) {
     locale: profile.locale || "pt-br",
     role: profile.role,
     plan: profile.plan,
+    premiumAccess: profile.plan !== "free" || Boolean(profile.bonus_access_until && new Date(profile.bonus_access_until).getTime() > Date.now()),
     bonusAccessUntil: profile.bonus_access_until || undefined,
     clubId: club ? publicRouteId(club) : undefined,
     clubName: club?.name,

@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Shield, Target, Trophy } from "lucide-react";
+import { ArrowLeft, Crown, ExternalLink, LockKeyhole, Shield, Target, Trophy } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -18,6 +19,8 @@ import type { PlayerRanking } from "@/types/domain";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
 import { CountryFlag } from "./country-flag";
+import { observeAuth } from "@/lib/auth-client";
+import { getCommunityProfile } from "@/lib/community-service";
 
 export interface PlayerRecentMatch {
   id: string;
@@ -44,6 +47,13 @@ const decimal = (value: number | null, matches: number) => value == null || !mat
 
 export function PlayerProfile({ player, club, recentMatches, limitedData = false }: PlayerProfileProps) {
   const chronological = recentMatches.slice().reverse();
+  const [premium, setPremium] = useState(false);
+  useEffect(() => observeAuth((user) => {
+    if (!user) { setPremium(false); return; }
+    getCommunityProfile().then((profile) => {
+      setPremium(Boolean(profile?.premiumAccess));
+    }).catch(() => setPremium(false));
+  }), []);
 
   return (
     <main className="app-shell player-page">
@@ -79,13 +89,14 @@ export function PlayerProfile({ player, club, recentMatches, limitedData = false
         <section className="player-layout">
           <aside className="player-panel player-efficiency">
             <header><div><small>CARREIRA NO CLUBE</small><h2>Eficiência</h2></div><Target /></header>
-            <div><span>Gols por jogo</span><strong>{decimal(player.goals, player.matches)}</strong></div>
-            <div><span>Assistências por jogo</span><strong>{decimal(player.assists, player.matches)}</strong></div>
+            <div className={!premium ? "premium-metric locked" : "premium-metric"}><span>Gols por jogo <small>PREMIUM</small></span><strong>{premium ? decimal(player.goals, player.matches) : <LockKeyhole />}</strong></div>
+            <div className={!premium ? "premium-metric locked" : "premium-metric"}><span>Assistências por jogo <small>PREMIUM</small></span><strong>{premium ? decimal(player.assists, player.matches) : <LockKeyhole />}</strong></div>
             <div><span>Passes por jogo</span><strong>{decimal(player.passesMade, player.matches)}</strong></div>
             <div><span>Desarmes</span><strong>{player.tacklesMade == null ? "—" : number.format(player.tacklesMade)}</strong></div>
             <div><span>Desarmes por jogo</span><strong>{decimal(player.tacklesMade, player.matches)}</strong></div>
             <div><span>Sucesso no desarme</span><strong>{player.tackleSuccessRate == null ? "—" : `${player.tackleSuccessRate}%`}</strong></div>
             <div><span>Clean sheets</span><strong>{limitedData ? "—" : number.format(player.cleanSheets)}</strong></div>
+            {!premium && <Link className="premium-metrics-cta" href="/planos"><Crown /> Liberar médias e análises Premium</Link>}
           </aside>
 
           <article className="player-panel player-trend">

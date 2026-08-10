@@ -21,6 +21,7 @@ export interface CommunityProfile {
   pendingClubName?: string;
   pendingClaimId?: string;
   plan: CommunityPlan;
+  premiumAccess: boolean;
   bonusAccessUntil?: string;
 }
 

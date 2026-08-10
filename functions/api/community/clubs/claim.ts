@@ -43,13 +43,18 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
     const approved = await supabaseRest<Array<{ id: string }>>(env, `club_claims?club_id=eq.${encodeURIComponent(club.id)}&status=eq.approved&limit=1`);
     if (approved.length) return apiError("Este clube já está vinculado a outra conta.", 409);
 
+    const now = new Date().toISOString();
     const claims = await supabaseRest<Array<{ id: string; status: string; created_at: string }>>(env, "club_claims?on_conflict=profile_id,club_id", {
       method: "POST",
       headers: { Prefer: "resolution=merge-duplicates,return=representation" },
-      body: JSON.stringify({ club_id: club.id, profile_id: profile.id, firebase_uid: identity.uid, responsible_name: responsibleName, contact_email: contactEmail, country_slug: country, ea_url: eaUrl, status: "pending_review", updated_at: new Date().toISOString() }),
+      body: JSON.stringify({ club_id: club.id, profile_id: profile.id, firebase_uid: identity.uid, responsible_name: responsibleName, contact_email: contactEmail, country_slug: country, ea_url: eaUrl, status: "approved", reviewed_at: now, updated_at: now }),
     });
     const claim = claims[0];
-    return Response.json({ id: claim?.id, responsibleName, email: contactEmail, clubName: club.name, country, eaUrl, clubId, platform, submittedAt: claim?.created_at || new Date().toISOString(), status: "pending_review" }, { status: 201 });
+    await supabaseRest(env, `profiles?id=eq.${encodeURIComponent(profile.id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ club_id: club.id, role: "owner", country_slug: country, updated_at: now }),
+    });
+    return Response.json({ id: claim?.id, responsibleName, email: contactEmail, clubName: club.name, country, eaUrl, clubId, platform, submittedAt: claim?.created_at || now, status: "indexed" }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "CLAIM_FAILED";
     const status = message.startsWith("AUTH_") ? 401 : message === "ORIGIN_NOT_ALLOWED" ? 403 : 500;
