@@ -1,0 +1,308 @@
+{
+  "status": "succeeded",
+  "responseCount": 2,
+  "matches": [],
+  "clubInfo": {
+    "name": "Villathinaikos",
+    "clubId": 171630,
+    "regionId": 1396788530,
+    "teamId": 1318,
+    "customKit": {
+      "stadName": "VILLANESKO",
+      "kitId": "10797056",
+      "seasonalTeamId": "131397",
+      "seasonalKitId": "1076404224",
+      "selectedKitType": "0",
+      "customKitId": "7639",
+      "customAwayKitId": "7540",
+      "customThirdKitId": "7526",
+      "customKeeperKitId": "5013",
+      "kitColor1": "15921906",
+      "kitColor2": "7122142",
+      "kitColor3": "8654629",
+      "kitColor4": "8654629",
+      "kitAColor1": "592397",
+      "kitAColor2": "3554112",
+      "kitAColor3": "8237531",
+      "kitAColor4": "7122142",
+      "kitThrdColor1": "16774144",
+      "kitThrdColor2": "7192366",
+      "kitThrdColor3": "14935011",
+      "kitThrdColor4": "1336871",
+      "dCustomKit": "0",
+      "crestColor": "10278653",
+      "crestAssetId": "99080306"
+    }
+  },
+  "membersStats": [
+    {
+      "name": "lokp7",
+      "proPos": "14",
+      "gamesPlayed": "372",
+      "goals": "70",
+      "assists": "311",
+      "manOfTheMatch": "39",
+      "ratingAve": "8.1",
+      "prevGoals": "0",
+      "favoritePosition": "midfielder"
+    },
+    {
+      "name": "TCPCavaliere",
+      "proPos": "14",
+      "gamesPlayed": "313",
+      "goals": "48",
+      "assists": "44",
+      "manOfTheMatch": "2",
+      "ratingAve": "7.1",
+      "prevGoals": "0",
+      "favoritePosition": "midfielder"
+    },
+    {
+      "name": "brizzindelass",
+      "proPos": "25",
+      "gamesPlayed": "331",
+      "goals": "128",
+      "assists": "202",
+      "manOfTheMatch": "42",
+      "ratingAve": "7.6",
+      "prevGoals": "0",
+      "favoritePosition": "forward"
+    },
+    {
+      "name": "Yago-Carvalho_",
+      "proPos": "25",
+      "gamesPlayed": "339",
+      "goals": "344",
+      "assists": "206",
+      "manOfTheMatch": "57",
+      "ratingAve": "7.5",
+      "prevGoals": "1",
+      "favoritePosition": "forward"
+    },
+    {
+      "name": "eu_nery55",
+      "proPos": "14",
+      "gamesPlayed": "949",
+      "goals": "1519",
+      "assists": "849",
+      "manOfTheMatch": "282",
+      "ratingAve": "8.4",
+      "prevGoals": "3",
+      "favoritePosition": "midfielder"
+    },
+    {
+      "name": "danieldhds",
+      "proPos": "25",
+      "gamesPlayed": "607",
+      "goals": "417",
+      "assists": "423",
+      "manOfTheMatch": "43",
+      "ratingAve": "7.7",
+      "prevGoals": "0",
+      "favoritePosition": "forward"
+    },
+    {
+      "name": "Star_Lordy1",
+      "proPos": "14",
+      "gamesPlayed": "1611",
+      "goals": "789",
+      "assists": "1007",
+      "manOfTheMatch": "132",
+      "ratingAve": "7.8",
+      "prevGoals": "0",
+      "favoritePosition": "midfielder"
+    },
+    {
+      "name": "MatthewsMendesx",
+      "proPos": "25",
+      "gamesPlayed": "1509",
+      "goals": "1548",
+      "assists": "1240",
+      "manOfTheMatch": "432",
+      "ratingAve": "8.3",
+      "prevGoals": "1",
+      "favoritePosition": "forward"
+    },
+    {
+      "name": "fml170716",
+      "proPos": "25",
+      "gamesPlayed": "521",
+      "goals": "188",
+      "assists": "128",
+      "manOfTheMatch": "6",
+      "ratingAve": "6.8",
+      "prevGoals": "1",
+      "favoritePosition": "forward"
+    },
+    {
+      "name": "cspgabriell",
+      "proPos": "14",
+      "gamesPlayed": "1336",
+      "goals": "500",
+      "assists": "476",
+      "manOfTheMatch": "52",
+      "ratingAve": "7.0",
+      "prevGoals": "0",
+      "favoritePosition": "midfielder"
+    }
+  ],
+  "raw": {
+    "info": {
+      "171630": {
+        "name": "Villathinaikos",
+        "clubId": 171630,
+        "regionId": 1396788530,
+        "teamId": 1318,
+        "customKit": {
+          "stadName": "VILLANESKO",
+          "kitId": "10797056",
+          "seasonalTeamId": "131397",
+          "seasonalKitId": "1076404224",
+          "selectedKitType": "0",
+          "customKitId": "7639",
+          "customAwayKitId": "7540",
+          "customThirdKitId": "7526",
+          "customKeeperKitId": "5013",
+          "kitColor1": "15921906",
+          "kitColor2": "7122142",
+          "kitColor3": "8654629",
+          "kitColor4": "8654629",
+          "kitAColor1": "592397",
+          "kitAColor2": "3554112",
+          "kitAColor3": "8237531",
+          "kitAColor4": "7122142",
+          "kitThrdColor1": "16774144",
+          "kitThrdColor2": "7192366",
+          "kitThrdColor3": "14935011",
+          "kitThrdColor4": "1336871",
+          "dCustomKit": "0",
+          "crestColor": "10278653",
+          "crestAssetId": "99080306"
+        }
+      }
+    },
+    "players": {
+      "members": [
+        {
+          "name": "lokp7",
+          "proPos": "14",
+          "gamesPlayed": "372",
+          "goals": "70",
+          "assists": "311",
+          "manOfTheMatch": "39",
+          "ratingAve": "8.1",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "TCPCavaliere",
+          "proPos": "14",
+          "gamesPlayed": "313",
+          "goals": "48",
+          "assists": "44",
+          "manOfTheMatch": "2",
+          "ratingAve": "7.1",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "brizzindelass",
+          "proPos": "25",
+          "gamesPlayed": "331",
+          "goals": "128",
+          "assists": "202",
+          "manOfTheMatch": "42",
+          "ratingAve": "7.6",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Yago-Carvalho_",
+          "proPos": "25",
+          "gamesPlayed": "339",
+          "goals": "344",
+          "assists": "206",
+          "manOfTheMatch": "57",
+          "ratingAve": "7.5",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "eu_nery55",
+          "proPos": "14",
+          "gamesPlayed": "949",
+          "goals": "1519",
+          "assists": "849",
+          "manOfTheMatch": "282",
+          "ratingAve": "8.4",
+          "prevGoals": "3",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "danieldhds",
+          "proPos": "25",
+          "gamesPlayed": "607",
+          "goals": "417",
+          "assists": "423",
+          "manOfTheMatch": "43",
+          "ratingAve": "7.7",
+          "prevGoals": "0",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "Star_Lordy1",
+          "proPos": "14",
+          "gamesPlayed": "1611",
+          "goals": "789",
+          "assists": "1007",
+          "manOfTheMatch": "132",
+          "ratingAve": "7.8",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        },
+        {
+          "name": "MatthewsMendesx",
+          "proPos": "25",
+          "gamesPlayed": "1509",
+          "goals": "1548",
+          "assists": "1240",
+          "manOfTheMatch": "432",
+          "ratingAve": "8.3",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "fml170716",
+          "proPos": "25",
+          "gamesPlayed": "521",
+          "goals": "188",
+          "assists": "128",
+          "manOfTheMatch": "6",
+          "ratingAve": "6.8",
+          "prevGoals": "1",
+          "favoritePosition": "forward"
+        },
+        {
+          "name": "cspgabriell",
+          "proPos": "14",
+          "gamesPlayed": "1336",
+          "goals": "500",
+          "assists": "476",
+          "manOfTheMatch": "52",
+          "ratingAve": "7.0",
+          "prevGoals": "0",
+          "favoritePosition": "midfielder"
+        }
+      ],
+      "positionCount": {
+        "midfielder": 5,
+        "goalkeeper": 0,
+        "forward": 5,
+        "defender": 0
+      }
+    },
+    "league": null,
+    "playoff": null,
+    "friendly": null
+  }
+}
