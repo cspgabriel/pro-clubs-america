@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "com.proclubsamerica.app",
       "sha256_cert_fingerprints": [
-        "B1:89:80:67:C1:CE:B9:5C:C9:08:33:89:8B:13:B5:2C:C2:5B:D3:09:C8:C8:DF:9C:BB:B8:4B:2C:E1:3D:BF:2B"
+        "B1:89:80:67:C1:CE:B9:5C:C9:08:33:89:8B:13:B5:2C:C2:5B:D3:09:C8:C8:DF:9C:BB:B8:4B:2C:E1:3D:BF:2B",
+        "06:DB:5E:FC:B4:48:49:22:B2:DF:16:C2:89:8D:1F:60:ED:F1:61:51:27:06:31:91:B0:70:88:8B:3C:D4:02:69"
       ]
     }
   }
