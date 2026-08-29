@@ -18,10 +18,13 @@ export const onRequestPost = async ({ request, env, waitUntil }: FunctionContext
     const identity = await verifyFirebaseRequest(request, env);
     const profile = await ensureProfile(env, identity, identity.name);
     const body = await request.json() as { hostClubId?: string; mode?: "open" | "invite"; date?: string; time?: string; region?: string; invitedClubId?: string };
-    if (!profile.club_id || !["owner", "captain"].includes(profile.role)) return apiError("CLUB_PERMISSION_REQUIRED", 403);
+    if (!profile.club_id) return apiError("Cadastre ou vincule seu clube em /cadastro antes de publicar um desafio.", 403);
     const home = await findClubById(env, profile.club_id);
-    const requestedHost = await resolveClubRoute(env, String(body.hostClubId || ""));
-    if (!home || !requestedHost || requestedHost.id !== home.id) return apiError("CLUB_PERMISSION_REQUIRED", 403);
+    if (!home) return apiError("Clube vinculado não encontrado no catálogo.", 404);
+    const requestedHost = body.hostClubId ? await resolveClubRoute(env, String(body.hostClubId)) : home;
+    if (requestedHost && requestedHost.id !== home.id && !["owner", "captain", "admin"].includes(profile.role)) {
+      return apiError("Você só pode criar desafios em nome do seu clube vinculado.", 403);
+    }
     const mode = body.mode === "invite" ? "invite" : "open";
     const invited = mode === "invite" ? await resolveClubRoute(env, String(body.invitedClubId || "")) : null;
     if (mode === "invite" && !invited) return apiError("Clube convidado inválido.");

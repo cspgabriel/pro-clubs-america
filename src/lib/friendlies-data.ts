@@ -5,6 +5,7 @@ import type { ClubDataset } from "@/types/domain";
 
 export interface CommunityMatchClub {
   id: string;
+  rawClubId?: string;
   name: string;
   platform: string;
   crestUrl: string;
@@ -33,6 +34,7 @@ export function getCommunityMatchClubs(): CommunityMatchClub[] {
 
   const indexed = publicClubs.map((club) => ({
     id: club.id,
+    rawClubId: club.rawClubId,
     name: club.name,
     platform: club.platform,
     crestUrl: club.crestUrl,

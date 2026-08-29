@@ -53,10 +53,24 @@ export async function matchPayload(env: BillingEnv, row: MatchRow) {
 }
 
 export async function resolveClubRoute(env: BillingEnv, routeId: string): Promise<SupabaseClub | null> {
-  const direct = await supabaseRest<SupabaseClub[]>(env, `clubs?ea_club_id=eq.${encodeURIComponent(routeId)}&platform=eq.common-gen5&limit=1`);
+  const cleanId = String(routeId || "").trim();
+  if (!cleanId) return null;
+  // 1. Tenta buscar por UUID direto
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanId)) {
+    const byUuid = await supabaseRest<SupabaseClub[]>(env, `clubs?id=eq.${encodeURIComponent(cleanId)}&limit=1`);
+    if (byUuid[0]) return byUuid[0];
+  }
+  // 2. Tenta buscar por EA Club ID na plataforma padrão (common-gen5)
+  const direct = await supabaseRest<SupabaseClub[]>(env, `clubs?ea_club_id=eq.${encodeURIComponent(cleanId)}&platform=eq.common-gen5&limit=1`);
   if (direct[0]) return direct[0];
-  const match = routeId.match(/^(common-gen4|common-gen5|nx)-(.+)$/);
-  if (!match) return null;
-  const rows = await supabaseRest<SupabaseClub[]>(env, `clubs?platform=eq.${encodeURIComponent(match[1])}&ea_club_id=eq.${encodeURIComponent(match[2])}&limit=1`);
-  return rows[0] ?? null;
+  // 3. Tenta buscar por prefixo de plataforma (ex: common-gen4-12345)
+  const match = cleanId.match(/^(common-gen4|common-gen5|nx)-(.+)$/);
+  if (match) {
+    const rows = await supabaseRest<SupabaseClub[]>(env, `clubs?platform=eq.${encodeURIComponent(match[1])}&ea_club_id=eq.${encodeURIComponent(match[2])}&limit=1`);
+    if (rows[0]) return rows[0];
+  }
+  // 4. Fallback: busca por ea_club_id em qualquer plataforma
+  const anyPlat = await supabaseRest<SupabaseClub[]>(env, `clubs?ea_club_id=eq.${encodeURIComponent(cleanId)}&limit=1`);
+  return anyPlat[0] ?? null;
 }
+

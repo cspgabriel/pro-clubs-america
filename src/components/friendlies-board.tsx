@@ -43,16 +43,21 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
   const [busyId, setBusyId] = useState("");
   const [matchMode, setMatchMode] = useState<"all" | PublicMatch["mode"]>("all");
   const visibleMatches = useMemo(() => officialMatches.filter((match) => matchMode === "all" || match.mode === matchMode), [officialMatches, matchMode]);
-  const activeClub = registeredClubs.find((club) => club.id === activeClubId);
-  const opponentOptions = useMemo(() => registeredClubs.filter((club) => club.id !== activeClubId && club.platform === activeClub?.platform && (!opponentQuery.trim() || club.name.toLocaleLowerCase("pt-BR").includes(opponentQuery.trim().toLocaleLowerCase("pt-BR")))).slice(0, 12), [registeredClubs, activeClubId, activeClub?.platform, opponentQuery]);
-  const canManage = Boolean(authUser && profile?.clubId && activeClub && ["owner", "captain"].includes(profile.role));
+  const activeClub = !activeClubId
+    ? null
+    : registeredClubs.find((club) => club.id === activeClubId || club.rawClubId === activeClubId)
+      ?? (profile?.clubName ? { id: activeClubId, name: profile.clubName, platform: "common-gen5", crestUrl: "/icon.svg", skillRating: null, winRate: null, matches: null, goals: null, roster: [] } : null);
+  const opponentOptions = useMemo(() => registeredClubs.filter((club) => club.id !== activeClubId && (!activeClub?.platform || club.platform === activeClub?.platform) && (!opponentQuery.trim() || club.name.toLocaleLowerCase("pt-BR").includes(opponentQuery.trim().toLocaleLowerCase("pt-BR")))).slice(0, 12), [registeredClubs, activeClubId, activeClub?.platform, opponentQuery]);
+  const canManage = Boolean(authUser && profile?.clubId);
 
   useEffect(() => {
     const stopAuth = observeAuth(async (user) => {
       setAuthUser(user);
       const nextProfile = user ? await getCommunityProfile().catch(() => null) : null;
       setProfile(nextProfile);
-      setActiveClubId(nextProfile?.clubId ?? "");
+      if (nextProfile?.clubId) {
+        setActiveClubId(nextProfile.clubId);
+      }
     });
     const stopMatches = watchFriendlies(setRequests, () => setNotice("Não foi possível carregar o mural em tempo real."));
     const stopOfficial = watchOfficialMatches((live) => {
@@ -74,27 +79,31 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    const host = registeredClubs.find((club) => club.id === activeClubId);
-    const invited = registeredClubs.find((club) => club.id === opponentClubId) ?? (initialChallengeTarget?.id === opponentClubId ? { ...initialChallengeTarget, platform: "common-gen5", crestUrl: "/icon.svg", skillRating: null, winRate: null, matches: null, goals: null, roster: [] } : undefined);
     if (!authUser) { setNotice("Entre na sua conta para publicar um amistoso."); return; }
-    if (!canManage || !host) { setNotice("Cadastre seu clube como dono ou capitão antes de publicar."); return; }
+    if (!profile?.clubId) { setNotice("Vincule seu clube em /cadastro para representar seu time no mural."); return; }
+    const host = activeClub ?? { id: profile.clubId, name: profile.clubName || "Meu Clube" };
+    const invited = registeredClubs.find((club) => club.id === opponentClubId) ?? (initialChallengeTarget?.id === opponentClubId ? { ...initialChallengeTarget, platform: "common-gen5", crestUrl: "/icon.svg", skillRating: null, winRate: null, matches: null, goals: null, roster: [] } : undefined);
     if (!date || !time) { setNotice("Defina a data e o horário do jogo."); return; }
     if (challengeMode === "invite" && (!invited || invited.id === host.id)) { setNotice("Escolha outro time da comunidade para receber o convite."); return; }
     setBusyId("create"); setNotice("");
     try {
       await createFriendly({ hostClubId: host.id, hostClubName: host.name, mode: challengeMode, date, time, region, invitedClubId: challengeMode === "invite" ? invited?.id : undefined, invitedClubName: challengeMode === "invite" ? invited?.name : undefined });
       setNotice(challengeMode === "invite" ? `Convite enviado para ${invited?.name}.` : "Desafio aberto publicado para a comunidade.");
-    } catch (error) { setNotice(error instanceof Error && error.message === "AUTH_REQUIRED" ? "Entre na sua conta para publicar." : "Sua conta não tem permissão para publicar por este clube."); }
+    } catch (error) { setNotice(error instanceof Error ? error.message : "Não foi possível publicar o desafio."); }
     finally { setBusyId(""); }
   }
 
   async function accept(request: FriendlyRequest) {
-    if (!canManage || !activeClub) { setNotice("Para aceitar, entre com uma conta de dono ou capitão vinculada a um time."); return; }
-    if (activeClub.id === request.hostClubId) { setNotice("O mesmo time que publicou não pode aceitar o próprio desafio."); return; }
-    if (request.mode === "invite" && request.invitedClubId !== activeClub.id) { setNotice(`Este convite é exclusivo para ${request.invitedClubName}.`); return; }
+    if (!authUser) { setNotice("Entre na sua conta para aceitar desafios."); return; }
+    if (!profile?.clubId) { setNotice("Vincule seu clube em /cadastro para aceitar desafios em nome do time."); return; }
+    const myClubId = profile.clubId;
+    if (myClubId === request.hostClubId) { setNotice("O mesmo time que publicou não pode aceitar o próprio desafio."); return; }
+    if (request.mode === "invite" && request.invitedClubId && request.invitedClubId !== myClubId) { setNotice(`Este convite é exclusivo para ${request.invitedClubName}.`); return; }
     setBusyId(request.id); setNotice("");
-    try { await acceptFriendly(request); setNotice(`Jogo confirmado: ${request.hostClubName} × ${activeClub.name}, dia ${new Date(`${request.date}T12:00:00`).toLocaleDateString("pt-BR")} às ${request.time}.`); }
-    catch { setNotice("O desafio não pôde ser aceito. Ele pode já ter sido reservado ou aceito por outro clube."); }
+    try {
+      await acceptFriendly(request);
+      setNotice(`Jogo confirmado com sucesso! Verifique a sala de lobby.`);
+    } catch (error) { setNotice(error instanceof Error ? error.message : "O desafio não pôde ser aceito."); }
     finally { setBusyId(""); }
   }
 

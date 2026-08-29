@@ -17,7 +17,7 @@ export const onRequestPatch = async ({ request, env, params, waitUntil }: MatchC
     assertSameOrigin(request, env.SITE_URL);
     const identity = await verifyFirebaseRequest(request, env);
     const profile = await ensureProfile(env, identity, identity.name);
-    if (!profile.club_id || !["owner", "captain"].includes(profile.role)) return apiError("CLUB_PERMISSION_REQUIRED", 403);
+    if (!profile.club_id) return apiError("Vincule seu clube em /cadastro para aceitar desafios em nome do time.", 403);
     const current = (await supabaseRest<MatchRow[]>(env, `matches?id=eq.${encodeURIComponent(params.id)}&limit=1`))[0];
     if (!current) return apiError("Partida não encontrada.", 404);
     const body = await request.json() as { action?: "accept" | "played" };
