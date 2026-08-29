@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/components/analytics";
 
 import { getFirebaseAuth } from "./firebase";
 import type { ChallengeMode, FriendlyRequest } from "./friendlies";
@@ -88,6 +89,27 @@ function poll<T>(load: () => Promise<T>, callback: (value: T) => void, onError?:
   return () => { active = false; window.clearInterval(timer); };
 }
 
+export interface AdminOverview {
+  generatedAt: string;
+  totals: { profiles: number; clubs: number; players: number; matches: number; snapshots: number; approvedClaims: number; marketListings: number; paidEntitlements: number };
+  growth: { newProfiles7d: number; snapshots24h: number };
+  crawl: {
+    healthy: boolean;
+    lastSnapshotAt: string | null;
+    lastSnapshotAgeHours: number | null;
+    staleThresholdHours: number;
+    queue: { queued: number; failed: number; blocked: number; succeeded: number };
+    priorityQueue: Array<{ club_id: string; status: string; priority: number; attempts: number; next_run_at: string; last_error: string | null }>;
+    runs: Array<{ started_at: string; finished_at: string | null; status: string; source: string; clubs_processed: number; players_observed: number; matches_observed: number; error_count: number }>;
+  };
+  recentProfiles: Array<{ email: string; full_name: string | null; role: string; plan: string; created_at: string; club_id: string | null; player_id: string | null }>;
+  recentClubs: Array<{ id: string; name: string; ea_club_id: string; platform: string; country_slug: string | null; created_at: string }>;
+}
+
+export function getAdminOverview() {
+  return api<AdminOverview>("/api/admin/overview", {}, true);
+}
+
 export function ensureCommunityProfile() {
   return api<CommunityProfile>("/api/community/profile", { method: "POST", body: "{}" }, true);
 }
@@ -118,6 +140,7 @@ export function sendPushTest() {
 }
 
 export function linkEaPlayer(input: { eaUrl: string; gamertag: string }) {
+  track("ea_link");
   return api<{ playerId: string; playerName: string; clubId: string; clubName: string; matches: number; goals: number; assists: number; tackles: number; sourceUrl: string; historyStatus: "queued" }>("/api/community/player-link", { method: "POST", body: JSON.stringify(input) }, true);
 }
 
@@ -138,6 +161,7 @@ export function watchCommunityClubs(callback: (items: TeamRegistration[]) => voi
 }
 
 export function createFriendly(input: { hostClubId: string; hostClubName: string; mode: ChallengeMode; date: string; time: string; region: string; invitedClubId?: string; invitedClubName?: string }) {
+  track("friendly_post", { mode: input.mode, region: input.region });
   return api<FriendlyRequest>("/api/community/matches", { method: "POST", body: JSON.stringify(input) }, true);
 }
 
@@ -170,6 +194,7 @@ export function watchFriendly(matchId: string, callback: (item: FriendlyRequest 
 }
 
 export function publishTransferPost(input: Omit<TransferPostRecord, "id" | "authorUid" | "plan" | "createdAt">) {
+  track("market_post");
   return api<TransferPostRecord>("/api/community/market", { method: "POST", body: JSON.stringify(input) }, true);
 }
 

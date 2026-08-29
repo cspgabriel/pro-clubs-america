@@ -50,6 +50,12 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
       body: JSON.stringify({ club_id: club.id, profile_id: profile.id, firebase_uid: identity.uid, responsible_name: responsibleName, contact_email: contactEmail, country_slug: country, ea_url: eaUrl, status: "approved", reviewed_at: now, updated_at: now }),
     });
     const claim = claims[0];
+    // Clube reivindicado entra na fila do crawler com prioridade alta e coleta imediata.
+    await supabaseRest(env, "ea_crawl_queue?on_conflict=club_id", {
+      method: "POST",
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify({ club_id: club.id, priority: 95, status: "queued", next_run_at: now, updated_at: now }),
+    }).catch((error) => console.error(JSON.stringify({ event: "club_claim_enqueue_failed", clubId: club.id, reason: error instanceof Error ? error.message : "UNKNOWN" })));
     await supabaseRest(env, `profiles?id=eq.${encodeURIComponent(profile.id)}`, {
       method: "PATCH",
       body: JSON.stringify({ club_id: club.id, role: "owner", country_slug: country, updated_at: now }),

@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/components/analytics";
 
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, type User } from "firebase/auth";
 import { getFirebaseAuth, isFirebaseConfigured } from "@/lib/firebase";
@@ -45,6 +46,7 @@ async function syncProfile() {
 }
 
 export async function loginWithGoogle() {
+  track("login_attempt", { method: "google" });
   const auth = getFirebaseAuth();
   if (!auth) throw new Error("FIREBASE_NOT_CONFIGURED");
   const result = await signInWithPopup(auth, new GoogleAuthProvider());
@@ -63,6 +65,7 @@ export async function loginWithEmail(email: string, password: string) {
 }
 
 export async function registerWithEmail(name: string, email: string, password: string) {
+  track("sign_up", { method: "email" });
   const auth = getFirebaseAuth();
   if (!auth) throw new Error("FIREBASE_NOT_CONFIGURED");
   const result = await createUserWithEmailAndPassword(auth, email, password);

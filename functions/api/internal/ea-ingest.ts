@@ -40,14 +40,25 @@ export const onRequestGet = async (context: FunctionContext) => {
     return Response.json({ items: item ? [{ queueId: item.id, priority: item.priority, attempts: item.attempts, clubId: club.ea_club_id, platform: club.platform, clubName: club.name, sourceUrl: club.ea_url }] : [] }, { headers: { "cache-control": "no-store" } });
   }
   const due = encodeURIComponent(new Date().toISOString());
+  const queueSelect = "select=id,priority,attempts,club_id,next_run_at";
+  const queueWindow = `status=in.(queued,failed,succeeded)&next_run_at=lte.${due}`;
+  const queueOrder = "order=priority.desc,next_run_at.asc";
   const [claims, matches] = await Promise.all([
     supabaseRest<Array<{ club_id: string }>>(context.env, "club_claims?status=eq.approved&select=club_id&limit=1000"),
     supabaseRest<Array<{ home_club_id: string; away_club_id: string | null; invited_club_id: string | null }>>(context.env, "matches?status=in.(open_challenge,accepted,waiting_ea_verification)&select=home_club_id,away_club_id,invited_club_id&limit=1000"),
   ]);
   const activeClubIds = [...new Set([...claims.map((item) => item.club_id), ...matches.flatMap((item) => [item.home_club_id, item.away_club_id, item.invited_club_id]).filter((value): value is string => Boolean(value))])];
-  if (!activeClubIds.length) return Response.json({ items: [] }, { headers: { "cache-control": "no-store" } });
-  const clubFilter = activeClubIds.map(encodeURIComponent).join(",");
-  const queue = await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?club_id=in.(${clubFilter})&status=in.(queued,failed,succeeded)&next_run_at=lte.${due}&select=id,priority,attempts,club_id,next_run_at&order=priority.desc,next_run_at.asc&limit=${limit}`);
+  const queue: QueueRow[] = [];
+  if (activeClubIds.length) {
+    const clubFilter = activeClubIds.map(encodeURIComponent).join(",");
+    queue.push(...(await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?club_id=in.(${clubFilter})&${queueWindow}&${queueSelect}&${queueOrder}&limit=${limit}`)));
+  }
+  if (queue.length < limit) {
+    const seen = queue.map((item) => item.id);
+    const exclusion = seen.length ? `&id=not.in.(${seen.map(encodeURIComponent).join(",")})` : "";
+    queue.push(...(await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?${queueWindow}${exclusion}&${queueSelect}&${queueOrder}&limit=${limit - queue.length}`)));
+  }
+  if (!queue.length) return Response.json({ items: [] }, { headers: { "cache-control": "no-store" } });
   const items = await Promise.all(queue.map(async (item) => {
     const club = (await supabaseRest<Array<{ id: string; ea_club_id: string; platform: string; name: string; ea_url: string }>>(context.env, `clubs?id=eq.${encodeURIComponent(item.club_id)}&select=id,ea_club_id,platform,name,ea_url&limit=1`))[0];
     return club ? { queueId: item.id, priority: item.priority, attempts: item.attempts, clubId: club.ea_club_id, platform: club.platform, clubName: club.name, sourceUrl: club.ea_url } : null;
@@ -88,6 +99,7 @@ export const onRequestPost = async (context: FunctionContext) => {
   const runs = await supabaseRest<Array<{ id: string }>>(context.env, "ea_crawl_runs", { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify({ source: safeText(body?.source || "authorized-import", 80), parser_version: parserVersion, status: "running", started_at: body?.startedAt || new Date().toISOString(), metadata: body?.metadata || {} }) });
   const runId = runs[0]?.id;
   const results: Array<{ fingerprint?: string; snapshotId?: string; reconciledMatchId?: string; error?: string }> = [];
+  let playersObserved = 0;
 
   for (const match of input) {
     try {
@@ -102,6 +114,7 @@ export const onRequestPost = async (context: FunctionContext) => {
       const fingerprint = await digest([platform, mode, playedAt.toISOString(), homeEaId, awayEaId, homeScore, awayScore].join("|"));
       const snapshots = await supabaseRest<SnapshotRow[]>(context.env, "ea_match_snapshots?on_conflict=source_fingerprint", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=representation" }, body: JSON.stringify({ source_fingerprint: fingerprint, platform, mode, played_at: playedAt.toISOString(), home_ea_club_id: homeEaId, home_club_id: homeClub?.id || null, home_club_name: homeName, away_ea_club_id: awayEaId, away_club_id: awayClub?.id || null, away_club_name: awayName, home_score: homeScore, away_score: awayScore, competition: safeText(match.competition || "EA Clubs", 120), source_url: sourceUrl(match.sourceUrl, homeEaId, platform), players: normalizePlayers(match.players), parser_version: parserVersion, ingest_run_id: runId, observed_at: new Date().toISOString(), updated_at: new Date().toISOString() }) });
       const snapshot = snapshots[0];
+      playersObserved += normalizePlayers(match.players).length;
       const reconciled = mode === "friendlyMatch" && snapshot ? await supabaseRest<Array<{ matched_match_id: string | null }>>(context.env, "rpc/reconcile_ea_friendly", { method: "POST", body: JSON.stringify({ p_snapshot_id: snapshot.id }) }) : [];
       results.push({ fingerprint, snapshotId: snapshot?.id, reconciledMatchId: reconciled[0]?.matched_match_id || undefined });
     } catch (error) { results.push({ error: error instanceof Error ? error.message : "INGEST_ITEM_FAILED" }); }
@@ -110,10 +123,11 @@ export const onRequestPost = async (context: FunctionContext) => {
   const errors = results.filter((item) => item.error).length;
   const runStatus = collectionStatus !== "succeeded" ? collectionStatus : input.length > 0 && errors === input.length ? "failed" : errors ? "partial" : "succeeded";
   const finishedAt = new Date();
-  await supabaseRest(context.env, `ea_crawl_runs?id=eq.${encodeURIComponent(runId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus, finished_at: finishedAt.toISOString(), clubs_processed: queueId ? 1 : 0, matches_observed: input.length - errors, error_count: errors + (collectionStatus === "succeeded" ? 0 : 1) }) });
+  await supabaseRest(context.env, `ea_crawl_runs?id=eq.${encodeURIComponent(runId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus, finished_at: finishedAt.toISOString(), clubs_processed: queueId ? 1 : 0, matches_observed: input.length - errors, players_observed: playersObserved, error_count: errors + (collectionStatus === "succeeded" ? 0 : 1) }) });
   if (queueId) {
-    const retryMinutes = runStatus === "succeeded" ? 120 : runStatus === "blocked" ? 1440 : 30;
-    await supabaseRest(context.env, `ea_crawl_queue?id=eq.${encodeURIComponent(queueId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus === "partial" ? "failed" : runStatus, last_attempt_at: finishedAt.toISOString(), last_success_at: runStatus === "succeeded" ? finishedAt.toISOString() : undefined, attempts: Number(body?.metadata?.attempts || 0) + 1, last_error: runStatus === "succeeded" ? null : safeText(body?.metadata?.error || runStatus, 500), next_run_at: new Date(finishedAt.getTime() + retryMinutes * 60000).toISOString(), updated_at: finishedAt.toISOString() }) });
+    const priorAttempts = Number(body?.metadata?.attempts || 0);
+    const retryMinutes = runStatus === "succeeded" ? 120 : runStatus === "blocked" ? 1440 : Math.min(30 * 2 ** Math.min(priorAttempts, 6), 1440);
+    await supabaseRest(context.env, `ea_crawl_queue?id=eq.${encodeURIComponent(queueId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus === "partial" ? "failed" : runStatus, last_attempt_at: finishedAt.toISOString(), last_success_at: runStatus === "succeeded" ? finishedAt.toISOString() : undefined, attempts: priorAttempts + 1, last_error: runStatus === "succeeded" ? null : safeText(body?.metadata?.error || runStatus, 500), next_run_at: new Date(finishedAt.getTime() + retryMinutes * 60000).toISOString(), updated_at: finishedAt.toISOString() }) });
   }
   return Response.json({ runId, status: runStatus, accepted: input.length - errors, errors, reconciled: results.filter((item) => item.reconciledMatchId).length, results }, { status: runStatus === "failed" || runStatus === "blocked" ? 422 : 202 });
 };

@@ -8,6 +8,7 @@ export interface BillingEnv {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
   EA_INGEST_SECRET?: string;
+  ADMIN_EMAILS?: string;
   SITE_URL?: string;
   VAPID_SUBJECT?: string;
   VAPID_PUBLIC_KEY?: string;

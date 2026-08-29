@@ -165,17 +165,28 @@ async function ingest(env, item, result) {
 
 async function run(env, requestedClubId = "") {
   if (!env.EA_INGEST_SECRET) throw new Error("EA_INGEST_SECRET_REQUIRED");
+  const parsedLimit = Number(env.CRAWL_LIMIT);
+  const limit = requestedClubId ? 1 : Math.max(1, Math.min(Number.isFinite(parsedLimit) ? parsedLimit : 3, 10));
   const queueUrl = new URL("/api/internal/ea-ingest", env.PCA_SITE_URL);
-  queueUrl.searchParams.set("limit", "1");
+  queueUrl.searchParams.set("limit", String(limit));
   if (requestedClubId) queueUrl.searchParams.set("clubId", requestedClubId);
   const queueResponse = await fetch(queueUrl, { headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}` } });
   if (!queueResponse.ok) throw new Error(`QUEUE_${queueResponse.status}`);
   const queue = await queueResponse.json();
-  const item = queue.items?.[0];
-  if (!item) return { status: "idle", processed: 0 };
-  const result = await crawl(env, item);
-  const stored = await ingest(env, item, result);
-  return { status: result.status, processed: 1, clubId: item.clubId, responses: result.responseCount, modes: result.modes, clickedFriendly: result.clickedFriendly, clickedPlayoff: result.clickedPlayoff, matches: result.matches.length, ingestStatus: stored.status || stored.httpStatus };
+  const items = Array.isArray(queue.items) ? queue.items.slice(0, limit) : [];
+  if (!items.length) return { status: "idle", processed: 0, results: [] };
+  // Sequencial de proposito: Browser Rendering limita sessoes concorrentes.
+  const results = [];
+  for (const item of items) {
+    try {
+      const result = await crawl(env, item);
+      const stored = await ingest(env, item, result);
+      results.push({ status: result.status, clubId: item.clubId, responses: result.responseCount, modes: result.modes, matches: result.matches.length, ingestStatus: stored.status || stored.httpStatus });
+    } catch (error) {
+      results.push({ status: "failed", clubId: item.clubId, error: error instanceof Error ? error.message : "CRAWL_FAILED" });
+    }
+  }
+  return { status: results.some((entry) => entry.status === "succeeded") ? "succeeded" : "failed", processed: results.length, results };
 }
 
 const worker = {

@@ -1,8 +1,8 @@
 name: Crawl public EA Clubs pages
 
+# Coleta agendada e responsabilidade do Worker Cloudflare (workers/ea-crawler,
+# cron horario). Este workflow fica como acionamento manual de contingencia.
 on:
-  schedule:
-    - cron: "17,47 * * * *"
   workflow_dispatch:
     inputs:
       limit:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      PCA_SITE_URL: https://pro-clubs-america.pages.dev
+      PCA_SITE_URL: https://proclubsamerica.com
       EA_INGEST_SECRET: ${{ secrets.EA_INGEST_SECRET }}
       CRAWL_LIMIT: ${{ inputs.limit || '3' }}
     steps:

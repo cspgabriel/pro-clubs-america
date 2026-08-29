@@ -8,6 +8,7 @@ import "@fontsource/outfit/600.css";
 import "@fontsource/outfit/700.css";
 import { PwaRegister } from "@/components/pwa-register";
 import { AppChrome } from "@/components/app-chrome";
+import { Analytics } from "@/components/analytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR" data-theme="dark">
       <body>
+        <Analytics />
         <PwaRegister />
         <AppChrome>{children}</AppChrome>
       </body>

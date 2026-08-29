@@ -56,6 +56,14 @@ export const publicPlayers: PublicPlayer[] = Object.values(detailed).flatMap((en
   });
 });
 
+
+// Paginas de jogador so entram no build/sitemap com volume minimo de partidas e
+// stats coerentes: pagina magra em massa prejudica a indexacao do dominio inteiro.
+export const MIN_INDEXABLE_MATCHES = 5;
+export const indexablePlayers: PublicPlayer[] = publicPlayers
+  .filter((player) => player.statsReliable && player.matches >= MIN_INDEXABLE_MATCHES)
+  .sort((a, b) => (b.goalContributions ?? 0) - (a.goalContributions ?? 0) || b.matches - a.matches);
+
 export const publicClubRosterTotals = new Map(Object.values(detailed).map((entry) => [routeClubId(entry.metadata.platform, entry.metadata.clubId), { assists: (entry.player_stats?.members ?? []).reduce((total, player) => total + numeric(player.assists), 0) }]));
 export function findPublicClub(id: string) { return publicClubs.find((club) => club.id === id); }
 export function findPublicPlayer(id: string) {

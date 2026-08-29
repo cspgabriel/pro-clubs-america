@@ -7,7 +7,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "browser": { "binding": "BROWSER" },
-  "triggers": { "crons": ["17 */2 * * *"] },
-  "vars": { "PCA_SITE_URL": "https://pro-clubs-america.pages.dev" },
+  "triggers": { "crons": ["17 * * * *"] },
+  "vars": { "PCA_SITE_URL": "https://proclubsamerica.com", "CRAWL_LIMIT": "3" },
   "observability": { "enabled": true, "head_sampling_rate": 1 }
 }

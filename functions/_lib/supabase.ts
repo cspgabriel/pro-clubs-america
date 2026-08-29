@@ -57,6 +57,21 @@ export async function supabaseRest<T>(env: SupabaseEnv, path: string, init: Requ
   return payload as T;
 }
 
+export async function supabaseCount(env: SupabaseEnv, path: string): Promise<number> {
+  const separator = path.includes("?") ? "&" : "?";
+  const response = await fetch(`${baseUrl(env)}/rest/v1/${path}${separator}select=id`, {
+    headers: {
+      apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+      authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+      Prefer: "count=exact",
+      Range: "0-0",
+    },
+  });
+  if (!response.ok) throw new Error(`SUPABASE_COUNT_${response.status}`);
+  const total = Number(response.headers.get("content-range")?.split("/")[1]);
+  return Number.isFinite(total) ? total : 0;
+}
+
 export async function findProfile(env: SupabaseEnv, firebaseUid: string) {
   const rows = await supabaseRest<SupabaseProfile[]>(env, `profiles?firebase_uid=eq.${encodeURIComponent(firebaseUid)}&limit=1`);
   return rows[0] ?? null;
