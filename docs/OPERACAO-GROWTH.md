@@ -105,10 +105,23 @@ npx wrangler deploy --config workers/ea-crawler/wrangler.jsonc
 O `GET`/`POST` de `/api/internal/ea-ingest` exige o secret `EA_INGEST_SECRET`,
 que precisa existir tanto no Worker quanto nas Pages Functions.
 
-### Contingencia
+### Contingencia — nao confie nela
 `.github/workflows/crawl-ea-public.yml` nao roda mais em cron (o agendamento do
 GitHub entregava ~2 execucoes/dia em vez das 48 configuradas e competia com o
 Worker). Ficou como `workflow_dispatch` manual.
+
+**Porem o script legado trava.** Disparo manual em 30/08 (run 33339910800) ficou
+25 minutos preso no passo de coleta e foi cancelado pelo `timeout-minutes`,
+deixando `chrome-headless-shell` como processo orfao — sem produzir nenhuma
+`ea_crawl_run`. `scripts/crawl-ea-public.mjs` usa Playwright local e aparenta
+pendurar esperando um seletor da pagina da EA que nao aparece.
+
+Para forcar uma coleta fora do cron, prefira o proprio Worker, que usa Browser
+Rendering e tem historico de sucesso:
+```
+curl -X POST "https://pro-clubs-america-ea-crawler.cspgabriel.workers.dev/" -H "authorization: Bearer $EA_INGEST_SECRET"
+```
+Consertar ou aposentar de vez o script legado e uma pendencia em aberto.
 
 ## 2. SEO
 
