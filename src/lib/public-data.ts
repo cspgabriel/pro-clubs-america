@@ -60,9 +60,14 @@ export const publicPlayers: PublicPlayer[] = Object.values(detailed).flatMap((en
 // Paginas de jogador so entram no build/sitemap com volume minimo de partidas e
 // stats coerentes: pagina magra em massa prejudica a indexacao do dominio inteiro.
 export const MIN_INDEXABLE_MATCHES = 5;
+// Teto duro do Cloudflare Pages: 20.000 arquivos por deploy. O export do Next 16
+// gera ~5 arquivos por rota (HTML + payloads RSC), entao o numero de paginas de
+// jogador precisa caber no que sobra depois de clubes, rankings e assets.
+export const MAX_INDEXABLE_PLAYERS = 2800;
 export const indexablePlayers: PublicPlayer[] = publicPlayers
   .filter((player) => player.statsReliable && player.matches >= MIN_INDEXABLE_MATCHES)
-  .sort((a, b) => (b.goalContributions ?? 0) - (a.goalContributions ?? 0) || b.matches - a.matches);
+  .sort((a, b) => (b.goalContributions ?? 0) - (a.goalContributions ?? 0) || b.matches - a.matches)
+  .slice(0, MAX_INDEXABLE_PLAYERS);
 
 export const publicClubRosterTotals = new Map(Object.values(detailed).map((entry) => [routeClubId(entry.metadata.platform, entry.metadata.clubId), { assists: (entry.player_stats?.members ?? []).reduce((total, player) => total + numeric(player.assists), 0) }]));
 export function findPublicClub(id: string) { return publicClubs.find((club) => club.id === id); }

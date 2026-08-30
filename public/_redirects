@@ -1,3 +1,6 @@
-/club/* /club/ 200
-/jogador/* /jogador/ 200
+# ATENCAO: um rewrite com splat (/club/* -> /club/ 200) tem precedencia sobre os
+# arquivos estaticos no Cloudflare Pages. As rotas /club/* e /jogador/* tinham
+# esse rewrite e por isso TODA pagina de clube e de jogador servia o shell
+# generico — title, canonical e JSON-LD unicos nunca chegavam ao Google.
+# Essas rotas sao pre-geradas por generateStaticParams; nao reintroduza o splat.
 /partida/* /partida/ 200

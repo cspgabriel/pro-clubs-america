@@ -3,6 +3,44 @@
 Estado apos a implementacao de 29/08/2026. Este documento lista o que ja roda
 sozinho e o que ainda depende de configuracao manual.
 
+## 0. ⚠️ Deploy — o CI esta quebrado desde 10/08/2026
+
+**Todas as execucoes do workflow `deploy-cloudflare-pages.yml` falharam** desde
+10/08. Producao ficou congelada em codigo antigo por quase tres semanas.
+
+Causa (log do run 33255922534):
+```
+In a non-interactive environment, it's necessary to set a
+CLOUDFLARE_API_TOKEN environment variable for wrangler to work.
+```
+
+Os secrets `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID` **nao existem** no
+repositorio. O workflow os referencia mas nunca foram criados.
+
+### Correcao (acao manual — exige criar um token)
+1. Cloudflare > My Profile > API Tokens > Create Token, com permissao
+   **Cloudflare Pages: Edit** na conta `8c4f3b0ccc2ee9001b6dd8322b8b6ca9`.
+2. `gh secret set CLOUDFLARE_API_TOKEN` e `gh secret set CLOUDFLARE_ACCOUNT_ID`
+   no repositorio.
+
+Enquanto isso, o deploy sai daqui com o wrangler ja autenticado por OAuth:
+```
+npm run build && npx wrangler pages deploy out --project-name=pro-clubs-america --branch=main --commit-dirty=true
+```
+
+### ⚠️ Teto de 20.000 arquivos por deploy
+O Cloudflare Pages recusa deploys acima de 20.000 arquivos. O export do Next 16
+gera cerca de **5 arquivos por rota** (HTML + payloads RSC `.txt`), entao 7.496
+paginas viravam 37.598 arquivos e o deploy era rejeitado.
+
+Por isso existe `MAX_INDEXABLE_PLAYERS` em `src/lib/public-data.ts`. Ao mexer na
+cobertura de paginas, confira antes de deployar:
+```
+find out -type f | wc -l
+```
+Se um dia a cobertura precisar crescer muito, o caminho e migrar de Pages para
+**Workers Static Assets**, que nao tem esse teto.
+
 ## 1. Crawler EA
 
 **Como funciona.** O Worker `pro-clubs-america-ea-crawler` roda de hora em hora
@@ -10,9 +48,10 @@ sozinho e o que ainda depende de configuracao manual.
 `GET /api/internal/ea-ingest` e coleta cada um sequencialmente via Browser Rendering.
 
 **Selecao da fila.** Clubes com claim aprovado ou partida em aberto tem
-prioridade. Quando essa faixa se esgota, o seletor cai para a fila geral
-(`priority.desc, next_run_at.asc`) — foi essa a correcao que destravou os 552
-clubes que nunca eram alcancados.
+prioridade, mas consomem no maximo `limit - 1` slots por execucao: **ao menos um
+slot fica sempre reservado para a fila geral**. Sem essa reserva os 5 clubes
+reivindicados (que ficam "vencidos" a cada 2h) tomavam 100% da vazao e os 552
+clubes do catalogo seguiam inalcancaveis.
 
 **Backoff.** Falha reagenda com `30 * 2^tentativas` minutos, teto de 24h.
 Sucesso reagenda em 2h. Bloqueio, 24h.
