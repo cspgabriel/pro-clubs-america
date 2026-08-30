@@ -49,9 +49,13 @@ export const onRequestGet = async (context: FunctionContext) => {
   ]);
   const activeClubIds = [...new Set([...claims.map((item) => item.club_id), ...matches.flatMap((item) => [item.home_club_id, item.away_club_id, item.invited_club_id]).filter((value): value is string => Boolean(value))])];
   const queue: QueueRow[] = [];
+  // Reserva ao menos um slot para a fila geral: os clubes reivindicados ficam
+  // sempre "vencidos" e, sem essa reserva, consomem 100% da vazao e os 552
+  // clubes do catalogo nunca sao coletados.
+  const priorityBudget = Math.max(1, limit - 1);
   if (activeClubIds.length) {
     const clubFilter = activeClubIds.map(encodeURIComponent).join(",");
-    queue.push(...(await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?club_id=in.(${clubFilter})&${queueWindow}&${queueSelect}&${queueOrder}&limit=${limit}`)));
+    queue.push(...(await supabaseRest<QueueRow[]>(context.env, `ea_crawl_queue?club_id=in.(${clubFilter})&${queueWindow}&${queueSelect}&${queueOrder}&limit=${priorityBudget}`)));
   }
   if (queue.length < limit) {
     const seen = queue.map((item) => item.id);

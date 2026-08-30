@@ -7,6 +7,7 @@ import { CalendarDays, CheckCircle2, Clock3, Goal, LockKeyhole, MapPin, Radio, S
 import type { CommunityMatchClub } from "@/lib/friendlies-data";
 import { type ChallengeMode, type FriendlyRequest } from "@/lib/friendlies";
 import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
+import { PushPrompt } from "./push-prompt";
 import { acceptFriendly, createFriendly, getCommunityProfile, markFriendlyPlayed, watchFriendlies, watchOfficialMatches, type CommunityProfile } from "@/lib/community-service";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
@@ -42,6 +43,14 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
   const [notice, setNotice] = useState("");
   const [busyId, setBusyId] = useState("");
   const [matchMode, setMatchMode] = useState<"all" | PublicMatch["mode"]>("all");
+  // Ancora do prompt de push: so pedimos permissao depois de uma acao que gera resposta de outro clube.
+  const [awaitingReply, setAwaitingReply] = useState(false);
+
+  // Adversarios sugeridos: o mural nunca aparece vazio.
+  const suggestedOpponents = useMemo(
+    () => communityClubs.filter((club) => club.id !== profile?.clubId).slice(0, 6),
+    [communityClubs, profile?.clubId],
+  );
   const visibleMatches = useMemo(() => officialMatches.filter((match) => matchMode === "all" || match.mode === matchMode), [officialMatches, matchMode]);
   const activeClub = !activeClubId
     ? null
@@ -89,6 +98,7 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
     try {
       await createFriendly({ hostClubId: host.id, hostClubName: host.name, mode: challengeMode, date, time, region, invitedClubId: challengeMode === "invite" ? invited?.id : undefined, invitedClubName: challengeMode === "invite" ? invited?.name : undefined });
       setNotice(challengeMode === "invite" ? `Convite enviado para ${invited?.name}.` : "Desafio aberto publicado para a comunidade.");
+      setAwaitingReply(true);
     } catch (error) { setNotice(error instanceof Error ? error.message : "Não foi possível publicar o desafio."); }
     finally { setBusyId(""); }
   }
@@ -103,6 +113,7 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
     try {
       await acceptFriendly(request);
       setNotice(`Jogo confirmado com sucesso! Verifique a sala de lobby.`);
+      setAwaitingReply(true);
     } catch (error) { setNotice(error instanceof Error ? error.message : "O desafio não pôde ser aceito."); }
     finally { setBusyId(""); }
   }
@@ -143,6 +154,7 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
         <label>Região ou servidor<input value={region} onChange={(event) => setRegion(event.target.value)} /></label>
         <button type="submit" disabled={busyId === "create" || !canManage}><Search /> {busyId === "create" ? "Publicando…" : challengeMode === "invite" ? "Enviar convite" : "Publicar desafio aberto"}</button>
         {notice && <p className="challenge-notice" role="status">{notice}</p>}
+        <PushPrompt visible={awaitingReply} reason="Avisamos no seu celular assim que o outro clube responder — mesmo com o app fechado." />
         <aside><ShieldCheck /> Aceite exige conta e time. Resultado validado exclusivamente pelo histórico Friendly Match.</aside>
       </form>
 
@@ -159,7 +171,14 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
             <div className={`challenge-status ${request.status}`}><span>{request.status === "searching" ? request.mode === "open" ? "Desafio aberto" : "Convite pendente" : request.status === "scheduled" ? "Jogo agendado" : request.status === "waiting_ea" ? "Aguardando EA" : "Confirmado"}</span>{challengeAction(request)}</div>
             <details className="challenge-details"><summary>Ver elencos e dados do confronto</summary><div className="challenge-team-data">{[host, opponent].map((club, index) => <section key={club?.id ?? index}><header><strong>{club?.name ?? (index ? opponentName : request.hostClubName)}</strong><span>SR {formatValue(club?.skillRating ?? null)}</span></header><dl><div><dt>Win rate</dt><dd>{formatValue(club?.winRate ?? null, "%")}</dd></div><div><dt>Jogos</dt><dd>{formatValue(club?.matches ?? null)}</dd></div><div><dt>Gols</dt><dd>{formatValue(club?.goals ?? null)}</dd></div></dl><div className="challenge-roster"><small>ELENCO PUBLICADO</small>{club?.roster.length ? club.roster.slice(0, 11).map((player) => <span key={`${club.id}-${player.name}`}><b>{player.name}</b>{player.position}</span>) : <p>Elenco ainda não coletado.</p>}</div></section>)}</div></details>
           </article>;
-        }) : <div className="market-empty"><Swords /><strong>Nenhum anúncio publicado</strong><span>Publique um convite ou desafio aberto.</span></div>}
+        }) : <div className="challenge-suggestions">
+          <div className="market-empty"><Swords /><strong>Nenhum desafio aberto agora</strong><span>Seja o primeiro — ou convide um destes times direto.</span></div>
+          <div className="suggestion-grid">{suggestedOpponents.map((club) => <button type="button" key={club.id} onClick={() => { setChallengeMode("invite"); setOpponentClubId(club.id); setOpponentQuery(club.name); document.getElementById("buscar-amistoso")?.scrollIntoView({ behavior: "smooth", block: "center" }); }}>
+            <Image src={club.crestUrl} alt="" width={40} height={40} unoptimized />
+            <span><strong>{club.name}</strong><small>SR {club.skillRating ?? "—"}{club.matches ? ` · ${club.matches} jogos` : ""}</small></span>
+            <em>Desafiar</em>
+          </button>)}</div>
+        </div>}
         <aside className="verification-flow"><div><UserCheck /> 1. Conta e time identificados</div><div><CheckCircle2 /> 2. Rival aceita e horário fecha</div><div><Clock3 /> 3. Partida é realizada</div><div><ShieldCheck /> 4. EA publica e confirma</div></aside>
         <p className="prototype-warning"><ShieldCheck /> Identidade, clube e permissões são validados pelo Firebase. Apenas donos e capitães vinculados podem publicar, aceitar ou avançar partidas.</p>
       </section>

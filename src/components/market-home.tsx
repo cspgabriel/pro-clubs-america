@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BarChart3, BriefcaseBusiness, CalendarDays, Clock3, Goal, MapPin, Radio, Search, Shield, Swords, Trophy, Users } from "lucide-react";
+import { UserRoundSearch, ArrowRight, BarChart3, BriefcaseBusiness, CalendarDays, Clock3, Goal, MapPin, Radio, Search, Shield, Swords, Trophy, Users } from "lucide-react";
 import type { PlayerRanking } from "@/types/domain";
 import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
 import { getCommunityProfile, watchFriendlies, type CommunityProfile } from "@/lib/community-service";
@@ -94,7 +94,10 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
           <Link href="/partidas/amistosos#buscar-amistoso"><Swords /><span><strong>Amistosos</strong><small>Buscar confronto</small></span></Link>
           <Link href="/rankings/jogadores/artilharia"><BarChart3 /><span><strong>Rankings</strong><small>Ver os líderes</small></span></Link>
         </div>
-        <div className="member-status"><Link href={profile?.clubId ? `/club/${profile.clubId}` : "/cadastro"}><Shield /><span><small>MEU CLUBE</small><strong>{profile?.clubName ?? "Vincular time da EA"}</strong></span><ArrowRight /></Link><Link href="/mercado"><BriefcaseBusiness /><span><small>MERCADO</small><strong>Publicar vaga ou perfil</strong></span><ArrowRight /></Link></div>
+        <div className="member-status">{profile?.clubId
+          ? <Link href={`/club/${profile.clubId}`}><Shield /><span><small>MEU CLUBE</small><strong>{profile.clubName}</strong></span><ArrowRight /></Link>
+          : <Link href="/mercado" className="member-status-primary"><UserRoundSearch /><span><small>VOCÊ AINDA NÃO TEM TIME</small><strong>Encontrar um clube agora</strong></span><ArrowRight /></Link>}
+          <Link href="/mercado">{profile?.clubId ? <BriefcaseBusiness /> : <Shield />}<span><small>{profile?.clubId ? "MERCADO" : "JÁ TEM CLUBE?"}</small><strong>{profile?.clubId ? "Publicar vaga ou perfil" : "Anunciar seu time"}</strong></span><ArrowRight /></Link></div>
       </section>
 
       <section className="market-section open-challenges-home" id="desafios-abertos">

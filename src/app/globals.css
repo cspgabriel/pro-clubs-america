@@ -561,3 +561,51 @@ html{color-scheme:dark}
 .admin-tag.queued,.admin-tag.running{border-color:#d9a441;color:#d9a441}
 @media(max-width:1000px){.admin-metrics{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.admin-page{width:calc(100% - 24px)}.admin-metrics{grid-template-columns:1fr}.admin-header{flex-direction:column;align-items:flex-start}}
+
+/* ===== Prompt contextual de push ===== */
+.push-prompt{position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;margin-top:16px;padding:16px 44px 16px 18px;border:1px solid var(--color-cta);background:linear-gradient(120deg,rgba(255,200,61,.1),var(--surface))}
+.push-prompt>svg{width:24px;height:24px;color:var(--color-cta)}
+.push-prompt strong{display:block;font-size:13px}
+.push-prompt p{margin:3px 0 0;color:#9fb0c9;font-size:11px;line-height:1.55}
+.push-prompt small{display:block;margin-top:6px;color:var(--color-cta);font-size:10px}
+.push-prompt>button{padding:11px 18px;border:0;background:var(--color-cta);color:#04120a;font-weight:700;font-size:11px;letter-spacing:.08em;cursor:pointer;white-space:nowrap}
+.push-prompt>button:disabled{opacity:.6;cursor:default}
+.push-prompt .push-prompt-close{position:absolute;top:8px;right:8px;padding:4px;background:transparent;color:#7f8ba0;border:0;cursor:pointer}
+.push-prompt .push-prompt-close svg{width:14px;height:14px}
+@media(max-width:640px){.push-prompt{grid-template-columns:auto 1fr;padding-right:18px}.push-prompt>button{grid-column:1/-1;width:100%}}
+
+/* ===== Onboarding: o momento "uau" e ver a propria carreira aparecer ===== */
+.onboarding-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px;margin-top:26px;padding:22px 20px;border:1px solid var(--color-cta);background:linear-gradient(140deg,rgba(255,200,61,.12),rgba(13,45,89,.5));animation:reveal .5s cubic-bezier(.2,.7,.3,1) both}
+.onboarding-preview>strong{grid-column:1/-1;font:26px "Russo One",sans-serif;letter-spacing:-.02em;color:#fff}
+.onboarding-preview>span{grid-column:1/-1;margin-top:-6px;color:var(--color-cta);font-size:11px;letter-spacing:.14em}
+.onboarding-preview>div{padding-top:12px;border-top:1px solid rgba(255,200,61,.25);animation:reveal .5s cubic-bezier(.2,.7,.3,1) both}
+.onboarding-preview>div:nth-of-type(1){animation-delay:.08s}
+.onboarding-preview>div:nth-of-type(2){animation-delay:.16s}
+.onboarding-preview>div:nth-of-type(3){animation-delay:.24s}
+.onboarding-preview b{display:block;font:30px "Russo One",sans-serif;color:var(--color-cta);line-height:1}
+.onboarding-preview small{display:block;margin-top:4px;color:#8b9bb4;font-size:8px;letter-spacing:.16em}
+.onboarding-skip{background:transparent!important;border:0!important;color:#7f8ba0!important;font-size:11px!important;text-decoration:underline;padding:4px 0!important}
+.onboarding-skip:hover{color:var(--color-cta)!important}
+@keyframes reveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.onboarding-preview,.onboarding-preview>div{animation:none}}
+
+/* ===== Nudge de perfil incompleto ===== */
+.profile-nudge{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--color-cta);background:linear-gradient(90deg,rgba(255,200,61,.14),rgba(6,19,41,.96));backdrop-filter:blur(8px)}
+.profile-nudge>svg{width:17px;height:17px;color:var(--color-cta);flex-shrink:0}
+.profile-nudge p{margin:0;flex:1;font-size:12px;color:#e8eefb}
+.profile-nudge a{padding:8px 15px;background:var(--color-cta);color:#04120a;font-weight:700;font-size:11px;letter-spacing:.06em;white-space:nowrap}
+.profile-nudge button{padding:4px;background:transparent;border:0;color:#7f8ba0;cursor:pointer;flex-shrink:0}
+.profile-nudge button svg{width:14px;height:14px}
+@media(max-width:640px){.profile-nudge p{font-size:11px}.profile-nudge a{padding:8px 11px;font-size:10px}}
+
+/* ===== Mural sem desafios: sugere adversarios reais ===== */
+.challenge-suggestions{display:grid;gap:14px}
+.suggestion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.suggestion-grid>button{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:11px;padding:13px;border:1px solid var(--soft-line);background:var(--surface);color:inherit;text-align:left;cursor:pointer;transition:border-color .15s,transform .15s}
+.suggestion-grid>button:hover{border-color:var(--color-cta);transform:translateY(-2px)}
+.suggestion-grid img{object-fit:contain}
+.suggestion-grid strong{display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.suggestion-grid small{display:block;margin-top:2px;color:#7f8ba0;font-size:9px}
+.suggestion-grid em{color:var(--color-cta);font-size:10px;font-style:normal;font-weight:700;letter-spacing:.08em}
+@media(max-width:1000px){.suggestion-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.suggestion-grid{grid-template-columns:1fr}}
