@@ -81,12 +81,40 @@ async function api<T>(path: string, init: RequestInit = {}, authRequired = false
   return payload;
 }
 
+/**
+ * Polling que pausa com a aba oculta e revalida ao voltar ao foco.
+ *
+ * Sao 6 watchers a 15s; sem essa pausa cada aba esquecida em segundo plano
+ * mantinha ~24 requisicoes/minuto indefinidamente.
+ *
+ * Nota: Supabase Realtime nao e alternativa direta aqui — a autenticacao e
+ * Firebase e o cliente nao tem sessao Supabase, entao toda leitura passa pelas
+ * Pages Functions. Trocar por websocket exigiria expor a anon key e reescrever
+ * a RLS em cima de auth.uid(), que nao existe neste modelo.
+ */
 function poll<T>(load: () => Promise<T>, callback: (value: T) => void, onError?: WatchError, interval = 15_000): Unsubscribe {
   let active = true;
+  let timer = 0;
   const run = () => load().then((value) => { if (active) callback(value); }).catch((error) => { if (active) onError?.(error instanceof Error ? error : new Error("POLL_FAILED")); });
+
+  const start = () => { if (!timer) timer = window.setInterval(run, interval); };
+  const stop = () => { if (timer) { window.clearInterval(timer); timer = 0; } };
+
+  const onVisibility = () => {
+    if (document.hidden) { stop(); return; }
+    void run();
+    start();
+  };
+
   void run();
-  const timer = window.setInterval(run, interval);
-  return () => { active = false; window.clearInterval(timer); };
+  if (!document.hidden) start();
+  document.addEventListener("visibilitychange", onVisibility);
+
+  return () => {
+    active = false;
+    stop();
+    document.removeEventListener("visibilitychange", onVisibility);
+  };
 }
 
 export interface AdminOverview {
