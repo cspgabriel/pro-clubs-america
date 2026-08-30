@@ -41,6 +41,38 @@ find out -type f | wc -l
 Se um dia a cobertura precisar crescer muito, o caminho e migrar de Pages para
 **Workers Static Assets**, que nao tem esse teto.
 
+## Configuracao — o que ja esta aplicado e o que falta
+
+| Item | Estado |
+|---|---|
+| `ADMIN_EMAILS` (Pages) | ✅ aplicado — `cspgabriel@outlook.com.br`. Para incluir mais gente: `npx wrangler pages secret put ADMIN_EMAILS --project-name=pro-clubs-america` com a lista separada por virgula, e **redeploy** (secret so vale a partir do proximo deployment) |
+| `CLOUDFLARE_ACCOUNT_ID` (GitHub) | ✅ aplicado |
+| `EA_INGEST_SECRET` (GitHub) | ✅ ja existia |
+| `CLOUDFLARE_API_TOKEN` (GitHub) | ❌ **so voce pode criar** — ver abaixo |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | ❌ **so voce pode criar** — ver abaixo |
+| Sitemap no Search Console | ❌ **so voce pode fazer** — ver abaixo |
+
+### Por que estes tres nao puderam ser automatizados
+
+**`CLOUDFLARE_API_TOKEN`** — o token disponivel no cofre local e valido mas nao
+tem permissao de Pages (403) nem de criar outros tokens (403). Criar um token
+exige o painel: Cloudflare > My Profile > API Tokens > Create Token, permissao
+**Cloudflare Pages: Edit** na conta `8c4f3b0ccc2ee9001b6dd8322b8b6ca9`. Depois:
+```
+gh secret set CLOUDFLARE_API_TOKEN
+```
+Ate la, o deploy sai manualmente (comando na secao 0).
+
+**GA4** — nao existe propriedade para este projeto nas contas do Google
+vinculadas, e o CLI `gmp` expoe apenas a Data API (leitura), nao a Admin API
+(criacao). Crie uma propriedade **dedicada** e coloque o ID de medicao em
+`NEXT_PUBLIC_GA_MEASUREMENT_ID`. Nao reaproveite propriedade de outro projeto:
+metrica compartilhada entre produtos nao permite ler nenhum deles.
+
+**Search Console** — `proclubsamerica.com` nao esta cadastrado na conta e a
+verificacao de propriedade nao pode ser feita por CLI. Adicione o dominio e
+envie `https://proclubsamerica.com/sitemap.xml`.
+
 ## 1. Crawler EA
 
 **Como funciona.** O Worker `pro-clubs-america-ea-crawler` roda de hora em hora
