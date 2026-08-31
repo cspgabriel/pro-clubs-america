@@ -5,7 +5,8 @@ import { repairPublicText } from "../../_lib/text";
 type MatchMode = "leagueMatch" | "friendlyMatch" | "playoffMatch";
 interface IncomingPlayer { playerId?: string; playerName?: string; position?: string; goals?: number; assists?: number; rating?: number; shots?: number; passesMade?: number; passAttempts?: number; tacklesMade?: number; tackleAttempts?: number; redCards?: number; saves?: number; cleanSheet?: boolean; }
 interface IncomingMatch { mode?: MatchMode; playedAt?: string; homeClubId?: string; homeClubName?: string; awayClubId?: string; awayClubName?: string; homeScore?: number; awayScore?: number; competition?: string; sourceUrl?: string; players?: IncomingPlayer[]; }
-interface IngestBody { parserVersion?: string; source?: string; startedAt?: string; matches?: IncomingMatch[]; metadata?: Record<string, unknown>; }
+interface IncomingExtras { overallStats?: unknown; info?: unknown; members?: unknown }
+interface IngestBody { parserVersion?: string; source?: string; startedAt?: string; matches?: IncomingMatch[]; extras?: IncomingExtras; metadata?: Record<string, unknown>; }
 interface SnapshotRow { id: string; source_fingerprint: string; }
 interface QueueRow { id: string; priority: number; attempts: number; club_id: string; next_run_at: string; }
 
@@ -90,6 +91,70 @@ function normalizePlayers(players: IncomingPlayer[] | undefined) {
   })).filter((player) => player.playerName);
 }
 
+
+const asArray = (value: unknown) => (Array.isArray(value) ? value : value && typeof value === "object" ? Object.values(value as Record<string, unknown>) : []);
+const num = (value: unknown) => { const parsed = Number(value); return Number.isFinite(parsed) ? parsed : null; };
+const ratio = (part: unknown, total: unknown) => { const a = Number(part), b = Number(total); return Number.isFinite(a) && Number.isFinite(b) && b > 0 ? Math.round((a / b) * 1000) / 1000 : null; };
+
+/**
+ * Atualiza catalogo (clubs/players) com o que a API publica devolveu.
+ * O catalogo veio de um dump estatico; sem isto ele nunca envelhece bem.
+ * Falha aqui nunca derruba a ingestao de partidas — e enriquecimento, nao core.
+ */
+async function syncCatalog(context: FunctionContext, eaClubId: string, platform: string, extras: IncomingExtras) {
+  const summary = { clubUpdated: false, playersUpserted: 0 };
+  const club = await findClubByEa(context.env, platform, eaClubId);
+  if (!club) return summary;
+  const now = new Date().toISOString();
+
+  const stats = asArray(extras.overallStats)[0] as Record<string, unknown> | undefined;
+  if (stats) {
+    const games = num(stats.gamesPlayed);
+    await supabaseRest(context.env, `clubs?id=eq.${encodeURIComponent(club.id)}`, {
+      method: "PATCH",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({
+        skill_rating: num(stats.skillRating), wins: num(stats.wins), ties: num(stats.ties), losses: num(stats.losses),
+        games_played: games, goals: num(stats.goals), goals_against: num(stats.goalsAgainst),
+        clean_sheets: num(stats.cleanSheets), goals_per_game: num(stats.goalsPerGame),
+        all_time_rank: num(stats.rank), current_division: num(stats.currentDivision),
+        last_synced_at: now, updated_at: now,
+      }),
+    });
+    summary.clubUpdated = true;
+  }
+
+  const members = asArray((extras.members as Record<string, unknown>)?.members ?? extras.members);
+  const rows = members.map((entry) => {
+    const member = entry as Record<string, unknown>;
+    const gamertag = safeText(member.name, 80);
+    if (!gamertag) return null;
+    const games = num(member.gamesPlayed);
+    return {
+      club_id: club.id, gamertag,
+      favorite_position: safeText(member.favoritePosition, 40) || null,
+      rating: num(member.ratingAve), games_played: games, goals: num(member.goals), assists: num(member.assists),
+      passes_made: num(member.passesMade), pass_success_rate: num(member.passSuccessRate),
+      tackles_made: num(member.tacklesMade), tackle_success_rate: num(member.tackleSuccessRate),
+      clean_sheets_def: num(member.cleanSheetsDef), clean_sheets_gk: num(member.cleanSheetsGK),
+      man_of_the_match: num(member.manOfTheMatch),
+      goals_per_game: ratio(member.goals, games), assists_per_game: ratio(member.assists, games),
+      tackles_per_game: ratio(member.tacklesMade, games),
+      last_synced_at: now, updated_at: now,
+    };
+  }).filter(Boolean);
+
+  if (rows.length) {
+    await supabaseRest(context.env, "players?on_conflict=club_id,gamertag", {
+      method: "POST",
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify(rows),
+    });
+    summary.playersUpserted = rows.length;
+  }
+  return summary;
+}
+
 export const onRequestPost = async (context: FunctionContext) => {
   if (!(await authorized(context.request, context.env.EA_INGEST_SECRET))) return apiError("INGEST_AUTH_REQUIRED", 401);
   const body = await context.request.json().catch(() => null) as IngestBody | null;
@@ -124,6 +189,17 @@ export const onRequestPost = async (context: FunctionContext) => {
     } catch (error) { results.push({ error: error instanceof Error ? error.message : "INGEST_ITEM_FAILED" }); }
   }
 
+  // Enriquecimento do catalogo: isolado do core, nunca derruba a ingestao.
+  let catalog = { clubUpdated: false, playersUpserted: 0 };
+  if (body?.extras && queueId) {
+    const platform = safeText((body?.metadata?.platform as string) || "common-gen5", 30);
+    const eaClubId = safeText(body?.metadata?.clubId, 20);
+    if (eaClubId && platforms.has(platform)) {
+      catalog = await syncCatalog(context, eaClubId, platform, body.extras)
+        .catch((error) => { console.error(JSON.stringify({ event: "catalog_sync_failed", eaClubId, reason: error instanceof Error ? error.message : "UNKNOWN" })); return catalog; });
+    }
+  }
+
   const errors = results.filter((item) => item.error).length;
   const runStatus = collectionStatus !== "succeeded" ? collectionStatus : input.length > 0 && errors === input.length ? "failed" : errors ? "partial" : "succeeded";
   const finishedAt = new Date();
@@ -133,5 +209,5 @@ export const onRequestPost = async (context: FunctionContext) => {
     const retryMinutes = runStatus === "succeeded" ? 120 : runStatus === "blocked" ? 1440 : Math.min(30 * 2 ** Math.min(priorAttempts, 6), 1440);
     await supabaseRest(context.env, `ea_crawl_queue?id=eq.${encodeURIComponent(queueId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus === "partial" ? "failed" : runStatus, last_attempt_at: finishedAt.toISOString(), last_success_at: runStatus === "succeeded" ? finishedAt.toISOString() : undefined, attempts: priorAttempts + 1, last_error: runStatus === "succeeded" ? null : safeText(body?.metadata?.error || runStatus, 500), next_run_at: new Date(finishedAt.getTime() + retryMinutes * 60000).toISOString(), updated_at: finishedAt.toISOString() }) });
   }
-  return Response.json({ runId, status: runStatus, accepted: input.length - errors, errors, reconciled: results.filter((item) => item.reconciledMatchId).length, results }, { status: runStatus === "failed" || runStatus === "blocked" ? 422 : 202 });
+  return Response.json({ runId, status: runStatus, accepted: input.length - errors, errors, catalog, reconciled: results.filter((item) => item.reconciledMatchId).length, results }, { status: runStatus === "failed" || runStatus === "blocked" ? 422 : 202 });
 };

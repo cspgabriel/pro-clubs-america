@@ -142,6 +142,7 @@ async function crawl(env, item) {
     for (let elapsed = 0; elapsed < 15000 && !observed.some((entry) => entry.mode === "playoffMatch"); elapsed += 1500) await sleep(1500);
     await Promise.allSettled(responseTasks);
     const matches = observed.flatMap((entry) => normalize(entry.payload, entry.mode, sourceUrl, item.clubId));
+    const extras = await fetchClubExtras(page, item.clubId, item.platform);
     const componentState = await page.evaluate(() => {
       const element = document.querySelector("ea-proclub-match-history-fc");
       if (!element) return "missing";
@@ -149,15 +150,39 @@ async function crawl(env, item) {
       return `${state}:${location.search.slice(0, 100)}`;
     }).catch(() => "unknown");
     const networkState = [...parseErrors.slice(-2), ...failedRequests.slice(-2), ...matchingResponses.slice(-4), ...matchingRequests.slice(-4)].join("|") || "no-matching-request";
-    return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, modes: [...new Set(observed.map((entry) => entry.mode))], clickedFriendly, clickedPlayoff, error: observed.length ? undefined : `PUBLIC_PAGE_DATA_NOT_OBSERVED:NET=${networkState}:COMP=${componentState}`.slice(0, 400), matches };
+    return { status: observed.length ? "succeeded" : "failed", responseCount: observed.length, modes: [...new Set(observed.map((entry) => entry.mode))], clickedFriendly, clickedPlayoff, error: observed.length ? undefined : `PUBLIC_PAGE_DATA_NOT_OBSERVED:NET=${networkState}:COMP=${componentState}`.slice(0, 400), matches, extras };
   } catch (error) {
     const message = error instanceof Error ? error.message : "CRAWL_FAILED";
-    return { status: /captcha|access denied|forbidden/i.test(message) ? "blocked" : "failed", responseCount: observed.length, modes: [...new Set(observed.map((entry) => entry.mode))], clickedFriendly, clickedPlayoff, error: message.slice(0, 400), matches: [] };
+    return { status: /captcha|access denied|forbidden/i.test(message) ? "blocked" : "failed", responseCount: observed.length, modes: [...new Set(observed.map((entry) => entry.mode))], clickedFriendly, clickedPlayoff, error: message.slice(0, 400), matches: [], extras: null };
   } finally { await browser.close().catch(() => undefined); }
 }
 
+/**
+ * Reaproveita a sessao ja aquecida (cookies Akamai) para chamar a API publica da
+ * EA direto do contexto da pagina. Custa uma requisicao, nao uma renderizacao —
+ * por isso enriquecer o catalogo praticamente nao aumenta o tempo de browser.
+ */
+async function fetchClubExtras(page, clubId, platform) {
+  const query = `platform=${encodeURIComponent(platform)}&clubIds=${encodeURIComponent(clubId)}`;
+  const endpoints = {
+    overallStats: `https://proclubs.ea.com/api/fc/clubs/overallStats?${query}`,
+    info: `https://proclubs.ea.com/api/fc/clubs/info?${query}`,
+    members: `https://proclubs.ea.com/api/fc/members/stats?platform=${encodeURIComponent(platform)}&clubId=${encodeURIComponent(clubId)}`,
+  };
+  const extras = {};
+  for (const [key, url] of Object.entries(endpoints)) {
+    try {
+      extras[key] = await page.evaluate(async (target) => {
+        const response = await fetch(target, { headers: { accept: "application/json" }, credentials: "include" });
+        return response.ok ? await response.json() : null;
+      }, url);
+    } catch { extras[key] = null; }
+  }
+  return extras;
+}
+
 async function ingest(env, item, result) {
-  const response = await fetch(`${env.PCA_SITE_URL}/api/internal/ea-ingest`, { method: "POST", headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}`, "content-type": "application/json" }, body: JSON.stringify({ parserVersion: PARSER_VERSION, source: "cloudflare-browser-public-page", startedAt: new Date().toISOString(), matches: result.matches, metadata: { queueId: item.queueId, attempts: item.attempts, clubId: item.clubId, platform: item.platform, responseCount: result.responseCount, modes: result.modes, clickedFriendly: result.clickedFriendly, clickedPlayoff: result.clickedPlayoff, collectionStatus: result.status, error: result.error } }) });
+  const response = await fetch(`${env.PCA_SITE_URL}/api/internal/ea-ingest`, { method: "POST", headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}`, "content-type": "application/json" }, body: JSON.stringify({ parserVersion: PARSER_VERSION, source: "cloudflare-browser-public-page", startedAt: new Date().toISOString(), matches: result.matches, extras: result.extras, metadata: { queueId: item.queueId, attempts: item.attempts, clubId: item.clubId, platform: item.platform, responseCount: result.responseCount, modes: result.modes, clickedFriendly: result.clickedFriendly, clickedPlayoff: result.clickedPlayoff, collectionStatus: result.status, error: result.error } }) });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok && result.status === "succeeded") throw new Error(`INGEST_${response.status}:${payload.error || "unknown"}`);
   return { httpStatus: response.status, ...payload };

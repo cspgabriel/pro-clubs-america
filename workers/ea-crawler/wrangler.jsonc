@@ -8,6 +8,6 @@
   "workers_dev": true,
   "browser": { "binding": "BROWSER" },
   "triggers": { "crons": ["17 * * * *"] },
-  "vars": { "PCA_SITE_URL": "https://proclubsamerica.com", "CRAWL_LIMIT": "3" },
+  "vars": { "PCA_SITE_URL": "https://proclubsamerica.com", "CRAWL_LIMIT": "4" },
   "observability": { "enabled": true, "head_sampling_rate": 1 }
 }
