@@ -3,10 +3,17 @@
 Estado apos a implementacao de 29/08/2026. Este documento lista o que ja roda
 sozinho e o que ainda depende de configuracao manual.
 
-## 0. ⚠️ Deploy — o CI esta quebrado desde 10/08/2026
+## 0. Deploy — CI restaurado em 31/08/2026
 
-**Todas as execucoes do workflow `deploy-cloudflare-pages.yml` falharam** desde
-10/08. Producao ficou congelada em codigo antigo por quase tres semanas.
+Historico: **todas as execucoes do workflow falharam entre 10/08 e 31/08** e a
+producao ficou congelada em codigo antigo por tres semanas. Hoje o CI esta
+verde e o deploy volta a sair sozinho a cada push na `main`.
+
+Foram duas causas encadeadas:
+1. secrets ausentes (resolvido);
+2. `npm run check` — que o CI roda e o `npm run build` local **nao** — barrava
+   em `react-hooks/set-state-in-effect`. **Rode `npm run check` antes de
+   empurrar**, ou o CI reprova o que passou no build.
 
 Causa (log do run 33255922534):
 ```
@@ -48,29 +55,28 @@ Se um dia a cobertura precisar crescer muito, o caminho e migrar de Pages para
 | `ADMIN_EMAILS` (Pages) | ✅ aplicado — `cspgabriel@outlook.com.br`. Para incluir mais gente: `npx wrangler pages secret put ADMIN_EMAILS --project-name=pro-clubs-america` com a lista separada por virgula, e **redeploy** (secret so vale a partir do proximo deployment) |
 | `CLOUDFLARE_ACCOUNT_ID` (GitHub) | ✅ aplicado |
 | `EA_INGEST_SECRET` (GitHub) | ✅ ja existia |
-| `CLOUDFLARE_API_TOKEN` (GitHub) | ❌ **so voce pode criar** — ver abaixo |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | ❌ **so voce pode criar** — ver abaixo |
-| Sitemap no Search Console | ❌ **so voce pode fazer** — ver abaixo |
+| `CLOUDFLARE_API_TOKEN` (GitHub) | ✅ aplicado — CI verde desde 31/08 |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | ❌ exige painel — credenciais locais sao `analytics.readonly` |
+| Sitemap no Search Console | ❌ exige painel — credenciais locais sao `webmasters.readonly` |
 
 ### Por que estes tres nao puderam ser automatizados
 
-**`CLOUDFLARE_API_TOKEN`** — o token disponivel no cofre local e valido mas nao
-tem permissao de Pages (403) nem de criar outros tokens (403). Criar um token
-exige o painel: Cloudflare > My Profile > API Tokens > Create Token, permissao
-**Cloudflare Pages: Edit** na conta `8c4f3b0ccc2ee9001b6dd8322b8b6ca9`. Depois:
-```
-gh secret set CLOUDFLARE_API_TOKEN
-```
-Ate la, o deploy sai manualmente (comando na secao 0).
+**`CLOUDFLARE_API_TOKEN`** — ✅ resolvido em 31/08. Existem **dois** tokens
+Cloudflare no cofre local: o de `MASTER_ENV.env` nao tem permissao de Pages
+(403), mas o de `api key cloudflare cspgabriel@outlook.com.br.txt` tem (200).
+Ao procurar credencial Cloudflare, teste os dois — nao assuma que o primeiro
+que aparecer e o certo.
 
-**GA4** — nao existe propriedade para este projeto nas contas do Google
-vinculadas, e o CLI `gmp` expoe apenas a Data API (leitura), nao a Admin API
-(criacao). Crie uma propriedade **dedicada** e coloque o ID de medicao em
+**GA4** — nao existe propriedade para este projeto nas contas vinculadas. O CLI
+`gmp` esta autenticado com escopo **`analytics.readonly`**, e os tokens OAuth em
+`credenciais/google_token_*.json` nao tem nenhum escopo de Analytics. Sem
+`analytics.edit` nao ha como criar propriedade por API. Crie uma propriedade **dedicada** e coloque o ID de medicao em
 `NEXT_PUBLIC_GA_MEASUREMENT_ID`. Nao reaproveite propriedade de outro projeto:
 metrica compartilhada entre produtos nao permite ler nenhum deles.
 
-**Search Console** — `proclubsamerica.com` nao esta cadastrado na conta e a
-verificacao de propriedade nao pode ser feita por CLI. Adicione o dominio e
+**Search Console** — `proclubsamerica.com` nao esta cadastrado na conta e o
+escopo disponivel e **`webmasters.readonly`** (sem `siteverification`), entao
+nem adicionar nem verificar o dominio sai por API. Adicione o dominio e
 envie `https://proclubsamerica.com/sitemap.xml`.
 
 ## 1. Crawler EA
