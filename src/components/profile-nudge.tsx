@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDismissible } from "@/lib/use-dismissible";
 import { Link2, X } from "lucide-react";
 import { observeAuth } from "@/lib/auth-client";
 import { getCommunityProfile } from "@/lib/community-service";
@@ -17,11 +18,7 @@ const DISMISS_KEY = "pca:profile-nudge-dismissed";
 export function ProfileNudge() {
   const pathname = usePathname();
   const [pending, setPending] = useState<"unknown" | "no-ea" | "no-club" | "ok">("unknown");
-  const [dismissed, setDismissed] = useState(true);
-
-  useEffect(() => {
-    try { setDismissed(window.sessionStorage.getItem(DISMISS_KEY) === "1"); } catch { setDismissed(false); }
-  }, []);
+  const [dismissed, dismiss] = useDismissible(DISMISS_KEY, "session");
 
   useEffect(() => observeAuth((user) => {
     if (!user) { setPending("ok"); return; }
@@ -32,11 +29,6 @@ export function ProfileNudge() {
       })
       .catch(() => setPending("ok"));
   }), []);
-
-  function dismiss() {
-    setDismissed(true);
-    try { window.sessionStorage.setItem(DISMISS_KEY, "1"); } catch { /* modo privado: so nao persiste */ }
-  }
 
   const hidden = HIDDEN_ON.includes(pathname) || pathname.startsWith("/admin");
   if (hidden || dismissed || pending === "unknown" || pending === "ok") return null;

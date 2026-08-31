@@ -1,8 +1,8 @@
 "use client";
 
 import { Bell, X } from "lucide-react";
-import { useEffect, useState } from "react";
 import { usePush } from "@/lib/use-push";
+import { useDismissible } from "@/lib/use-dismissible";
 
 const DISMISS_KEY = "pca:push-prompt-dismissed";
 
@@ -13,16 +13,7 @@ const DISMISS_KEY = "pca:push-prompt-dismissed";
  */
 export function PushPrompt({ reason, visible }: { reason: string; visible: boolean }) {
   const { state, busy, message, enable } = usePush();
-  const [dismissed, setDismissed] = useState(true);
-
-  useEffect(() => {
-    try { setDismissed(window.localStorage.getItem(DISMISS_KEY) === "1"); } catch { setDismissed(false); }
-  }, []);
-
-  function dismiss() {
-    setDismissed(true);
-    try { window.localStorage.setItem(DISMISS_KEY, "1"); } catch { /* modo privado: so nao persiste */ }
-  }
+  const [dismissed, dismiss] = useDismissible(DISMISS_KEY, "local");
 
   if (!visible || dismissed || state === "on" || state === "denied" || state === "unsupported" || state === "checking") return null;
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { ArrowRight, CalendarCheck, CheckCircle2, ExternalLink, Globe2, Link2, LogOut, Mail, Settings2, Shield, Target, UserRound, Users } from "lucide-react";
+import { ArrowRight, CalendarCheck, CheckCircle2, ExternalLink, Link2, LogOut, Mail, Settings2, Shield, Target, UserRound, Users } from "lucide-react";
 import { logout, observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
 import { getCommunityProfile, linkEaPlayer, saveCommunityPreferences, type CommunityProfile } from "@/lib/community-service";
 import { countries, locales } from "@/lib/i18n";

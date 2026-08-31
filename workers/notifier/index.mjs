@@ -14,7 +14,7 @@ async function dispatch(env) {
   return payload;
 }
 
-export default {
+const notifier = {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(dispatch(env).catch((error) => console.error(JSON.stringify({ event: "email_dispatch_failed", reason: error.message }))));
   },
@@ -28,3 +28,5 @@ export default {
     }
   },
 };
+
+export default notifier;
