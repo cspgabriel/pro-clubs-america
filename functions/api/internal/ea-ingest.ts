@@ -101,6 +101,37 @@ const ratio = (part: unknown, total: unknown) => { const a = Number(part), b = N
  * O catalogo veio de um dump estatico; sem isto ele nunca envelhece bem.
  * Falha aqui nunca derruba a ingestao de partidas — e enriquecimento, nao core.
  */
+/**
+ * Descoberta organica: todo adversario que aparece numa partida e um clube real
+ * da EA que talvez ainda nao esteja no catalogo. O dump inicial pegou ~557
+ * clubes de um ranking; a EA tem muito mais. Cadastrar o adversario e enfileira-lo
+ * faz o catalogo crescer sozinho a cada coleta, sem custo de browser adicional.
+ */
+async function discoverClub(context: FunctionContext, platform: string, eaClubId: string, name: string) {
+  if (!eaClubId || !/^\d{1,12}$/.test(eaClubId)) return null;
+  const now = new Date().toISOString();
+  const rows = await supabaseRest<Array<{ id: string }>>(context.env, "clubs?on_conflict=platform,ea_club_id", {
+    method: "POST",
+    headers: { Prefer: "resolution=merge-duplicates,return=representation" },
+    body: JSON.stringify({
+      platform, ea_club_id: eaClubId,
+      name: name || `Clube ${eaClubId}`,
+      ea_url: `https://www.ea.com/pt-br/games/ea-sports-fc/clubs/overview?clubId=${eaClubId}&platform=${platform}`,
+      source_url: `https://proclubs.ea.com/api/fc/clubs/info?platform=${platform}&clubIds=${eaClubId}`,
+      verified: false, updated_at: now,
+    }),
+  }).catch(() => []);
+  const club = rows[0];
+  if (!club) return null;
+  // Prioridade baixa: descoberto entra na fila atras dos clubes com dono real.
+  await supabaseRest(context.env, "ea_crawl_queue?on_conflict=club_id", {
+    method: "POST",
+    headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify({ club_id: club.id, priority: 5, status: "queued", next_run_at: now, updated_at: now }),
+  }).catch(() => undefined);
+  return club;
+}
+
 async function syncCatalog(context: FunctionContext, eaClubId: string, platform: string, extras: IncomingExtras) {
   const summary = { clubUpdated: false, playersUpserted: 0 };
   const club = await findClubByEa(context.env, platform, eaClubId);
@@ -169,6 +200,7 @@ export const onRequestPost = async (context: FunctionContext) => {
   const runId = runs[0]?.id;
   const results: Array<{ fingerprint?: string; snapshotId?: string; reconciledMatchId?: string; error?: string }> = [];
   let playersObserved = 0;
+  let discovered = 0;
 
   for (const match of input) {
     try {
@@ -180,8 +212,13 @@ export const onRequestPost = async (context: FunctionContext) => {
       const playedAt = new Date(String(match.playedAt || ""));
       if (!platforms.has(platform) || !mode || !modes.has(mode) || !homeEaId || !awayEaId || !homeName || !awayName || homeScore == null || awayScore == null || Number.isNaN(playedAt.getTime()) || playedAt.getTime() < Date.now() - 366 * 86400000 || playedAt.getTime() > Date.now() + 86400000) throw new Error("INVALID_MATCH");
       const [homeClub, awayClub] = await Promise.all([findClubByEa(context.env, platform, homeEaId), findClubByEa(context.env, platform, awayEaId)]);
+      // Adversario fora do catalogo vira clube novo + entrada na fila.
+      const homeClubId = homeClub?.id ?? (await discoverClub(context, platform, homeEaId, homeName))?.id ?? null;
+      const awayClubId = awayClub?.id ?? (await discoverClub(context, platform, awayEaId, awayName))?.id ?? null;
+      if (!homeClub && homeClubId) discovered += 1;
+      if (!awayClub && awayClubId) discovered += 1;
       const fingerprint = await digest([platform, mode, playedAt.toISOString(), homeEaId, awayEaId, homeScore, awayScore].join("|"));
-      const snapshots = await supabaseRest<SnapshotRow[]>(context.env, "ea_match_snapshots?on_conflict=source_fingerprint", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=representation" }, body: JSON.stringify({ source_fingerprint: fingerprint, platform, mode, played_at: playedAt.toISOString(), home_ea_club_id: homeEaId, home_club_id: homeClub?.id || null, home_club_name: homeName, away_ea_club_id: awayEaId, away_club_id: awayClub?.id || null, away_club_name: awayName, home_score: homeScore, away_score: awayScore, competition: safeText(match.competition || "EA Clubs", 120), source_url: sourceUrl(match.sourceUrl, homeEaId, platform), players: normalizePlayers(match.players), parser_version: parserVersion, ingest_run_id: runId, observed_at: new Date().toISOString(), updated_at: new Date().toISOString() }) });
+      const snapshots = await supabaseRest<SnapshotRow[]>(context.env, "ea_match_snapshots?on_conflict=source_fingerprint", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=representation" }, body: JSON.stringify({ source_fingerprint: fingerprint, platform, mode, played_at: playedAt.toISOString(), home_ea_club_id: homeEaId, home_club_id: homeClubId, home_club_name: homeName, away_ea_club_id: awayEaId, away_club_id: awayClubId, away_club_name: awayName, home_score: homeScore, away_score: awayScore, competition: safeText(match.competition || "EA Clubs", 120), source_url: sourceUrl(match.sourceUrl, homeEaId, platform), players: normalizePlayers(match.players), parser_version: parserVersion, ingest_run_id: runId, observed_at: new Date().toISOString(), updated_at: new Date().toISOString() }) });
       const snapshot = snapshots[0];
       playersObserved += normalizePlayers(match.players).length;
       const reconciled = mode === "friendlyMatch" && snapshot ? await supabaseRest<Array<{ matched_match_id: string | null }>>(context.env, "rpc/reconcile_ea_friendly", { method: "POST", body: JSON.stringify({ p_snapshot_id: snapshot.id }) }) : [];
@@ -209,5 +246,5 @@ export const onRequestPost = async (context: FunctionContext) => {
     const retryMinutes = runStatus === "succeeded" ? 120 : runStatus === "blocked" ? 1440 : Math.min(30 * 2 ** Math.min(priorAttempts, 6), 1440);
     await supabaseRest(context.env, `ea_crawl_queue?id=eq.${encodeURIComponent(queueId)}`, { method: "PATCH", body: JSON.stringify({ status: runStatus === "partial" ? "failed" : runStatus, last_attempt_at: finishedAt.toISOString(), last_success_at: runStatus === "succeeded" ? finishedAt.toISOString() : undefined, attempts: priorAttempts + 1, last_error: runStatus === "succeeded" ? null : safeText(body?.metadata?.error || runStatus, 500), next_run_at: new Date(finishedAt.getTime() + retryMinutes * 60000).toISOString(), updated_at: finishedAt.toISOString() }) });
   }
-  return Response.json({ runId, status: runStatus, accepted: input.length - errors, errors, catalog, reconciled: results.filter((item) => item.reconciledMatchId).length, results }, { status: runStatus === "failed" || runStatus === "blocked" ? 422 : 202 });
+  return Response.json({ runId, status: runStatus, accepted: input.length - errors, errors, catalog, discovered, reconciled: results.filter((item) => item.reconciledMatchId).length, results }, { status: runStatus === "failed" || runStatus === "blocked" ? 422 : 202 });
 };

@@ -188,6 +188,51 @@ async function ingest(env, item, result) {
   return { httpStatus: response.status, ...payload };
 }
 
+
+/**
+ * Descoberta em lote pelo ranking publico da EA. O dump inicial pegou ~557
+ * clubes de uma unica leitura; o ranking tem muito mais e muda toda temporada.
+ * Uma navegacao por execucao do cron (~5s) rende dezenas de clubes novos.
+ */
+async function discoverFromRankings(env, browser) {
+  const found = new Map();
+  const responseHarvest = [];
+  const page = await browser.newPage();
+  page.on("response", (response) => {
+    const url = response.url();
+    if (!url.startsWith("https://proclubs.ea.com/") || !/leaderboard|rankings|search/i.test(url)) return;
+    responseHarvest.push(response.json().then((payload) => {
+      for (const entry of Array.isArray(payload) ? payload : Object.values(payload || {})) {
+        if (!entry || typeof entry !== "object") continue;
+        const clubId = String(entry.clubId ?? entry.clubID ?? "").trim();
+        const name = String(entry.clubName ?? entry.name ?? "").trim();
+        const platform = String(entry.platform ?? "common-gen5").trim();
+        if (/^\d{1,12}$/.test(clubId) && !found.has(`${platform}:${clubId}`)) {
+          found.set(`${platform}:${clubId}`, { clubId, name, platform });
+        }
+      }
+    }).catch(() => undefined));
+  });
+  try {
+    await page.setUserAgent(BROWSER_USER_AGENT);
+    await page.goto("https://www.ea.com/pt-br/games/ea-sports-fc/clubs/rankings", { waitUntil: "domcontentloaded", timeout: 30000 });
+    for (let elapsed = 0; elapsed < 12000 && found.size === 0; elapsed += 2000) await sleep(2000);
+    await sleep(2000);
+    await Promise.allSettled(responseHarvest);
+  } catch { /* descoberta e best-effort: nunca bloqueia a coleta */ }
+  finally { await page.close().catch(() => undefined); }
+
+  const discoveries = [...found.values()].slice(0, 200);
+  if (!discoveries.length) return { found: 0, sent: 0 };
+  const response = await fetch(`${env.PCA_SITE_URL}/api/internal/ea-discover`, {
+    method: "POST",
+    headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}`, "content-type": "application/json" },
+    body: JSON.stringify({ discoveries }),
+  }).catch(() => null);
+  const payload = response && response.ok ? await response.json().catch(() => ({})) : {};
+  return { found: discoveries.length, sent: payload.created ?? 0 };
+}
+
 async function run(env, requestedClubId = "") {
   if (!env.EA_INGEST_SECRET) throw new Error("EA_INGEST_SECRET_REQUIRED");
   const parsedLimit = Number(env.CRAWL_LIMIT);
@@ -199,7 +244,16 @@ async function run(env, requestedClubId = "") {
   if (!queueResponse.ok) throw new Error(`QUEUE_${queueResponse.status}`);
   const queue = await queueResponse.json();
   const items = Array.isArray(queue.items) ? queue.items.slice(0, limit) : [];
-  if (!items.length) return { status: "idle", processed: 0, results: [] };
+  // Descoberta roda uma vez por execucao, independente da fila ter itens:
+  // e ela que faz o catalogo crescer alem dos clubes ja conhecidos.
+  let discovery = { found: 0, sent: 0 };
+  if (!requestedClubId) {
+    const discoveryBrowser = await puppeteer.launch(env.BROWSER);
+    try { discovery = await discoverFromRankings(env, discoveryBrowser); }
+    catch (error) { console.error(JSON.stringify({ event: "discovery_failed", reason: error instanceof Error ? error.message : "UNKNOWN" })); }
+    finally { await discoveryBrowser.close().catch(() => undefined); }
+  }
+  if (!items.length) return { status: "idle", processed: 0, results: [], discovery };
   // Sequencial de proposito: Browser Rendering limita sessoes concorrentes.
   const results = [];
   for (const item of items) {
@@ -211,7 +265,7 @@ async function run(env, requestedClubId = "") {
       results.push({ status: "failed", clubId: item.clubId, error: error instanceof Error ? error.message : "CRAWL_FAILED" });
     }
   }
-  return { status: results.some((entry) => entry.status === "succeeded") ? "succeeded" : "failed", processed: results.length, results };
+  return { status: results.some((entry) => entry.status === "succeeded") ? "succeeded" : "failed", processed: results.length, results, discovery };
 }
 
 const worker = {
