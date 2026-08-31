@@ -101,6 +101,22 @@ function normalizeMatches(rawMatches, mode, sourceUrl, requestedClubId) {
   return normalized;
 }
 
+// Um clube que nao resolve nao pode derrubar a execucao inteira: falha, registra
+// e o loop segue para o proximo. Sem isto uma pagina pendurada consumia os 25
+// minutos de timeout-minutes do workflow sem produzir nenhuma coleta.
+const CLUB_DEADLINE_MS = Number(process.env.CLUB_DEADLINE_MS || 180000);
+
+function withDeadline(promise, ms, clubId) {
+  let timer;
+  const deadline = new Promise((resolvePromise) => {
+    timer = setTimeout(() => {
+      console.error(`[CRAWLER] Tempo esgotado (${ms}ms) no clube ${clubId}; seguindo para o proximo.`);
+      resolvePromise({ status: "failed", responseCount: 0, modes: [], matches: [], error: `CLUB_DEADLINE_EXCEEDED_${ms}MS` });
+    }, ms);
+  });
+  return Promise.race([promise, deadline]).finally(() => clearTimeout(timer));
+}
+
 async function fetchEaData(page, clubId, platform) {
   const infoUrl = `https://proclubs.ea.com/api/fc/clubs/info?platform=${encodeURIComponent(platform)}&clubIds=${encodeURIComponent(clubId)}`;
   const statsUrl = `https://proclubs.ea.com/api/fc/members/career/stats?platform=${encodeURIComponent(platform)}&clubId=${encodeURIComponent(clubId)}`;
@@ -281,7 +297,9 @@ async function main() {
     if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
 
     for (const item of queueItems) {
-      const result = await crawlClub(page, item);
+      // Teto por clube: sem isto uma pagina que nunca resolve pendura o job ate
+      // o timeout-minutes do workflow (25min) e nenhuma coleta e registrada.
+      const result = await withDeadline(crawlClub(page, item), CLUB_DEADLINE_MS, item.clubId);
 
       // Salva snapshot local
       const snapshotFile = resolve(outDir, `club_${item.clubId}_${item.platform}_latest.json`);
