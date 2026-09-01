@@ -10,6 +10,7 @@ export type CommunityRole = "owner" | "captain" | "player" | "visitor" | "admin"
 export type CommunityPlan = "free" | "pro" | "vip" | "player_pro" | "club_pro" | "club_premium";
 
 export interface CommunityProfile {
+  id: string;
   uid: string;
   displayName: string;
   email: string;
@@ -32,6 +33,24 @@ export interface CommunityProfile {
   plan: CommunityPlan;
   premiumAccess: boolean;
   bonusAccessUntil?: string;
+}
+
+export interface ProfileShowcase {
+  overall: number | null;
+  positions: string[];
+  archetypes: string[];
+  photoUrls: string[];
+  youtubeUrls: string[];
+}
+
+export interface CommunityMemberCard {
+  id: string;
+  name: string;
+  role: CommunityRole;
+  country: string;
+  avatarUrl?: string;
+  club?: { id: string; name: string };
+  player?: { name: string; position: string; overall: number };
 }
 
 export interface ClubReferralSummary {
@@ -69,7 +88,7 @@ type Unsubscribe = () => void;
 
 async function api<T>(path: string, init: RequestInit = {}, authRequired = false): Promise<T> {
   const headers = new Headers(init.headers);
-  headers.set("content-type", "application/json");
+  if (!(init.body instanceof FormData) && !headers.has("content-type")) headers.set("content-type", "application/json");
   const user = getFirebaseAuth()?.currentUser;
   if (authRequired) {
     if (!user) throw new Error("AUTH_REQUIRED");
@@ -149,6 +168,24 @@ export async function getCommunityProfile(): Promise<CommunityProfile | null> {
 
 export function saveCommunityPreferences(input: { country: string; locale: string }) {
   return api<CommunityProfile>("/api/community/profile", { method: "PATCH", body: JSON.stringify(input) }, true);
+}
+
+export function getProfileShowcase() {
+  return api<ProfileShowcase>("/api/community/showcase", {}, true);
+}
+
+export function saveProfileShowcase(input: ProfileShowcase) {
+  return api<ProfileShowcase>("/api/community/showcase", { method: "PATCH", body: JSON.stringify(input) }, true);
+}
+
+export function uploadShowcasePhoto(file: File) {
+  const form = new FormData();
+  form.append("photo", file);
+  return api<{ url: string }>("/api/community/showcase/upload", { method: "POST", body: form }, true);
+}
+
+export function listCommunityMembers() {
+  return api<CommunityMemberCard[]>("/api/community/profiles");
 }
 
 export function getPushConfig() {

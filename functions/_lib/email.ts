@@ -40,8 +40,8 @@ function shell(env: EmailEnv, title: string, body: string, unsubscribeUrl?: stri
     '<!doctype html><html lang="pt-BR"><body style="margin:0;background:#061329;font-family:Inter,Arial,sans-serif;color:#f5f8ff">',
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">',
     '<table role="presentation" width="100%" style="max-width:560px;background:#0d2d59;border:1px solid #254a78">',
-    '<tr><td style="padding:24px 26px;border-bottom:1px solid #254a78">',
-    `<a href="${site}" style="color:#ffc83d;font-size:13px;font-weight:700;letter-spacing:.14em;text-decoration:none">PRO CLUBS AMERICA</a></td></tr>`,
+    '<tr><td style="padding:22px 26px;border-bottom:1px solid #254a78">',
+    `<a href="${site}" style="display:inline-flex;vertical-align:middle;color:#ffc83d;font-size:13px;font-weight:700;letter-spacing:.14em;text-decoration:none"><img src="${site}/brand/pro-clubs-america-192.png" width="42" height="42" alt="Pro Clubs America" style="display:inline-block;vertical-align:middle;margin-right:11px;border:0">PRO CLUBS AMERICA</a></td></tr>`,
     '<tr><td style="padding:28px 26px">',
     `<h1 style="margin:0 0 14px;font-size:22px;line-height:1.3;color:#fff">${title}</h1>`,
     body,
@@ -66,11 +66,12 @@ export function renderEmail(env: EmailEnv, flow: EmailFlow, input: { name: strin
   switch (flow) {
     case "welcome_d0":
       return {
-        subject: "Bem-vindo ao Pro Clubs America — vincule seu perfil EA",
-        html: shell(env, `Boas-vindas, ${first}!`, [
-          paragraph("Sua conta esta ativa. Falta um passo para o portal funcionar de verdade para voce."),
-          paragraph(`${strong("Vincule seu perfil do EA SPORTS FC Clubs")} e passamos a importar automaticamente suas partidas, gols, assistencias e notas.`),
-          button(`${site}/conta/`, "Vincular meu perfil EA"),
+        subject: "Bem-vindo ao Pro Clubs America. Seu próximo time está aqui.",
+        html: shell(env, `Seu vestiário está aberto, ${first}.`, [
+          paragraph("Agora você faz parte da comunidade independente de Pro Clubs da América do Sul."),
+          '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0;background:#082248;border:1px solid #254a78"><tr><td style="padding:16px 14px;width:33.33%;border-right:1px solid #254a78"><span style="display:block;color:#ffc83d;font-size:10px;font-weight:700;letter-spacing:.1em">01 · PERFIL</span><span style="display:block;margin-top:5px;color:#d9e6f8;font-size:12px;line-height:1.45">Mostre seu boneco e os seus melhores lances.</span></td><td style="padding:16px 14px;width:33.33%;border-right:1px solid #254a78"><span style="display:block;color:#ffc83d;font-size:10px;font-weight:700;letter-spacing:.1em">02 · MERCADO</span><span style="display:block;margin-top:5px;color:#d9e6f8;font-size:12px;line-height:1.45">Encontre vaga ou divulgue seu time.</span></td><td style="padding:16px 14px;width:33.33%"><span style="display:block;color:#ffc83d;font-size:10px;font-weight:700;letter-spacing:.1em">03 · AMISTOSOS</span><span style="display:block;margin-top:5px;color:#d9e6f8;font-size:12px;line-height:1.45">Escolha um rival e entre em campo.</span></td></tr></table>',
+          paragraph(`${strong("Comece vinculando seu perfil do EA SPORTS FC Clubs.")} Assim suas estatísticas, posições e partidas ganham contexto dentro da comunidade.`),
+          button(`${site}/conta/`, "Montar meu perfil"),
         ].join("")),
       };
     case "welcome_d2":

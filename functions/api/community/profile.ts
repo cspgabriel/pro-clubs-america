@@ -1,4 +1,4 @@
-import { apiError, verifyFirebaseRequest, type BillingEnv, type FunctionContext } from "../../_lib/billing";
+import { apiError, assertSameOrigin, verifyFirebaseRequest, type BillingEnv, type FunctionContext } from "../../_lib/billing";
 import { ensureProfile, findClubById, publicRouteId, supabaseRest, type SupabaseProfile } from "../../_lib/supabase";
 
 interface ClaimRow { id: string; status: string; club_id: string; created_at: string }
@@ -9,6 +9,7 @@ async function profilePayload(env: BillingEnv, profile: SupabaseProfile) {
   const claims = await supabaseRest<ClaimRow[]>(env, `club_claims?profile_id=eq.${encodeURIComponent(profile.id)}&order=created_at.desc&limit=1`);
   const pending = claims[0]?.status === "pending_review" ? await findClubById(env, claims[0].club_id) : null;
   return {
+    id: profile.id,
     uid: profile.firebase_uid,
     displayName: profile.full_name || profile.email.split("@")[0],
     email: profile.email,
@@ -54,6 +55,7 @@ export const onRequestPost = onRequestGet;
 
 export const onRequestPatch = async (context: FunctionContext) => {
   try {
+    assertSameOrigin(context.request, context.env.SITE_URL);
     const { profile } = await authenticated(context);
     const body = await context.request.json() as { country?: string; locale?: string };
     const country = String(body.country || "brasil").slice(0, 40);

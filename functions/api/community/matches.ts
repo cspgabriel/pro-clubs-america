@@ -19,6 +19,7 @@ export const onRequestPost = async ({ request, env, waitUntil }: FunctionContext
     const profile = await ensureProfile(env, identity, identity.name);
     const body = await request.json() as { hostClubId?: string; mode?: "open" | "invite"; date?: string; time?: string; region?: string; invitedClubId?: string };
     if (!profile.club_id) return apiError("Cadastre ou vincule seu clube em /cadastro antes de publicar um desafio.", 403);
+    if (!['owner', 'captain', 'admin'].includes(profile.role)) return apiError("Somente dono ou capitão do clube pode publicar um desafio.", 403);
     const home = await findClubById(env, profile.club_id);
     if (!home) return apiError("Clube vinculado não encontrado no catálogo.", 404);
     const requestedHost = body.hostClubId ? await resolveClubRoute(env, String(body.hostClubId)) : home;

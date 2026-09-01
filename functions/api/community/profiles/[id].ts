@@ -4,6 +4,7 @@ import { findClubById, publicRouteId, supabaseRest } from "../../../_lib/supabas
 type ProfileContext = FunctionContext & { params: { id: string } };
 interface PublicProfile { id: string; full_name: string | null; role: string; country_slug: string | null; avatar_url: string | null; club_id: string | null; player_id: string | null; }
 interface PublicPlayer { gamertag: string; favorite_position: string; rating: number; games_played: number; goals: number; assists: number; tackles_made: number; win_rate: number; }
+interface ShowcaseRow { overall: number | null; positions: string[] | null; archetypes: string[] | null; photo_urls: string[] | null; youtube_urls: string[] | null; }
 
 export const onRequestGet = async ({ env, params }: ProfileContext) => {
   try {
@@ -11,6 +12,7 @@ export const onRequestGet = async ({ env, params }: ProfileContext) => {
     if (!profile) return apiError("Perfil não encontrado.", 404);
     const club = profile.club_id ? await findClubById(env, profile.club_id) : null;
     const player = profile.player_id ? (await supabaseRest<PublicPlayer[]>(env, `players?id=eq.${encodeURIComponent(profile.player_id)}&select=gamertag,favorite_position,rating,games_played,goals,assists,tackles_made,win_rate&limit=1`))[0] : null;
-    return Response.json({ id: profile.id, name: profile.full_name || "Jogador", role: profile.role, country: profile.country_slug || "brasil", avatarUrl: profile.avatar_url, club: club ? { id: publicRouteId(club), name: club.name } : null, player: player ? { id: player.gamertag, name: player.gamertag, position: player.favorite_position, overall: player.rating, matches: player.games_played, goals: player.goals, assists: player.assists, tackles: player.tackles_made, winRate: player.win_rate } : null }, { headers: { "cache-control": "public, max-age=60" } });
+    const showcase = (await supabaseRest<ShowcaseRow[]>(env, `profile_showcases?profile_id=eq.${encodeURIComponent(profile.id)}&select=overall,positions,archetypes,photo_urls,youtube_urls&limit=1`))[0];
+    return Response.json({ id: profile.id, name: profile.full_name || "Jogador", role: profile.role, country: profile.country_slug || "brasil", avatarUrl: profile.avatar_url, club: club ? { id: publicRouteId(club), name: club.name } : null, player: player ? { id: player.gamertag, name: player.gamertag, position: player.favorite_position, overall: player.rating, matches: player.games_played, goals: player.goals, assists: player.assists, tackles: player.tackles_made, winRate: player.win_rate } : null, showcase: { overall: showcase?.overall ?? null, positions: showcase?.positions ?? [], archetypes: showcase?.archetypes ?? [], photoUrls: showcase?.photo_urls ?? [], youtubeUrls: showcase?.youtube_urls ?? [] } }, { headers: { "cache-control": "public, max-age=60" } });
   } catch { return apiError("Não foi possível carregar o perfil.", 500); }
 };

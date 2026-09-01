@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { UserRoundSearch, ArrowRight, BarChart3, BriefcaseBusiness, CalendarDays, Clock3, Goal, MapPin, Radio, Search, Shield, Swords, Trophy, Users } from "lucide-react";
 import type { PlayerRanking } from "@/types/domain";
 import { observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
-import { getCommunityProfile, watchFriendlies, type CommunityProfile } from "@/lib/community-service";
+import { getCommunityProfile, listCommunityMembers, watchFriendlies, type CommunityMemberCard, type CommunityProfile } from "@/lib/community-service";
 import type { FriendlyRequest } from "@/lib/friendlies";
 import { PlatformHeader } from "./platform-header";
 import { MobileNav } from "./mobile-nav";
@@ -23,8 +23,8 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
   const [profile, setProfile] = useState<CommunityProfile | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [openChallenges, setOpenChallenges] = useState<FriendlyRequest[]>([]);
+  const [members, setMembers] = useState<CommunityMemberCard[]>([]);
   const [query, setQuery] = useState("");
-  const [featured, setFeatured] = useState(0);
   const term = query.trim().toLocaleLowerCase("pt-BR");
   const matchingClubs = useMemo(() => term ? availableClubs.filter((club) => club.name.toLocaleLowerCase("pt-BR").includes(term) || club.id.toLocaleLowerCase("pt-BR").includes(term)).slice(0, 6) : [], [availableClubs, term]);
   const matchingPlayers = useMemo(() => term ? players.filter((player) => player.name.toLocaleLowerCase("pt-BR").includes(term) || player.clubName?.toLocaleLowerCase("pt-BR").includes(term)).slice(0, 6) : [], [players, term]);
@@ -33,12 +33,6 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
   const topAssists = useMemo(() => reliablePlayers.slice().sort((a, b) => (b.assists ?? 0) - (a.assists ?? 0)).slice(0, 5), [reliablePlayers]);
   const topTackles = useMemo(() => reliablePlayers.filter((player) => player.tacklesMade != null).slice().sort((a, b) => (b.tacklesMade ?? 0) - (a.tacklesMade ?? 0)).slice(0, 5), [reliablePlayers]);
   const topClubs = useMemo(() => availableClubs.filter((club) => club.platform === "common-gen5" && (club.rank ?? 0) > 0).slice().sort((a, b) => (a.rank ?? 999999) - (b.rank ?? 999999)).slice(0, 5), [availableClubs]);
-  const slides = [
-    { kicker: "MARCAR AMISTOSO", title: "Encontre um adversário", text: "Publique um horário ou desafie diretamente outro clube da comunidade.", href: "/partidas/amistosos#buscar-amistoso", action: "Buscar amistoso" },
-    { kicker: "RANKING DE JOGADORES", title: "Veja os artilheiros", text: "Compare gols, assistências, desarmes e aproveitamento por atleta.", href: "/rankings/jogadores/artilharia", action: "Ver artilharia" },
-    { kicker: "RANKING DE CLUBES", title: "Os melhores times", text: "Classificação de clubes e times cadastrados com dados públicos da EA.", href: "/rankings/clubes/artilharia", action: "Ver clubes" },
-    { kicker: "MERCADO", title: "Reforce seu elenco", text: "Divulgue vagas abertas ou mostre que você está procurando um clube.", href: "/mercado", action: "Abrir mercado" },
-  ];
 
   function openFirstResult() {
     const club = matchingClubs[0]; const player = matchingPlayers[0];
@@ -47,17 +41,13 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
     else if (term) router.push(`/clubes?termo=${encodeURIComponent(query.trim())}`);
   }
 
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setInterval(() => setFeatured((current) => (current + 1) % slides.length), 5000);
-    return () => window.clearInterval(timer);
-  }, [slides.length]);
-
   useEffect(() => observeAuth((value) => {
     setUser(value); setAuthReady(true);
     if (!value) { setProfile(null); router.replace("/entrar?next=/inicio"); }
     else getCommunityProfile().then(setProfile).catch(() => setProfile(null));
   }), [router]);
+
+  useEffect(() => { listCommunityMembers().then(setMembers).catch(() => setMembers([])); }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -72,13 +62,10 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
   return (
     <main className="app-shell">
       <PlatformHeader />
-      <section className="featured-slider" aria-label="Destaques">
-        <Image className="featured-stadium" src="/brand/home-stadium.png" alt="" fill sizes="100vw" priority />
-        <div className="featured-track" key={featured}>
-          <div><small>{slides[featured].kicker}</small><h2>{slides[featured].title}</h2><p>{slides[featured].text}</p></div>
-          <Link href={slides[featured].href}>{slides[featured].action}<ArrowRight /></Link>
-        </div>
-        <div className="featured-dots" aria-label="Selecionar destaque">{slides.map((slide, index) => <button type="button" aria-label={`Mostrar ${slide.title}`} aria-current={index === featured} className={index === featured ? "active" : ""} onClick={() => setFeatured(index)} key={slide.title} />)}</div>
+      <section className="community-home-lead">
+        <div className="community-home-copy"><small>COMUNIDADE EM CAMPO</small><h1>Encontre gente para jogar hoje.</h1><p>Conheça os clubes e jogadores que já chegaram à plataforma. Depois, escolha: reforçar o elenco ou marcar o próximo amistoso.</p></div>
+        <div className="home-action-duo"><Link href="/mercado"><BriefcaseBusiness /><span><small>MERCADO</small><strong>Montar o elenco</strong><em>Vagas e jogadores livres <ArrowRight /></em></span></Link><Link href="/partidas/amistosos#desafios-abertos"><Swords /><span><small>AMISTOSOS</small><strong>Encontrar rival</strong><em>Ver desafios abertos <ArrowRight /></em></span></Link></div>
+        <div className="home-community-rows"><section><header><div><small>TIMES NA PLATAFORMA</small><h2>Clubes para conhecer</h2></div><Link href="/clubes">Ver todos <ArrowRight /></Link></header><div className="home-community-clubs">{topClubs.slice(0, 4).map((club) => <Link href={`/club/${club.id}`} key={club.id}><Image src={club.crestUrl} alt="" width={42} height={42} unoptimized /><span><strong>{club.name}</strong><small>SR {club.skillRating ?? "—"} · #{club.rank ?? "—"}</small></span><ArrowRight /></Link>)}</div></section><section><header><div><small>MEMBROS RECENTES</small><h2>Jogadores para entrar</h2></div><Link href="/mercado">Abrir mercado <ArrowRight /></Link></header><div className="home-community-members">{members.slice(0, 4).map((member) => <Link href={`/perfil?id=${member.id}`} key={member.id}>{member.avatarUrl ? <img src={member.avatarUrl} alt="" /> : <b>{member.name.slice(0, 1).toUpperCase()}</b>}<span><strong>{member.name}</strong><small>{member.player ? `${member.player.position} · OVR ${member.player.overall}` : member.club?.name ?? "Perfil da comunidade"}</small></span><ArrowRight /></Link>)}{!members.length && <span className="home-members-empty">Os próximos perfis aparecerão aqui.</span>}</div></section></div>
       </section>
       <section className="market-hero" id="buscar">
         <div className="member-greeting"><BrandLogo size={94} /><div><small>PRO CLUBS AMERICA</small><h1>Olá, {user.name.split(" ")[0]}.</h1><p>{profile?.clubName ? <>Seu clube <strong>{profile.clubName}</strong> está pronto para competir.</> : "Encontre um clube, publique uma oportunidade ou comece seu próprio time."}</p></div></div>
