@@ -47,7 +47,7 @@ export function MarketHome({ players, availableClubs }: { players: HomePlayer[];
     else getCommunityProfile().then(setProfile).catch(() => setProfile(null));
   }), [router]);
 
-  useEffect(() => { listCommunityMembers().then(setMembers).catch(() => setMembers([])); }, []);
+  useEffect(() => { listCommunityMembers().then((directory) => setMembers(directory.members)).catch(() => setMembers([])); }, []);
 
   useEffect(() => {
     if (!user) return;

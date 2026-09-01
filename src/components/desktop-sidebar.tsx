@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BarChart3, BriefcaseBusiness, Crosshair, Crown, ExternalLink, Globe2, Goal, Handshake, Home, Percent, Search, Shield, ShieldCheck, ShoppingBag, Swords, UserPlus, UserRound, Users } from "lucide-react";
+import { BarChart3, BriefcaseBusiness, Crosshair, Crown, Download, ExternalLink, Globe2, Goal, Handshake, Home, Percent, Search, Shield, ShieldCheck, ShoppingBag, Swords, UserPlus, UserRound, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { BrandLogo } from "./brand-logo";
 
@@ -9,7 +9,7 @@ export const navigationGroups = [
   { label: "EXPLORAR", items: [
     { href: "/inicio", label: "Início", icon: Home, tone: "gold" },
     { href: "/buscar", label: "Buscar", icon: Search, tone: "cyan" },
-    { href: "/clubes", label: "Clubes", icon: Shield, tone: "blue" },
+    { href: "/clubes", label: "Comunidade", icon: Shield, tone: "blue" },
     { href: "/jogadores", label: "Jogadores", icon: Users, tone: "violet" },
   ] },
   { label: "COMPETIÇÃO", items: [
@@ -27,6 +27,7 @@ export const navigationGroups = [
   ] },
   { label: "CONTA E PLANOS", items: [
     { href: "/conta", label: "Minha conta", icon: UserRound, tone: "cyan" },
+    { href: "/instalar", label: "Instalar app", icon: Download, tone: "gold" },
     { href: "/planos", label: "Planos", icon: Crown, tone: "gold" },
   ] },
 ];

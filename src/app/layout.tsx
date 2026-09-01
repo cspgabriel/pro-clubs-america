@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   title: "Pro Clubs America | EA SPORTS FC Clubs",
   description: "Comunidade sul-americana de Pro Clubs: clubes, jogadores, amistosos e rankings.",
   manifest: "/manifest.webmanifest",
+  icons: { apple: "/brand/pro-clubs-america-192.png" },
   appleWebApp: { capable: true, title: "Pro Clubs America", statusBarStyle: "black-translucent" },
 };
 

@@ -53,6 +53,9 @@ export interface CommunityMemberCard {
   player?: { name: string; position: string; overall: number };
 }
 
+export interface CommunityClubCard { id: string; name: string; memberCount: number; }
+export interface CommunityDirectory { members: CommunityMemberCard[]; clubs: CommunityClubCard[]; }
+
 export interface ClubReferralSummary {
   code: string;
   inviteUrl: string;
@@ -185,7 +188,7 @@ export function uploadShowcasePhoto(file: File) {
 }
 
 export function listCommunityMembers() {
-  return api<CommunityMemberCard[]>("/api/community/profiles");
+  return api<CommunityDirectory>("/api/community/profiles");
 }
 
 export function getPushConfig() {
