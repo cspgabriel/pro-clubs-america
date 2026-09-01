@@ -1,4 +1,4 @@
-import { apiError, assertSameOrigin, verifyFirebaseRequest, type BillingEnv, type FunctionContext } from "../../_lib/billing";
+import { apiError, assertSameOrigin, verifyFirebaseRequest, type FunctionContext } from "../../_lib/billing";
 import { ensureProfile, supabaseRest } from "../../_lib/supabase";
 
 interface ShowcaseRow {
