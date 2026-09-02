@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Pro Clubs America",
     short_name: "Clubs America",
     description: "Comunidade sul-americana de clubes, jogadores, estatísticas e amistosos de Pro Clubs.",
-    start_url: "/",
+    start_url: "/inicio",
     display: "standalone",
     background_color: "#061329",
     theme_color: "#0d2347",

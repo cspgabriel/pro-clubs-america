@@ -136,6 +136,12 @@ export async function findClubByEa(env: SupabaseEnv, platform: string, eaClubId:
   return rows[0] ?? null;
 }
 
+export async function findClubByPublicRouteId(env: SupabaseEnv, routeId: string) {
+  const prefixed = routeId.match(/^(common-gen4|nx)-(.+)$/);
+  if (prefixed) return findClubByEa(env, prefixed[1], prefixed[2]);
+  return findClubByEa(env, "common-gen5", routeId);
+}
+
 export function publicRouteId(club: SupabaseClub) {
   return club.platform === "common-gen5" ? club.ea_club_id : `${club.platform}-${club.ea_club_id}`;
 }

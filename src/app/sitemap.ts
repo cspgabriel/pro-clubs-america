@@ -10,7 +10,7 @@ const STATIC_ROUTES: Array<{ path: string; priority: number; changeFrequency: Me
   { path: "/jogadores", priority: 0.9, changeFrequency: "daily" },
   { path: "/rankings/times", priority: 0.8, changeFrequency: "daily" },
   { path: "/rankings/comunidade", priority: 0.7, changeFrequency: "daily" },
-  { path: "/amistosos", priority: 0.7, changeFrequency: "hourly" },
+  { path: "/partidas/amistosos", priority: 0.7, changeFrequency: "hourly" },
   { path: "/mercado", priority: 0.7, changeFrequency: "hourly" },
   { path: "/partidas", priority: 0.6, changeFrequency: "daily" },
   { path: "/buscar", priority: 0.5, changeFrequency: "weekly" },
