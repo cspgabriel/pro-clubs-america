@@ -46,7 +46,7 @@ export function CommunityProfilePage() {
   }, [id]);
 
   const videoIds = useMemo(() => profile?.showcase.youtubeUrls.map(youtubeId).filter((video): video is string => Boolean(video)) ?? [], [profile]);
-  const overall = profile?.showcase.overall ?? profile?.player?.overall ?? null;
+  const overall = profile?.showcase.overall ?? (profile?.player && profile.player.overall >= 20 ? profile.player.overall : null);
   const stats = profile ? [
     { label: "OVR", value: overall ?? "—" },
     { label: "Jogos", value: profile.player?.matches ?? "—" },

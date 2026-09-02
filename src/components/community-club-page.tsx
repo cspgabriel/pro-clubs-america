@@ -56,7 +56,7 @@ export function CommunityClubPage() {
         <header><div><small>ELENCO NA PLATAFORMA</small><h2>{club.members.length} {club.members.length === 1 ? "membro" : "membros"} cadastrados</h2></div><span>{club.platform === "common-gen4" ? "PS4 / Xbox One" : "PS5 / Xbox Series / PC"}</span></header>
         {club.members.length ? <div>{club.members.map((member) => <Link href={`/perfil?id=${encodeURIComponent(member.id)}`} key={member.id}>
           {member.avatarUrl ? <img src={member.avatarUrl} alt="" /> : <b>{member.name.slice(0, 1).toUpperCase()}</b>}
-          <span><strong>{member.name} <CountryFlag country={member.country} /></strong><small>{roleLabel(member.role)}{member.player ? ` · ${member.player.position} · OVR ${member.player.overall}` : " · Perfil da comunidade"}</small></span><ArrowRight />
+          <span><strong>{member.name} <CountryFlag country={member.country} /></strong><small>{roleLabel(member.role)}{member.player ? ` · ${member.player.position} · ${member.player.overall >= 20 ? `OVR ${member.player.overall}` : `Nota ${member.player.overall}`}` : " · Perfil da comunidade"}</small></span><ArrowRight />
         </Link>)}</div> : <div className="community-club-empty"><Users /><strong>O elenco ainda está sendo montado</strong><span>Este clube já está na plataforma. Os jogadores aparecerão aqui conforme entrarem no time.</span></div>}
       </section>
     </> : <section className="member-home-loading"><Users /><span>{error || "Carregando clube…"}</span>{error && <Link href="/clubes">Voltar para a comunidade</Link>}</section>}
