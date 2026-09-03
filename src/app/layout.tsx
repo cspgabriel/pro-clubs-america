@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   title: { default: "Pro Clubs America | Comunidade de Pro Clubs", template: "%s | Pro Clubs America" },
   description: "Comunidade latino-americana de Pro Clubs para encontrar clubes, jogadores, mercado de transferências e amistosos no EA SPORTS FC.",
   manifest: "/manifest.webmanifest",
+  verification: { google: "oiUqm-7SwP9_PLm3GuSpfS96JVW8GFpbIhD8etY9mgY" },
   icons: { icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/brand/pro-clubs-america-192.png", type: "image/png", sizes: "192x192" }], apple: "/brand/pro-clubs-america-192.png" },
   appleWebApp: { capable: true, title: "Pro Clubs America", statusBarStyle: "black-translucent" },
   applicationName: "Pro Clubs America",
