@@ -10,6 +10,7 @@ export interface SupabaseProfile {
   full_name: string | null;
   country_slug: string | null;
   locale: string | null;
+  onboarding_completed_at?: string | null;
   role: "visitor" | "player" | "captain" | "owner" | "admin";
   plan: "free" | "pro" | "vip" | "player_pro" | "club_pro" | "club_premium";
   reliability: number;
@@ -89,9 +90,10 @@ function createReferralCode() {
 export async function ensureProfile(env: SupabaseEnv, identity: { uid: string; email?: string }, displayName?: string) {
   const existing = await findProfile(env, identity.uid);
   if (existing) {
-    if (existing.referral_code) return existing;
+    const refreshName = displayName && (!existing.full_name || existing.full_name === existing.email.split("@")[0]);
+    if (existing.referral_code && !refreshName) return existing;
     const rows = await supabaseRest<SupabaseProfile[]>(env, `profiles?id=eq.${encodeURIComponent(existing.id)}`, {
-      method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify({ referral_code: createReferralCode(), updated_at: new Date().toISOString() }),
+      method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify({ referral_code: existing.referral_code || createReferralCode(), ...(refreshName ? { full_name: displayName } : {}), updated_at: new Date().toISOString() }),
     });
     return rows[0] ?? existing;
   }

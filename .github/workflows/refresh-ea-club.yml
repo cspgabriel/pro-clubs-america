@@ -1,0 +1,33 @@
+name: Refresh one indexed EA club
+
+on:
+  workflow_dispatch:
+    inputs:
+      club_id:
+        description: EA club ID in common-gen5
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ea-public-crawler
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Refresh public statistics through the existing collector
+        env:
+          CLUB_ID: ${{ inputs.club_id }}
+          EA_INGEST_SECRET: ${{ secrets.EA_INGEST_SECRET }}
+        run: |
+          [[ "$CLUB_ID" =~ ^[0-9]{1,12}$ ]] || exit 1
+          curl --fail-with-body --max-time 360 --silent --show-error \
+            "https://pro-clubs-america-ea-crawler.cspgabriel.workers.dev/?clubId=$CLUB_ID" \
+            -H "authorization: Bearer $EA_INGEST_SECRET" \
+            | tee refresh-result.json
+          jq -e '.status == "succeeded" and .results[0].ingestStatus == "succeeded"' refresh-result.json

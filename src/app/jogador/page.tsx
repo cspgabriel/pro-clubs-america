@@ -1,2 +1,3 @@
 import { PlayerRouteResolver } from "@/components/profile-resolvers";
-export default function Page() { return <PlayerRouteResolver />; }
+import { Suspense } from "react";
+export default function Page() { return <Suspense fallback={<p>Carregando jogador…</p>}><PlayerRouteResolver /></Suspense>; }

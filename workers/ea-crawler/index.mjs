@@ -1,6 +1,7 @@
 import puppeteer from "@cloudflare/puppeteer";
+import { normalizeEaPlayers } from "../../scripts/lib/ea-player-stats.mjs";
 
-const PARSER_VERSION = "cloudflare-browser-public-page-v12";
+const PARSER_VERSION = "cloudflare-browser-public-page-v13";
 const USER_AGENT = "ProClubsAmericaCrawler/1.0 (+https://proclubsamerica.com)";
 const BROWSER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -29,17 +30,6 @@ function playedAt(value) {
   return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
 }
 
-function players(payload, clubIds) {
-  if (!payload || typeof payload !== "object") return [];
-  return clubIds.flatMap((clubId) => {
-    const collection = payload[clubId] || {};
-    return (Array.isArray(collection) ? collection : Object.values(collection)).flatMap((player) => {
-      const name = safeText(player?.playername || player?.playerName || player?.name || player?.eaId);
-      return name ? [{ playerId: safeText(player.playerId || player.nucleusId || name), playerName: name, position: safeText(player.pos || player.position || player.favoritePosition), goals: safeNumber(player.goals), assists: safeNumber(player.assists), rating: player.rating == null ? undefined : safeNumber(player.rating), shots: player.shots == null ? undefined : safeNumber(player.shots), passesMade: player.passesMade == null ? undefined : safeNumber(player.passesMade), passAttempts: player.passAttempts == null ? undefined : safeNumber(player.passAttempts), tacklesMade: player.tacklesMade == null ? undefined : safeNumber(player.tacklesMade), tackleAttempts: player.tackleAttempts == null ? undefined : safeNumber(player.tackleAttempts), redCards: player.redCards == null ? undefined : safeNumber(player.redCards), saves: player.saves == null ? undefined : safeNumber(player.saves), cleanSheet: Boolean(player.cleanSheet || player.cleanSheets) }] : [];
-    });
-  });
-}
-
 function normalize(payload, mode, sourceUrl, requestedClubId) {
   return listMatches(payload).flatMap((raw) => {
     const clubRows = raw?.clubs && typeof raw.clubs === "object" ? Object.entries(raw.clubs).map(([id, club]) => ({ id: safeText(club?.clubId || id), ...club })) : [];
@@ -48,7 +38,7 @@ function normalize(payload, mode, sourceUrl, requestedClubId) {
     const [home, away] = clubRows;
     const date = playedAt(raw.timestamp || raw.playedAt || raw.matchTimestamp || raw.date);
     if (!date) return [];
-    return [{ mode, playedAt: date, homeClubId: home.id, homeClubName: safeText(home.name || home.clubName || home.details?.name, `Clube ${home.id}`), awayClubId: away.id, awayClubName: safeText(away.name || away.clubName || away.details?.name, `Clube ${away.id}`), homeScore: safeNumber(home.goals ?? home.score), awayScore: safeNumber(away.goals ?? away.score), competition: "EA SPORTS FC Clubs", sourceUrl, players: players(raw.players, [home.id, away.id]) }];
+    return [{ sourceMatchId: safeText(raw.matchId), mode, playedAt: date, homeClubId: home.id, homeClubName: safeText(home.name || home.clubName || home.details?.name, `Clube ${home.id}`), awayClubId: away.id, awayClubName: safeText(away.name || away.clubName || away.details?.name, `Clube ${away.id}`), homeScore: safeNumber(home.goals ?? home.score), awayScore: safeNumber(away.goals ?? away.score), competition: "EA SPORTS FC Clubs", sourceUrl, players: normalizeEaPlayers(raw.players, [home.id, away.id]) }];
   });
 }
 

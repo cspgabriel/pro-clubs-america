@@ -7,6 +7,6 @@ import { ProfileNudge } from "./profile-nudge";
 
 export function AppChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const publicLanding = pathname === "/";
+  const publicLanding = pathname === "/" || pathname.replace(/\/$/, "") === "/onboarding";
   return <>{!publicLanding && <><DesktopSidebar /><MobileSidebar /><ProfileNudge /></>}{children}</>;
 }

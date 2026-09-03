@@ -33,7 +33,10 @@ export function CommunityHome({ requireAuth = false }: { requireAuth?: boolean }
       if (requireAuth) router.replace("/entrar?next=/inicio");
       return;
     }
-    getCommunityProfile().then(setProfile).catch(() => setProfile(null));
+    getCommunityProfile().then((value) => {
+      setProfile(value);
+      if (requireAuth && value && !value.onboardingCompleted) router.replace("/onboarding");
+    }).catch(() => setProfile(null));
   }), [requireAuth, router]);
   useEffect(() => { listCommunityMembers().then((directory) => { setMembers(directory.members); setClubs(directory.clubs); }).catch(() => { setMembers([]); setClubs([]); }); }, []);
   useEffect(() => { if (!user) return; return watchFriendlies((items) => setChallenges(items.filter((item) => item.mode === "open" && item.status === "searching").slice(0, 6)), () => setChallenges([])); }, [user]);

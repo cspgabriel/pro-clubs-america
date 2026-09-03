@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { ArrowRight, CalendarCheck, CheckCircle2, ExternalLink, Link2, LogOut, Mail, Settings2, Shield, Target, UserRound, Users } from "lucide-react";
 import { logout, observeAuth, type AuthUserSnapshot } from "@/lib/auth-client";
-import { getCommunityProfile, linkEaPlayer, saveCommunityPreferences, type CommunityProfile } from "@/lib/community-service";
-import { countries, locales } from "@/lib/i18n";
+import { getCommunityProfile, linkEaPlayer, type CommunityProfile } from "@/lib/community-service";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
 import { CountryFlag } from "./country-flag";
@@ -33,97 +32,4 @@ export function AccountPage() {
     <NotificationSettings />
     <button className="account-logout" onClick={exit}><LogOut /> Sair da conta</button>
   </> : <article><h2>Identificação necessária</h2><p>Crie uma conta ou entre com Google/e-mail.</p><Link href="/entrar">Entrar <ArrowRight /></Link></article>}</div><MobileNav /></main>;
-}
-
-export function OnboardingPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<AuthUserSnapshot | null>(null);
-  const [authReady, setAuthReady] = useState(false);
-  const [country, setCountry] = useState("brasil");
-  const [locale, setLocale] = useState("pt-br");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  // Passo 1 e vincular a EA: sem isso o perfil fica vazio e o produto nao entrega nada.
-  // Pais/idioma viraram um ajuste opcional no fim, nao a primeira pergunta.
-  const [step, setStep] = useState<"ea" | "preferences">("ea");
-  const [linked, setLinked] = useState<{ playerName: string; clubName: string; matches: number; goals: number; assists: number } | null>(null);
-
-  useEffect(() => observeAuth((value) => {
-    setUser(value);
-    setAuthReady(true);
-    if (!value) { router.replace("/entrar"); return; }
-    getCommunityProfile().then((profile) => {
-      if (!profile) return;
-      setCountry(profile.country || "brasil");
-      setLocale(profile.locale || "pt-br");
-      if (profile.playerId) setStep("preferences");
-    }).catch(() => undefined);
-  }), [router]);
-
-  async function linkEa(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    setBusy(true); setError("");
-    try {
-      const result = await linkEaPlayer({ eaUrl: String(form.get("eaUrl")), gamertag: String(form.get("gamertag")) });
-      setLinked({ playerName: result.playerName, clubName: result.clubName, matches: result.matches, goals: result.goals, assists: result.assists });
-      setStep("preferences");
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Não foi possível vincular. Confira o link do seu clube na EA.");
-    } finally { setBusy(false); }
-  }
-
-  async function finish(event: FormEvent) {
-    event.preventDefault();
-    setBusy(true); setError("");
-    try { await saveCommunityPreferences({ country, locale }); router.push("/inicio"); }
-    catch { setError("Não foi possível salvar seu perfil. Entre novamente e tente de novo."); }
-    finally { setBusy(false); }
-  }
-
-  if (!authReady || !user) return <main className="member-home-loading"><UserRound /><span>Carregando sua conta…</span></main>;
-
-  return <main className="app-shell"><PlatformHeader /><div className="onboarding-layout">
-    <section>
-      <Link2 />
-      <small>PASSO {step === "ea" ? "1" : "2"} DE 2</small>
-      <h1>{step === "ea" ? "Conecte seu perfil da EA" : "Quase lá"}</h1>
-      <p>{step === "ea"
-        ? "É o que faz o portal funcionar: importamos automaticamente suas partidas, gols, assistências e notas — e você passa a aparecer nos rankings."
-        : "Seu perfil já está ativo. Ajuste país e idioma e entre na comunidade."}</p>
-      {linked && <div className="onboarding-preview">
-        <strong>{linked.playerName}</strong>
-        <span>{linked.clubName}</span>
-        <div><b>{linked.matches}</b><small>PARTIDAS</small></div>
-        <div><b>{linked.goals}</b><small>GOLS</small></div>
-        <div><b>{linked.assists}</b><small>ASSIST.</small></div>
-      </div>}
-    </section>
-
-    {step === "ea" ? <form onSubmit={linkEa}>
-      <span>VINCULAR JOGADOR</span>
-      <h2>Olá, {user.name}</h2>
-      <label>Link do seu clube na EA
-        <input required name="eaUrl" placeholder="https://www.ea.com/…/clubs/overview?clubId=…" />
-      </label>
-      <label>Seu gamertag no clube
-        <input required name="gamertag" placeholder="Ex.: danieldhds" />
-      </label>
-      {error && <p className="registration-error">{error}</p>}
-      <button disabled={busy} type="submit">{busy ? "Vinculando…" : "Vincular e continuar"} <ArrowRight /></button>
-      <button type="button" className="onboarding-skip" onClick={() => setStep("preferences")}>Ainda não tenho clube</button>
-    </form> : <form onSubmit={finish}>
-      <span>PREFERÊNCIAS</span>
-      <h2>{linked ? "Perfil vinculado!" : `Olá, ${user.name}`}</h2>
-      <label>País da comunidade
-        <select value={country} onChange={(event) => setCountry(event.target.value)}>{countries.map((item) => <option value={item.slug} key={item.code}>{item.flag} {item.name.pt}</option>)}</select>
-      </label>
-      <label>Idioma
-        <select value={locale} onChange={(event) => setLocale(event.target.value)}>{locales.map((item) => <option value={item.id} key={item.id}>{item.label}</option>)}</select>
-      </label>
-      {error && <p className="registration-error">{error}</p>}
-      <button disabled={busy} type="submit">{busy ? "Salvando…" : "Entrar na comunidade"} <ArrowRight /></button>
-      {!linked && <Link href="/mercado">Não tenho clube — quero encontrar um time</Link>}
-    </form>}
-  </div><MobileNav /></main>;
 }

@@ -17,7 +17,8 @@ const ingestSecret = process.env.EA_INGEST_SECRET || getArg("--secret", "");
 const forcedClubId = getArg("--clubId", "");
 const forcedPlatform = getArg("--platform", "common-gen5");
 const limit = Math.max(1, Math.min(Number(process.env.CRAWL_LIMIT || getArg("--limit", "3")), 20));
-const parserVersion = "playwright-stealth-api-v2";
+const parserVersion = "playwright-public-api-v3";
+import { normalizeEaPlayers } from "./lib/ea-player-stats.mjs";
 const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -33,36 +34,6 @@ function timestamp(value) {
   return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
 }
 
-function playerRows(rawPlayers, clubIds) {
-  if (!rawPlayers || typeof rawPlayers !== "object") return [];
-  const rows = [];
-  for (const clubId of clubIds) {
-    const clubPlayers = rawPlayers[clubId] || rawPlayers[String(clubId)] || {};
-    const playersList = Array.isArray(clubPlayers) ? clubPlayers : Object.values(clubPlayers);
-    for (const player of playersList) {
-      if (!player || typeof player !== "object") continue;
-      const name = text(player.playername || player.playerName || player.name || player.eaId);
-      if (!name) continue;
-      rows.push({
-        playerId: text(player.playerId || player.nucleusId || name),
-        playerName: name,
-        position: text(player.pos || player.position || player.favoritePosition),
-        goals: number(player.goals),
-        assists: number(player.assists),
-        rating: player.rating == null ? undefined : number(player.rating),
-        shots: player.shots == null ? undefined : number(player.shots),
-        passesMade: player.passesMade == null ? undefined : number(player.passesMade),
-        passAttempts: player.passAttempts == null ? undefined : number(player.passAttempts),
-        tacklesMade: player.tacklesMade == null ? undefined : number(player.tacklesMade),
-        tackleAttempts: player.tackleAttempts == null ? undefined : number(player.tackleAttempts),
-        redCards: player.redCards == null ? undefined : number(player.redCards),
-        saves: player.saves == null ? undefined : number(player.saves),
-        cleanSheet: Boolean(player.cleanSheet || player.cleanSheets),
-      });
-    }
-  }
-  return rows;
-}
 
 function normalizeMatches(rawMatches, mode, sourceUrl, requestedClubId) {
   if (!rawMatches || typeof rawMatches !== "object") return [];
@@ -85,6 +56,7 @@ function normalizeMatches(rawMatches, mode, sourceUrl, requestedClubId) {
     if (!playedAt) continue;
 
     normalized.push({
+      sourceMatchId: text(raw.matchId),
       mode,
       playedAt,
       homeClubId: home.id,
@@ -95,7 +67,7 @@ function normalizeMatches(rawMatches, mode, sourceUrl, requestedClubId) {
       awayScore: number(away.goals ?? away.score),
       competition: "EA SPORTS FC Clubs",
       sourceUrl,
-      players: playerRows(raw.players, [home.id, away.id]),
+      players: normalizeEaPlayers(raw.players, [home.id, away.id]),
     });
   }
   return normalized;

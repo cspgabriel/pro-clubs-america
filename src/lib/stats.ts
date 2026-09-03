@@ -32,6 +32,9 @@ export function buildDashboard(dataset: ClubDataset): DashboardData {
       tacklesMade: player.tacklesMade ?? null,
       tackleSuccessRate: player.tackleSuccessRate ?? null,
       winRate: player.winRate ?? null,
+      manOfTheMatch: player.manOfTheMatch ?? null,
+      redCards: player.redCards ?? null,
+      shotSuccessRate: player.shotSuccessRate ?? null,
       ratingTotal: player.averageRating ?? 0,
       ratedMatches: player.averageRating == null ? 0 : 1,
       officialCareer: player.gamesPlayed != null,
@@ -61,7 +64,10 @@ export function buildDashboard(dataset: ClubDataset): DashboardData {
       if (result === "D") losses += 1;
 
       for (const stats of match.players) {
-        const player = playerMap.get(stats.playerId) ?? {
+        if (stats.clubId && stats.clubId !== dataset.club.id) continue;
+        const known = dataset.players.find((member) => member.id === stats.playerId || member.name === stats.playerName);
+        if (!known) continue;
+        const player = playerMap.get(known.id) ?? {
           id: stats.playerId,
           name: stats.playerName,
           position: stats.position ?? "—",
@@ -96,7 +102,7 @@ export function buildDashboard(dataset: ClubDataset): DashboardData {
             player.averageRating = round(player.ratingTotal / player.ratedMatches);
           }
         }
-        playerMap.set(stats.playerId, player);
+        playerMap.set(known.id, player);
       }
 
       return {
@@ -127,6 +133,9 @@ export function buildDashboard(dataset: ClubDataset): DashboardData {
       tacklesMade: player.tacklesMade,
       tackleSuccessRate: player.tackleSuccessRate,
       winRate: player.winRate,
+      manOfTheMatch: player.manOfTheMatch,
+      redCards: player.redCards,
+      shotSuccessRate: player.shotSuccessRate,
     }))
     .sort(
       (a, b) =>

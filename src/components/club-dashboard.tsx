@@ -79,7 +79,7 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
           <p>Central independente de desempenho, elenco e histórico competitivo.</p>
           <div className="club-meta">
             <span><ShieldCheck size={15} /> ID {data.club.id}</span>
-            <span><Users size={15} /> Crossplay — geração atual</span>
+            <span><Users size={15} /> {data.club.platform === "common-gen4" ? "PS4 / Xbox One" : data.club.platform === "nx" ? "Nintendo Switch" : "PS5 / Xbox Series / PC"}</span>
             {data.club.overview && <span><Trophy size={15} /> Skill rating {data.club.overview.skillRating}</span>}
           </div>
           <Link className="challenge-team-button" href={`/partidas/amistosos?desafiar=${data.club.id}&nome=${encodeURIComponent(data.club.name)}#buscar-amistoso`}><Swords size={16} /> Desafiar clube</Link>
@@ -103,6 +103,9 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
           <article className="stat-card"><div><Medal /><span>JOGADORES</span></div><strong>{number.format(data.club.overview?.members ?? data.players.length)}</strong><small>{data.rankings.length} com detalhes coletados</small></article>
         </div>
 
+        <p className="public-source-note">{data.source.note}</p>
+        {data.club.overview && <div className="club-meta"><span>Empates: {data.summary.draws}</span><span>Derrotas: {data.summary.losses}</span><span>Gols sofridos: {data.summary.goalsAgainst}</span><span>Divisão: {data.club.overview.currentDivision ?? "—"}</span><span>Acessos: {data.club.overview.promotions ?? "—"}</span><span>Rebaixamentos: {data.club.overview.relegations ?? "—"}</span></div>}
+
         <div className="form-top">
           <article className="panel form-panel">
             <div className="panel-heading"><div><span>RECORTE RECENTE</span><h3>Forma do clube</h3></div></div>
@@ -115,7 +118,7 @@ export function ClubDashboard({ data }: { data: DashboardData }) {
         <section className="panel ranking-panel" id="jogadores">
           <div className="panel-heading"><div><span>ELENCO E PERFORMANCE</span><h3>Ranking de jogadores</h3></div><span className="count-pill">{data.rankings.length} atletas</span></div>
           {data.rankings.length ? (
-            <div className="table-wrap"><table><thead><tr><th>#</th><th>Jogador</th><th>OVR</th><th>Posição</th><th>Jogos</th><th>Gols</th><th>Assist.</th><th>G+A</th><th>Passes</th><th>% passe</th><th>% vit.</th></tr></thead><tbody>{data.rankings.map((player, index) => <tr key={player.id}><td><span className="rank">{index + 1}</span></td><td><Link className="player-table-link" href={`/jogador/${encodeURIComponent(player.id)}`}>{player.name}<ArrowUpRight size={13} /></Link></td><td className="accent-number">{player.overallRating ?? "—"}</td><td>{player.position}</td><td>{player.matches}</td><td className="accent-number">{player.goals ?? "—"}</td><td>{player.assists ?? "—"}</td><td>{player.goalContributions ?? "—"}</td><td>{player.passesMade?.toLocaleString("pt-BR") ?? "—"}</td><td>{player.passSuccessRate == null ? "—" : `${player.passSuccessRate}%`}</td><td>{player.winRate == null ? "—" : `${player.winRate}%`}</td></tr>)}</tbody></table></div>
+            <div className="table-wrap"><table><thead><tr><th>#</th><th>Jogador</th><th>OVR</th><th>Posição</th><th>Jogos</th><th>Gols</th><th>Assist.</th><th>G+A</th><th>Passes</th><th>% passe</th><th>% vit.</th><th>Nota</th><th>Desarmes</th><th>% desarme</th><th>% chute</th><th>MVP</th><th>Verm.</th></tr></thead><tbody>{data.rankings.map((player, index) => <tr key={player.id}><td><span className="rank">{index + 1}</span></td><td><Link className="player-table-link" href={`/jogador?id=${encodeURIComponent(player.id)}&clubId=${encodeURIComponent(data.club.id)}`}>{player.name}<ArrowUpRight size={13} /></Link></td><td className="accent-number">{player.overallRating ?? "—"}</td><td>{player.position}</td><td>{player.matches}</td><td className="accent-number">{player.goals ?? "—"}</td><td>{player.assists ?? "—"}</td><td>{player.goalContributions ?? "—"}</td><td>{player.passesMade?.toLocaleString("pt-BR") ?? "—"}</td><td>{player.passSuccessRate == null ? "—" : `${player.passSuccessRate}%`}</td><td>{player.winRate == null ? "—" : `${player.winRate}%`}</td><td>{player.averageRating ?? "—"}</td><td>{player.tacklesMade ?? "—"}</td><td>{player.tackleSuccessRate == null ? "—" : `${player.tackleSuccessRate}%`}</td><td>{player.shotSuccessRate == null ? "—" : `${player.shotSuccessRate}%`}</td><td>{player.manOfTheMatch ?? "—"}</td><td>{player.redCards ?? "—"}</td></tr>)}</tbody></table></div>
           ) : <EmptyState title="Elenco aguardando importação" text="Os nomes e estatísticas serão exibidos somente depois da leitura real da página oficial." />}
         </section>
 

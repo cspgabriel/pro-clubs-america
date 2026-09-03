@@ -1,6 +1,7 @@
 export type SourceState = "pending" | "complete" | "partial";
 
 export interface PlayerMatchStats {
+  clubId?: string;
   playerId: string;
   playerName: string;
   position?: string;
@@ -55,6 +56,9 @@ export interface ClubDataset {
       forwards: number;
       defenders: number;
       goalkeepers: number;
+      currentDivision?: number;
+      promotions?: number;
+      relegations?: number;
     };
   };
   source: {
@@ -77,6 +81,9 @@ export interface ClubDataset {
     tackleSuccessRate?: number;
     cleanSheets?: number;
     winRate?: number;
+    manOfTheMatch?: number;
+    redCards?: number;
+    shotSuccessRate?: number;
   }>;
   matches: MatchRecord[];
 }
@@ -98,6 +105,9 @@ export interface PlayerRanking {
   tackleSuccessRate: number | null;
   winRate: number | null;
   country?: string | null;
+  manOfTheMatch?: number | null;
+  redCards?: number | null;
+  shotSuccessRate?: number | null;
 }
 
 export interface DashboardData extends ClubDataset {

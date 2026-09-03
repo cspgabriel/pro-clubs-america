@@ -85,7 +85,7 @@ export function PlayerProfile({ player, club, recentMatches, limitedData = false
           <Link className="player-back" href="/#jogadores"><ArrowLeft size={15} /> VOLTAR À BUSCA</Link>
           <small>PERFIL DO JOGADOR</small>
           <h1 className="player-name-country">{player.name}<CountryFlag country={player.country} /></h1>
-          <Link className="player-club-link" href={`/club/${club.id}`}>
+          <Link className="player-club-link" href={`/club?id=${encodeURIComponent(club.id)}`}>
             {club.crestUrl && <Image src={club.crestUrl} alt={`Escudo ${club.name}`} width={38} height={38} unoptimized />}
             <span><b>{club.name}</b><small>Ver página do clube</small></span>
           </Link>
@@ -112,6 +112,9 @@ export function PlayerProfile({ player, club, recentMatches, limitedData = false
             <div><span>Desarmes</span><strong>{player.tacklesMade == null ? "—" : number.format(player.tacklesMade)}</strong></div>
             <div><span>Desarmes por jogo</span><strong>{decimal(player.tacklesMade, player.matches)}</strong></div>
             <div><span>Sucesso no desarme</span><strong>{player.tackleSuccessRate == null ? "—" : `${player.tackleSuccessRate}%`}</strong></div>
+            <div><span>Sucesso nas finalizações</span><strong>{player.shotSuccessRate == null ? "—" : `${player.shotSuccessRate}%`}</strong></div>
+            <div><span>Melhor em campo</span><strong>{player.manOfTheMatch ?? "—"}</strong></div>
+            <div><span>Cartões vermelhos</span><strong>{player.redCards ?? "—"}</strong></div>
             <div><span>Clean sheets</span><strong>{limitedData ? "—" : number.format(player.cleanSheets)}</strong></div>
             {!premium && <Link className="premium-metrics-cta" href="/planos"><Crown /> Liberar médias e análises Premium</Link>}
           </aside>

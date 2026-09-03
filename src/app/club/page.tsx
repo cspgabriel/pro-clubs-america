@@ -1,2 +1,3 @@
 import { ClubRouteResolver } from "@/components/profile-resolvers";
-export default function Page() { return <ClubRouteResolver />; }
+import { Suspense } from "react";
+export default function Page() { return <Suspense fallback={<p>Carregando clube…</p>}><ClubRouteResolver /></Suspense>; }

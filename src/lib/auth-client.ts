@@ -70,6 +70,7 @@ export async function registerWithEmail(name: string, email: string, password: s
   if (!auth) throw new Error("FIREBASE_NOT_CONFIGURED");
   const result = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(result.user, { displayName: name });
+  await result.user.getIdToken(true);
   const user = persist(snapshot(result.user, "password"));
   await syncProfile();
   return user;
@@ -89,18 +90,14 @@ export async function logout() {
 }
 
 export function observeAuth(callback: (user: AuthUserSnapshot | null) => void) {
-  const update = () => callback(getStoredAuthUser());
-  window.addEventListener(authEvent, update);
-  window.addEventListener("storage", update);
   const auth = getFirebaseAuth();
-  const unsubscribe = auth ? onAuthStateChanged(auth, async (user) => {
+  if (!auth) { callback(null); return () => undefined; }
+  // Wait for Firebase to restore the session before protected pages redirect.
+  return onAuthStateChanged(auth, (user) => {
     const value = user ? snapshot(user, user.providerData[0]?.providerId === "google.com" ? "google" : "password") : null;
     persist(value);
-    if (user) await ensureCommunityProfile().catch(() => undefined);
     callback(value);
-  }) : () => undefined;
-  update();
-  return () => { window.removeEventListener(authEvent, update); window.removeEventListener("storage", update); unsubscribe(); };
+  });
 }
 
 export { isFirebaseConfigured };

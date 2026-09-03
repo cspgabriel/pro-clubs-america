@@ -3,8 +3,8 @@ import { findClubByEa, supabaseRest } from "../../_lib/supabase";
 import { repairPublicText } from "../../_lib/text";
 
 type MatchMode = "leagueMatch" | "friendlyMatch" | "playoffMatch";
-interface IncomingPlayer { playerId?: string; playerName?: string; position?: string; goals?: number; assists?: number; rating?: number; shots?: number; passesMade?: number; passAttempts?: number; tacklesMade?: number; tackleAttempts?: number; redCards?: number; saves?: number; cleanSheet?: boolean; }
-interface IncomingMatch { mode?: MatchMode; playedAt?: string; homeClubId?: string; homeClubName?: string; awayClubId?: string; awayClubName?: string; homeScore?: number; awayScore?: number; competition?: string; sourceUrl?: string; players?: IncomingPlayer[]; }
+interface IncomingPlayer { playerId?: string; playerName?: string; clubId?: string; position?: string; goals?: number; assists?: number; rating?: number; shots?: number; passesMade?: number; passAttempts?: number; tacklesMade?: number; tackleAttempts?: number; redCards?: number; saves?: number; cleanSheet?: boolean; secondsPlayed?: number; manOfTheMatch?: number; archetypeId?: string; vproAttributes?: string; }
+interface IncomingMatch { sourceMatchId?: string; mode?: MatchMode; playedAt?: string; homeClubId?: string; homeClubName?: string; awayClubId?: string; awayClubName?: string; homeScore?: number; awayScore?: number; competition?: string; sourceUrl?: string; players?: IncomingPlayer[]; }
 interface IncomingExtras { overallStats?: unknown; info?: unknown; members?: unknown }
 interface IngestBody { parserVersion?: string; source?: string; startedAt?: string; matches?: IncomingMatch[]; extras?: IncomingExtras; metadata?: Record<string, unknown>; }
 interface SnapshotRow { id: string; source_fingerprint: string; }
@@ -13,7 +13,7 @@ interface QueueRow { id: string; priority: number; attempts: number; club_id: st
 const modes = new Set<MatchMode>(["leagueMatch", "friendlyMatch", "playoffMatch"]);
 const platforms = new Set(["common-gen5", "common-gen4", "nx"]);
 const safeText = (value: unknown, max: number) => repairPublicText(value).slice(0, max);
-const safeNumber = (value: unknown, min = 0, max = 99) => { const number = Number(value); return Number.isFinite(number) && number >= min && number <= max ? number : null; };
+const safeNumber = (value: unknown, min = 0, max = 99) => { if (value == null || value === "") return null; const number = Number(value); return Number.isFinite(number) && number >= min && number <= max ? number : null; };
 
 async function digest(value: string) {
   const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
@@ -84,16 +84,19 @@ function sourceUrl(value: unknown, homeClubId: string, platform: string) {
 function normalizePlayers(players: IncomingPlayer[] | undefined) {
   return (Array.isArray(players) ? players : []).slice(0, 50).map((player) => ({
     playerId: safeText(player.playerId, 120), playerName: safeText(player.playerName, 120), position: safeText(player.position, 30),
+    clubId: safeText(player.clubId, 20),
     goals: safeNumber(player.goals, 0, 30) ?? 0, assists: safeNumber(player.assists, 0, 30) ?? 0, rating: safeNumber(player.rating, 0, 10),
     shots: safeNumber(player.shots, 0, 100), passesMade: safeNumber(player.passesMade, 0, 500), passAttempts: safeNumber(player.passAttempts, 0, 500),
     tacklesMade: safeNumber(player.tacklesMade, 0, 100), tackleAttempts: safeNumber(player.tackleAttempts, 0, 100), redCards: safeNumber(player.redCards, 0, 10),
-    saves: safeNumber(player.saves, 0, 100), cleanSheet: Boolean(player.cleanSheet),
+    saves: safeNumber(player.saves, 0, 100), cleanSheet: player.cleanSheet == null ? null : player.cleanSheet === true,
+    secondsPlayed: safeNumber(player.secondsPlayed, 0, 20000), manOfTheMatch: safeNumber(player.manOfTheMatch, 0, 1),
+    archetypeId: safeText(player.archetypeId, 40) || null, vproAttributes: safeText(player.vproAttributes, 2000) || null,
   })).filter((player) => player.playerName);
 }
 
 
 const asArray = (value: unknown) => (Array.isArray(value) ? value : value && typeof value === "object" ? Object.values(value as Record<string, unknown>) : []);
-const num = (value: unknown) => { const parsed = Number(value); return Number.isFinite(parsed) ? parsed : null; };
+const num = (value: unknown) => { if (value == null || value === "") return null; const parsed = Number(value); return Number.isFinite(parsed) ? parsed : null; };
 const ratio = (part: unknown, total: unknown) => { const a = Number(part), b = Number(total); return Number.isFinite(a) && Number.isFinite(b) && b > 0 ? Math.round((a / b) * 1000) / 1000 : null; };
 
 /**
@@ -149,6 +152,7 @@ async function syncCatalog(context: FunctionContext, eaClubId: string, platform:
         games_played: games, goals: num(stats.goals), goals_against: num(stats.goalsAgainst),
         clean_sheets: num(stats.cleanSheets), goals_per_game: num(stats.goalsPerGame),
         all_time_rank: num(stats.rank), current_division: num(stats.currentDivision),
+        source_payload: { overallStats: stats, info: extras.info || null, memberNames: extras.members ? asArray((extras.members as Record<string, unknown>)?.members ?? extras.members).map((entry) => safeText((entry as Record<string, unknown>).name, 80)).filter(Boolean) : null, observedAt: now },
         last_synced_at: now, updated_at: now,
       }),
     });
@@ -169,6 +173,8 @@ async function syncCatalog(context: FunctionContext, eaClubId: string, platform:
       tackles_made: num(member.tacklesMade), tackle_success_rate: num(member.tackleSuccessRate),
       clean_sheets_def: num(member.cleanSheetsDef), clean_sheets_gk: num(member.cleanSheetsGK),
       man_of_the_match: num(member.manOfTheMatch),
+      win_rate: num(member.winRate),
+      source_payload: { member, observedAt: now },
       goals_per_game: ratio(member.goals, games), assists_per_game: ratio(member.assists, games),
       tackles_per_game: ratio(member.tacklesMade, games),
       last_synced_at: now, updated_at: now,
@@ -218,7 +224,7 @@ export const onRequestPost = async (context: FunctionContext) => {
       if (!homeClub && homeClubId) discovered += 1;
       if (!awayClub && awayClubId) discovered += 1;
       const fingerprint = await digest([platform, mode, playedAt.toISOString(), homeEaId, awayEaId, homeScore, awayScore].join("|"));
-      const snapshots = await supabaseRest<SnapshotRow[]>(context.env, "ea_match_snapshots?on_conflict=source_fingerprint", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=representation" }, body: JSON.stringify({ source_fingerprint: fingerprint, platform, mode, played_at: playedAt.toISOString(), home_ea_club_id: homeEaId, home_club_id: homeClubId, home_club_name: homeName, away_ea_club_id: awayEaId, away_club_id: awayClubId, away_club_name: awayName, home_score: homeScore, away_score: awayScore, competition: safeText(match.competition || "EA Clubs", 120), source_url: sourceUrl(match.sourceUrl, homeEaId, platform), players: normalizePlayers(match.players), parser_version: parserVersion, ingest_run_id: runId, observed_at: new Date().toISOString(), updated_at: new Date().toISOString() }) });
+      const snapshots = await supabaseRest<SnapshotRow[]>(context.env, "ea_match_snapshots?on_conflict=source_fingerprint", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=representation" }, body: JSON.stringify({ source_fingerprint: fingerprint, source_match_id: safeText(match.sourceMatchId, 80) || null, platform, mode, played_at: playedAt.toISOString(), home_ea_club_id: homeEaId, home_club_id: homeClubId, home_club_name: homeName, away_ea_club_id: awayEaId, away_club_id: awayClubId, away_club_name: awayName, home_score: homeScore, away_score: awayScore, competition: safeText(match.competition || "EA Clubs", 120), source_url: sourceUrl(match.sourceUrl, homeEaId, platform), players: normalizePlayers(match.players), parser_version: parserVersion, ingest_run_id: runId, observed_at: new Date().toISOString(), updated_at: new Date().toISOString() }) });
       const snapshot = snapshots[0];
       playersObserved += normalizePlayers(match.players).length;
       const reconciled = mode === "friendlyMatch" && snapshot ? await supabaseRest<Array<{ matched_match_id: string | null }>>(context.env, "rpc/reconcile_ea_friendly", { method: "POST", body: JSON.stringify({ p_snapshot_id: snapshot.id }) }) : [];

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import clubData from "@/data/club.json";
 import { buildDashboard } from "@/lib/stats";
-import { PlayerProfile, type PlayerRecentMatch } from "@/components/player-profile";
+import { LiveClubDashboard } from "@/components/live-club-dashboard";
 import type { ClubDataset } from "@/types/domain";
-import { findPublicClub, findPublicPlayer, indexablePlayers } from "@/lib/public-data";
+import { findPublicPlayer, indexablePlayers } from "@/lib/public-data";
 import { SITE_NAME, breadcrumb, canonical, jsonLd } from "@/lib/seo";
 
 const dataset = clubData as ClubDataset;
@@ -26,8 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const url = canonical(`/jogador/${id}`);
   if (!player) return { title: `Jogador nao encontrado | ${SITE_NAME}`, robots: { index: false, follow: true } };
   const club = "clubName" in player && player.clubName ? ` do ${player.clubName}` : "";
-  const rating = player.averageRating ? `, nota media ${player.averageRating}` : "";
-  const description = `Estatisticas de ${player.name}${club} no EA SPORTS FC Clubs: ${player.matches} partidas, ${player.goals} gols, ${player.assists} assistencias${rating}. Posicao ${player.position}.`;
+  const description = `Estatísticas sincronizadas de ${player.name}${club} no EA SPORTS FC Clubs: desempenho, gols, assistências e partidas armazenadas.`;
   return {
     title: `${player.name} — estatisticas de Pro Clubs | ${SITE_NAME}`,
     description,
@@ -44,27 +43,6 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
 
   const isLocal = dashboard.rankings.some((item) => item.id === player.id);
   const publicPlayer = isLocal ? null : findPublicPlayer(player.id);
-  const publicClub = publicPlayer ? findPublicClub(publicPlayer.clubId) : null;
-
-  const recentMatches: PlayerRecentMatch[] = isLocal ? dataset.matches.flatMap((match) => {
-    const stats = match.players.find((item) => item.playerId.toLocaleLowerCase("pt-BR") === player.id.toLocaleLowerCase("pt-BR"));
-    if (!stats) return [];
-    const isHome = match.homeClubId === dataset.club.id;
-    const ownScore = isHome ? match.homeScore : match.awayScore;
-    const opponentScore = isHome ? match.awayScore : match.homeScore;
-    return [{
-      id: match.id,
-      label: new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(match.playedAt)),
-      opponent: isHome ? match.awayClubName : match.homeClubName,
-      score: `${ownScore} × ${opponentScore}`,
-      result: ownScore > opponentScore ? "V" as const : ownScore === opponentScore ? "E" as const : "D" as const,
-      goals: stats.goals,
-      assists: stats.assists,
-      rating: stats.rating ?? null,
-      passes: stats.passesMade ?? null,
-      tackles: stats.tacklesMade ?? null,
-    }];
-  }) : [];
 
   const clubName = isLocal ? dataset.club.name : publicPlayer!.clubName;
   const structured = jsonLd({
@@ -76,5 +54,5 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
       breadcrumb([{ name: "Inicio", path: "/" }, { name: "Jogadores", path: "/jogadores" }, { name: player.name, path: `/jogador/${id}` }]),
     ],
   });
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={structured} /><PlayerProfile player={player} club={isLocal ? dataset.club : { id: publicPlayer!.clubId, name: publicPlayer!.clubName, crestUrl: publicClub?.crestUrl, sourceUrl: publicPlayer!.sourceUrl }} recentMatches={recentMatches} limitedData={!isLocal} /></>;
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={structured} /><LiveClubDashboard id={isLocal ? dataset.club.id : publicPlayer!.clubId} playerName={player.name} /></>;
 }

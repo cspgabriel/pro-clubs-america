@@ -16,6 +16,7 @@ export interface CommunityProfile {
   email: string;
   country: string;
   locale: string;
+  onboardingCompleted: boolean;
   role: CommunityRole;
   clubId?: string;
   clubName?: string;
@@ -169,8 +170,15 @@ export async function getCommunityProfile(): Promise<CommunityProfile | null> {
   return api<CommunityProfile>("/api/community/profile", {}, true);
 }
 
-export function saveCommunityPreferences(input: { country: string; locale: string }) {
+export function saveCommunityPreferences(input: { country: string; locale: string; completeOnboarding?: boolean; clubId?: string | null }) {
   return api<CommunityProfile>("/api/community/profile", { method: "PATCH", body: JSON.stringify(input) }, true);
+}
+
+export interface CatalogClub { id: string; name: string; platform: string; countryCode?: string | null; }
+
+export function searchCatalogClubs(query: string, platform: string, signal?: AbortSignal) {
+  const params = new URLSearchParams({ q: query, platform });
+  return api<CatalogClub[]>(`/api/catalog/clubs?${params}`, { signal });
 }
 
 export function getProfileShowcase() {

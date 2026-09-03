@@ -25,7 +25,7 @@ export function ProfileNudge() {
     getCommunityProfile()
       .then((profile) => {
         if (!profile) { setPending("ok"); return; }
-        setPending(!profile.playerId ? "no-ea" : !profile.clubId ? "no-club" : "ok");
+        setPending(!profile.clubId ? "no-club" : !profile.playerId ? "no-ea" : "ok");
       })
       .catch(() => setPending("ok"));
   }), []);
@@ -34,7 +34,7 @@ export function ProfileNudge() {
   if (hidden || dismissed || pending === "unknown" || pending === "ok") return null;
 
   const copy = pending === "no-ea"
-    ? { text: "Seu perfil ainda está vazio.", action: "Vincular perfil EA", href: "/onboarding" }
+    ? { text: "Seu time já está escolhido. Complete seu perfil quando quiser.", action: "Personalizar perfil", href: "/conta" }
     : { text: "Você ainda não faz parte de um clube.", action: "Encontrar um time", href: "/mercado" };
 
   return (

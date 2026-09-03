@@ -1,5 +1,6 @@
 import { apiError, assertSameOrigin, verifyFirebaseRequest, type BillingEnv, type FunctionContext } from "../../_lib/billing";
-import { ensureProfile, findClubById, publicRouteId, supabaseRest, type SupabaseProfile } from "../../_lib/supabase";
+import { ensureProfile, findClubById, findClubByPublicRouteId, publicRouteId, supabaseRest, type SupabaseProfile } from "../../_lib/supabase";
+import { countries, locales } from "../../../src/lib/i18n";
 
 interface ClaimRow { id: string; status: string; club_id: string; created_at: string }
 
@@ -15,6 +16,7 @@ async function profilePayload(env: BillingEnv, profile: SupabaseProfile) {
     email: profile.email,
     country: profile.country_slug || "brasil",
     locale: profile.locale || "pt-br",
+    onboardingCompleted: Boolean(profile.onboarding_completed_at),
     role: profile.role,
     plan: profile.plan,
     premiumAccess: profile.plan !== "free" || Boolean(profile.bonus_access_until && new Date(profile.bonus_access_until).getTime() > Date.now()),
@@ -57,18 +59,35 @@ export const onRequestPatch = async (context: FunctionContext) => {
   try {
     assertSameOrigin(context.request, context.env.SITE_URL);
     const { profile } = await authenticated(context);
-    const body = await context.request.json() as { country?: string; locale?: string };
-    const country = String(body.country || "brasil").slice(0, 40);
-    const locale = ["pt-br", "es", "en"].includes(String(body.locale)) ? String(body.locale) : "pt-br";
+    const body = await context.request.json() as { country?: string; locale?: string; completeOnboarding?: boolean; clubId?: string | null };
+    const country = countries.find((item) => item.slug === body.country);
+    const locale = locales.find((item) => item.id === body.locale);
+    if (!country || !locale) return apiError("Escolha um país e idioma disponíveis.");
+    const updates: Partial<SupabaseProfile> & { country_code: string } = {
+      country_slug: country.slug, country_code: country.code, locale: locale.id,
+    };
+    if (body.completeOnboarding === true) {
+      if (body.clubId !== null && (typeof body.clubId !== "string" || !/^(?:(?:common-gen4|nx)-)?\d{1,12}$/.test(body.clubId))) {
+        return apiError("Selecione um time da base ou a opção sem time.");
+      }
+      const club = body.clubId ? await findClubByPublicRouteId(context.env, body.clubId) : null;
+      if (body.clubId && !club) return apiError("Time não encontrado na base. Pesquise novamente.", 404);
+      // Choosing a club is self-declared membership, never ownership or an EA player claim.
+      if (profile.club_id && profile.club_id !== club?.id) return apiError("Sua conta já está vinculada a outro time. Mantenha o vínculo atual para continuar.", 409);
+      updates.club_id = club?.id || null;
+      if (profile.role === "visitor" && club) updates.role = "player";
+      updates.onboarding_completed_at = profile.onboarding_completed_at || new Date().toISOString();
+    }
     const rows = await supabaseRest<SupabaseProfile[]>(context.env, `profiles?id=eq.${encodeURIComponent(profile.id)}`, {
       method: "PATCH",
       headers: { Prefer: "return=representation" },
-      body: JSON.stringify({ country_slug: country, locale, updated_at: new Date().toISOString() }),
+      body: JSON.stringify({ ...updates, updated_at: new Date().toISOString() }),
     });
-    return Response.json(await profilePayload(context.env, rows[0] ?? profile));
+    if (!rows[0]) throw new Error("PROFILE_UPDATE_EMPTY");
+    return Response.json(await profilePayload(context.env, rows[0]), { headers: { "cache-control": "no-store" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "PROFILE_UPDATE_FAILED";
-    return apiError(message.startsWith("AUTH_") ? "AUTH_REQUIRED" : "Não foi possível salvar o perfil.", message.startsWith("AUTH_") ? 401 : 500);
+    return apiError(message.startsWith("AUTH_") ? "AUTH_REQUIRED" : "Não foi possível salvar o perfil.", message.startsWith("AUTH_") ? 401 : message === "ORIGIN_NOT_ALLOWED" ? 403 : 500);
   }
 };
 
