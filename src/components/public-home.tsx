@@ -10,13 +10,20 @@ import styles from "./public-home.module.css";
 
 const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR");
 
+type CatalogClub = { id: string; name: string; platform: "common-gen5" | "common-gen4" | "nx"; countryCode: string | null };
+
+const platformLabel: Record<CatalogClub["platform"], string> = { "common-gen5": "PS5 / Xbox Series / PC", "common-gen4": "PS4 / Xbox One", nx: "Nintendo Switch" };
+
 export function PublicHome() {
   const [directory, setDirectory] = useState<CommunityDirectory>({ clubs: [], members: [] });
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [attempt, setAttempt] = useState(0);
   const [input, setInput] = useState("");
   const [query, setQuery] = useState("");
+  const [catalogResults, setCatalogResults] = useState<CatalogClub[]>([]);
+  const [catalogStatus, setCatalogStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const results = useRef<HTMLElement>(null);
+  const catalogRequest = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -41,7 +48,32 @@ export function PublicHome() {
   const visibleMembers = term ? members : members.slice(0, 4);
   function search(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setQuery(input.trim());
+    const value = input.trim();
+    setQuery(value);
+    catalogRequest.current?.abort();
+    if (!value) {
+      setCatalogResults([]);
+      setCatalogStatus("idle");
+      return;
+    }
+    const controller = new AbortController();
+    catalogRequest.current = controller;
+    setCatalogStatus("loading");
+    void Promise.all(["common-gen5", "common-gen4", "nx"].map(async (platform) => {
+      const response = await fetch(`/api/catalog/clubs?q=${encodeURIComponent(value)}&platform=${platform}`, { signal: controller.signal, cache: "no-store" });
+      if (!response.ok) throw new Error("CATALOG_UNAVAILABLE");
+      return response.json() as Promise<CatalogClub[]>;
+    })).then((groups) => {
+      if (!controller.signal.aborted) {
+        setCatalogResults(groups.flat().slice(0, 12));
+        setCatalogStatus("ready");
+      }
+    }).catch(() => {
+      if (!controller.signal.aborted) {
+        setCatalogResults([]);
+        setCatalogStatus("error");
+      }
+    });
     results.current?.focus({ preventScroll: true });
     results.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
   }
@@ -79,6 +111,12 @@ export function PublicHome() {
         <section className={styles.community} id="comunidade" ref={results} tabIndex={-1} aria-labelledby="community-title">
           <header className={styles.sectionHeader}><div><span className={styles.eyebrow}>FEITO POR QUEM JOGA</span><h2 id="community-title">Conheça quem já<br className={styles.mobileBreak} /> está por aqui.</h2></div><Link href="/clubes">Explorar comunidade <ArrowUpRight size={17} aria-hidden="true" /></Link></header>
           <p className={styles.sectionDescription}>Clubes e perfis cadastrados no Pro Clubs America. Encontre uma conexão para o próximo jogo.</p>
+          {catalogStatus !== "idle" && <section className={styles.eaResults} aria-live="polite" aria-busy={catalogStatus === "loading"}>
+            <div><span className={styles.eyebrow}>CATÁLOGO SINCRONIZADO</span><h3>Resultados de clubes da EA</h3></div>
+            {catalogStatus === "loading" && <p>Consultando clubes sincronizados…</p>}
+            {catalogStatus === "error" && <p>Não foi possível consultar o catálogo agora. Tente novamente.</p>}
+            {catalogStatus === "ready" && (catalogResults.length ? <div className={styles.eaResultGrid}>{catalogResults.map((club) => <Link href={`/time?id=${encodeURIComponent(club.id)}`} key={`${club.platform}-${club.id}`}><span className={styles.clubBadge}>{club.name.slice(0, 2).toUpperCase()}</span><span><strong>{club.name}</strong><small>{platformLabel[club.platform]}{club.countryCode ? ` · ${club.countryCode}` : ""}</small></span><ArrowUpRight size={18} aria-hidden="true" /></Link>)}</div> : <p>Nenhum clube encontrado no catálogo sincronizado para “{query}”.</p>)}
+          </section>}
           <div role="status" aria-live="polite" className={styles.resultStatus}>
             {status === "loading" && "Carregando clubes e jogadores…"}
             {status === "ready" && term && <><span>{clubs.length + members.length} resultado(s) para “{query}” nos cadastros exibidos.</span><button type="button" onClick={() => { setInput(""); setQuery(""); }}>Limpar busca</button></>}
@@ -95,7 +133,7 @@ export function PublicHome() {
               <Link className={styles.directoryFooter} href="/clubes#jogadores-cadastrados">Ver jogadores cadastrados <ArrowRight size={16} aria-hidden="true" /></Link>
             </div>
           </div>}
-          <small className={styles.dataNote}>Seleção dos últimos cadastros públicos, limitada a 100 perfis. Esta busca não consulta o catálogo da EA.</small>
+          <small className={styles.dataNote}>A busca consulta o catálogo sincronizado de clubes e os cadastros públicos da comunidade. Dados ausentes continuam indisponíveis até a próxima sincronização.</small>
         </section>
         <section className={styles.featureGrid} aria-label="Mais formas de entrar no jogo">
           <article className={styles.friendly} id="amistosos"><div className={styles.featureSymbol} aria-hidden="true"><Swords size={58} strokeWidth={1.2} /></div><span className={styles.eyebrow}>AMISTOSOS</span><h2>Seu próximo rival<br />está a um convite.</h2><p>Encontre desafios abertos e combine uma partida com outro clube da comunidade.</p><Link href="/partidas/amistosos#desafios-abertos">Ver desafios abertos <ArrowUpRight size={19} aria-hidden="true" /></Link></article>
