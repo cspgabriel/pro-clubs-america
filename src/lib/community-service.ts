@@ -183,6 +183,22 @@ export function saveCommunityPreferences(input: { country: string; locale: strin
   return api<CommunityProfile>("/api/community/profile", { method: "PATCH", body: JSON.stringify(input) }, true);
 }
 
+export interface ClubInvitationRecord {
+  id: string;
+  status: "pending" | "accepted" | "declined" | "cancelled" | "expired";
+  createdAt: string;
+  expiresAt: string;
+  club: { id: string; name: string; platform: string };
+  inviter: { id: string; name: string; nickname?: string };
+  invitee: { id: string; name: string; nickname?: string; avatarUrl?: string };
+}
+
+export interface ClubInvitationsSummary {
+  incoming: ClubInvitationRecord[];
+  outgoing: ClubInvitationRecord[];
+  membership: { clubId: string; clubName: string; role: CommunityRole; canManage: boolean } | null;
+}
+
 export interface CatalogClub { id: string; name: string; platform: string; countryCode?: string | null; }
 
 export function searchCatalogClubs(query: string, platform: string, signal?: AbortSignal) {
@@ -235,6 +251,22 @@ export function getClubReferral() {
 
 export function redeemClubReferral(code: string) {
   return api<{ joined: boolean; clubId?: string; clubName?: string; bonusDays: number }>("/api/community/referral", { method: "POST", body: JSON.stringify({ code }) }, true);
+}
+
+export function getClubInvitations() {
+  return api<ClubInvitationsSummary>("/api/community/club-invitations", {}, true);
+}
+
+export function createClubInvitation(target: string) {
+  return api<{ invitationId: string; emailStatus: "sent" | "skipped" | "failed"; emailReason?: string }>("/api/community/club-invitations", { method: "POST", body: JSON.stringify({ target }) }, true);
+}
+
+export function respondToClubInvitation(id: string, action: "accept" | "decline" | "cancel") {
+  return api<{ id: string; status: string; clubName?: string }>("/api/community/club-invitations", { method: "PATCH", body: JSON.stringify({ id, action }) }, true);
+}
+
+export function leaveCommunityClub() {
+  return api<{ left: boolean; clubName?: string }>("/api/community/club-invitations", { method: "PATCH", body: JSON.stringify({ action: "leave" }) }, true);
 }
 
 export function registerCommunityClub(input: Omit<TeamRegistration, "id" | "submittedAt" | "status">) {

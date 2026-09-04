@@ -1,7 +1,7 @@
 import type { BillingEnv } from "./billing";
 import { supabaseRest } from "./supabase";
 
-export type EmailFlow = "welcome_d0" | "welcome_d2" | "welcome_d5" | "reactivation" | "match_notification";
+export type EmailFlow = "welcome_d0" | "welcome_d2" | "welcome_d5" | "reactivation" | "match_notification" | "club_invitation";
 /** Fluxos que o usuario pode desligar sem quebrar a conta. */
 const MARKETING_FLOWS = new Set<EmailFlow>(["welcome_d2", "welcome_d5", "reactivation"]);
 
@@ -60,6 +60,8 @@ const paragraph = (text: string) => `<p style="margin:0 0 12px;font-size:14px;li
 
 const strong = (text: string) => `<strong style="color:#fff">${text}</strong>`;
 
+const escapeHtml = (text: string) => text.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] || character);
+
 export function renderEmail(env: EmailEnv, flow: EmailFlow, input: { name: string; unsubscribeUrl: string; data?: Record<string, string> }) {
   const site = env.SITE_URL || "https://proclubsamerica.com";
   const first = input.name.split(" ")[0] || "jogador";
@@ -108,6 +110,20 @@ export function renderEmail(env: EmailEnv, flow: EmailFlow, input: { name: strin
           button(input.data?.url || `${site}/partidas/`, "Ver detalhes"),
         ].join(""), input.unsubscribeUrl),
       };
+    case "club_invitation": {
+      const clubNameText = input.data?.clubName || "Um clube";
+      const clubName = escapeHtml(clubNameText);
+      const inviterName = escapeHtml(input.data?.inviterName || "Um capitão");
+      const url = input.data?.url || `${site}/conta/`;
+      return {
+        subject: `${clubNameText} convidou você para o elenco`,
+        html: shell(env, "Um clube te chamou", [
+          paragraph(`${strong(inviterName)} convidou você para jogar no ${strong(clubName)}.`),
+          paragraph("Abra o convite para conferir o clube e aceitar ou recusar. Nada muda no seu perfil até você confirmar."),
+          button(url, "Ver convite"),
+        ].join(""), input.unsubscribeUrl),
+      };
+    }
   }
 }
 

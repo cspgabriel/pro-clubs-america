@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { CountryFlag } from "./country-flag";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
+import { ClubInvitations } from "./club-invitations";
 
 interface ClubMember {
   id: string;
@@ -53,6 +54,7 @@ export function CommunityClubPage() {
         <Link href="/partidas/amistosos#buscar-amistoso" className="community-club-challenge"><Swords /> Desafiar este clube</Link>
       </section>
       <section className="community-club-roster">
+        <ClubInvitations mode="club" clubId={club.id} onMembershipChanged={() => window.location.reload()} />
         <Link className="community-back" href={`/club?id=${encodeURIComponent(club.id)}`}>Estatísticas, elenco EA e histórico atualizado <ArrowRight /></Link>
         <header><div><small>ELENCO NA PLATAFORMA</small><h2>{club.members.length} {club.members.length === 1 ? "membro" : "membros"} cadastrados</h2></div><span>{club.platform === "common-gen4" ? "PS4 / Xbox One" : "PS5 / Xbox Series / PC"}</span></header>
         {club.members.length ? <div>{club.members.map((member) => <Link href={`/perfil?id=${encodeURIComponent(member.id)}`} key={member.id}>
