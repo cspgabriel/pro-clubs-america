@@ -21,6 +21,7 @@ import { PlatformHeader } from "./platform-header";
 import { CountryFlag } from "./country-flag";
 import { observeAuth } from "@/lib/auth-client";
 import { getCommunityProfile } from "@/lib/community-service";
+import { PlayerShareCard } from "./player-share-card";
 
 export interface PlayerRecentMatch {
   id: string;
@@ -94,6 +95,7 @@ export function PlayerProfile({ player, club, recentMatches, limitedData = false
       </section>
 
       <div className="player-content">
+        <PlayerShareCard player={player} clubName={club.name} />
         <section className="player-kpis" aria-label="Estatísticas do jogador">
           <article><small>JOGOS</small><strong>{number.format(player.matches)}</strong></article>
           <article><small>GOLS</small><strong>{player.goals == null ? "—" : number.format(player.goals)}</strong></article>

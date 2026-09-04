@@ -1,4 +1,4 @@
-const CACHE = "pro-clubs-america-v11";
+const CACHE = "pro-clubs-america-v12";
 const SHELL = ["/", "/inicio/", "/buscar/", "/clubes/", "/jogadores/", "/mercado/", "/partidas/", "/partidas/amistosos/", "/cadastro/", "/instalar/", "/rankings/jogadores/artilharia/", "/rankings/clubes/artilharia/", "/rankings/times/", "/club/171630/", "/icon.svg"];
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener("activate", (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim())));

@@ -1,0 +1,17 @@
+.panel{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;margin-bottom:18px;padding:22px;border:1px solid rgba(255,200,61,.38);background:radial-gradient(circle at 90% 10%,rgba(255,200,61,.16),transparent 35%),linear-gradient(125deg,#0e3268,#071a38)}
+.preview{display:grid;grid-template-columns:88px 1fr;align-items:center;gap:18px;min-width:0}
+.rating{display:grid;place-items:center;width:88px;height:104px;border:1px solid #ffc83d;border-radius:18px 18px 28px 28px;background:#081f44;color:#ffc83d}
+.rating strong{font:700 38px/1 "Outfit",sans-serif}
+.rating small{margin-top:4px;color:#ffc83d;font-size:9px;letter-spacing:.12em}
+.copy{min-width:0}
+.copy>small{color:#ffc83d;font-size:9px;font-weight:800;letter-spacing:.16em}
+.copy h2{overflow:hidden;margin:7px 0 5px;text-overflow:ellipsis;white-space:nowrap;font-size:26px}
+.copy p{margin:0;color:#b8c9e3;font-size:11px}
+.stats{display:flex;flex-wrap:wrap;gap:14px;margin-top:13px}
+.stats span{display:grid;gap:2px;color:#90a7c8;font-size:8px;letter-spacing:.1em}
+.stats b{color:#fff;font-size:16px;letter-spacing:0}
+.actions{display:grid;justify-items:end;gap:8px}
+.actions button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border:0;background:#ffc83d;color:#071a38;font-weight:800;font-size:11px;cursor:pointer}
+.actions button svg{width:17px}
+.actions small{max-width:210px;color:#9fb2cf;font-size:9px;text-align:right}
+@media(max-width:700px){.panel{grid-template-columns:1fr;padding:17px}.preview{grid-template-columns:68px 1fr;gap:13px}.rating{width:68px;height:84px}.rating strong{font-size:29px}.copy h2{font-size:21px}.actions{justify-items:stretch}.actions button{width:100%}.actions small{text-align:left}}

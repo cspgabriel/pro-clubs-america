@@ -35,7 +35,8 @@ export function RankingsPage({ metric, entity, players = [], clubs = [] }: { met
     secondary: `${player.position} · ${player.matches.toLocaleString("pt-BR")} jogos${metric === "desarmes" && player.tacklesMade != null && player.matches ? ` · ${(player.tacklesMade / player.matches).toLocaleString("pt-BR", { maximumFractionDigits: 2 })}/jogo` : ""}`,
     clubName: player.clubName,
   })).sort((a, b) => b.value - a.value);
-  const rows: RankingRow[] = entity === "players" ? playerRows : clubs;
+  const allRows: RankingRow[] = entity === "players" ? playerRows : clubs;
+  const rows = allRows.slice(0, 100);
   const maxValue = rows[0]?.value || 1;
   const entityTitle = entity === "players" ? "jogadores" : "clubes";
 
@@ -49,7 +50,7 @@ export function RankingsPage({ metric, entity, players = [], clubs = [] }: { met
           <span>#{index + 1}</span><Award /><small>{copy.unit}</small><strong>{row.value.toLocaleString("pt-BR")}{metric === "aproveitamento" ? "%" : ""}</strong><h2>{row.name}{row.clubName && <em>{row.clubName}</em>}</h2><p>{row.secondary}</p>
         </Link>)}
       </section>
-      <section className="ranking-list ranking-list-full"><header><div>{entity === "players" ? <Users /> : <Shield />}<span>{entityTitle.toUpperCase()}</span></div><b>{rows.length} indexados</b></header>
+      <section className="ranking-list ranking-list-full"><header><div>{entity === "players" ? <Users /> : <Shield />}<span>{entityTitle.toUpperCase()}</span></div><b>Top {rows.length} de {allRows.length.toLocaleString("pt-BR")}</b></header>
         {rows.map((row, index) => <Link href={entity === "players" ? `/jogador/${encodeURIComponent(row.id)}` : `/club/${row.id}`} key={row.id}><span className="ranking-position">{String(index + 1).padStart(2, "0")}</span><div><strong>{row.name}{row.clubName && <em>{row.clubName}</em>}</strong><small>{row.secondary}</small><i style={{ width: `${Math.max(4, row.value / maxValue * 100)}%` }} /></div><b>{row.value.toLocaleString("pt-BR")}{metric === "aproveitamento" ? "%" : ""}</b><ChevronRight /></Link>)}
         {!rows.length && <div className="ranking-empty"><TrendingUp />Aguardando dados confirmados para esta métrica.</div>}
       </section>
