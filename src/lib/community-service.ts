@@ -17,6 +17,11 @@ export interface CommunityProfile {
   country: string;
   locale: string;
   onboardingCompleted: boolean;
+  nickname: string;
+  gamingPlatform: string;
+  preferredPosition: string;
+  lookingForClub: boolean;
+  phone: string;
   role: CommunityRole;
   clubId?: string;
   clubName?: string;
@@ -46,6 +51,10 @@ export interface ProfileShowcase {
 
 export interface CommunityMemberCard {
   id: string;
+  nickname?: string;
+  gamingPlatform?: string;
+  preferredPosition?: string;
+  lookingForClub?: boolean;
   name: string;
   role: CommunityRole;
   country: string;
@@ -100,7 +109,7 @@ async function api<T>(path: string, init: RequestInit = {}, authRequired = false
   }
   const response = await fetch(path, { ...init, headers, cache: "no-store" });
   const payload = await response.json().catch(() => ({})) as T & { error?: string };
-  if (!response.ok) throw new Error(payload.error || `API_${response.status}`);
+  if (!response.ok) throw Object.assign(new Error(payload.error || `API_${response.status}`), { step: (payload as { step?: number }).step });
   return payload;
 }
 
@@ -170,7 +179,7 @@ export async function getCommunityProfile(): Promise<CommunityProfile | null> {
   return api<CommunityProfile>("/api/community/profile", {}, true);
 }
 
-export function saveCommunityPreferences(input: { country: string; locale: string; completeOnboarding?: boolean; clubId?: string | null }) {
+export function saveCommunityPreferences(input: { country: string; locale: string; completeOnboarding?: boolean; clubId?: string | null; nickname?: string; displayName?: string; gamingPlatform?: string; preferredPosition?: string; lookingForClub?: boolean; phone?: string }) {
   return api<CommunityProfile>("/api/community/profile", { method: "PATCH", body: JSON.stringify(input) }, true);
 }
 
@@ -195,8 +204,8 @@ export function uploadShowcasePhoto(file: File) {
   return api<{ url: string }>("/api/community/showcase/upload", { method: "POST", body: form }, true);
 }
 
-export function listCommunityMembers() {
-  return api<CommunityDirectory>("/api/community/profiles");
+export function listCommunityMembers(available = false) {
+  return api<CommunityDirectory>(`/api/community/profiles${available ? "?available=1" : ""}`);
 }
 
 export function getPushConfig() {

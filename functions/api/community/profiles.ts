@@ -1,17 +1,22 @@
 import { apiError, type FunctionContext } from "../../_lib/billing";
 import { findClubById, publicRouteId, supabaseRest } from "../../_lib/supabase";
 
-interface ProfileRow { id: string; full_name: string | null; role: string; country_slug: string | null; avatar_url: string | null; club_id: string | null; player_id: string | null; }
+interface ProfileRow { id: string; full_name: string | null; role: string; country_slug: string | null; avatar_url: string | null; club_id: string | null; player_id: string | null; nickname: string | null; gaming_platform: string | null; preferred_position: string | null; looking_for_club: boolean; }
 interface PlayerRow { id: string; gamertag: string; favorite_position: string; rating: number; }
 
 export const onRequestGet = async (context: FunctionContext) => {
   try {
-    const profiles = await supabaseRest<ProfileRow[]>(context.env, "profiles?select=id,full_name,role,country_slug,avatar_url,club_id,player_id&order=created_at.desc&limit=100");
+    const available = new URL(context.request.url).searchParams.get("available") === "1";
+    const profiles = await supabaseRest<ProfileRow[]>(context.env, `profiles?select=id,full_name,role,country_slug,avatar_url,club_id,player_id,nickname,gaming_platform,preferred_position,looking_for_club&order=created_at.desc&limit=100${available ? "&looking_for_club=eq.true" : ""}`);
     const members = await Promise.all(profiles.map(async (profile) => {
       const club = profile.club_id ? await findClubById(context.env, profile.club_id) : null;
       const player = profile.player_id ? (await supabaseRest<PlayerRow[]>(context.env, `players?id=eq.${encodeURIComponent(profile.player_id)}&select=id,gamertag,favorite_position,rating&limit=1`))[0] : null;
       return {
         id: profile.id,
+        nickname: profile.nickname || undefined,
+        gamingPlatform: profile.gaming_platform || undefined,
+        preferredPosition: profile.preferred_position || undefined,
+        lookingForClub: profile.looking_for_club,
         name: profile.full_name || "Jogador",
         role: profile.role,
         country: profile.country_slug || "brasil",
@@ -26,7 +31,7 @@ export const onRequestGet = async (context: FunctionContext) => {
       const club = await findClubById(context.env, clubId);
       return club ? { id: publicRouteId(club), name: club.name, memberCount } : null;
     }))).filter((club): club is { id: string; name: string; memberCount: number } => Boolean(club));
-    return Response.json({ members, clubs }, { headers: { "cache-control": "public, max-age=60" } });
+    return Response.json({ members, clubs }, { headers: { "cache-control": "no-store" } });
   } catch { return apiError("Não foi possível carregar os perfis da comunidade.", 500); }
 };
 
