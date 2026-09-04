@@ -85,6 +85,7 @@ O Next.js informa a porta disponível no terminal. Normalmente é
 | `/rankings/times` | Times cadastrados e validados na comunidade |
 | `/rankings/[metric]` | Compatibilidade: redireciona links antigos ao ranking de jogadores |
 | `/api/health` | Verificação simples de saúde |
+| `/api/ea?clubId={id}&platform={platform}` | Consulta ao vivo, com cache curto, da fonte pública da EA; o layout recua ao snapshot validado se a EA bloquear a requisição |
 | `/manifest.webmanifest` | Manifesto instalável da PWA |
 
 ## Base atual
