@@ -165,7 +165,7 @@ export function OnboardingPage() {
 
   if (!ready) return <main className={styles.loading}><BrandLogo size={72} /><p role={loadFailed ? "alert" : "status"}>{loadFailed ? t.loadError : t.loading}</p>{loadFailed && <button onClick={() => setRetry((value) => value + 1)}>{t.retry}</button>}</main>;
 
-  return <main className={styles.wizard} lang={locale}>
+  return <main className={`${styles.wizard} ${styles.compact}`} lang={locale}>
     <header className={styles.brand}><BrandLogo size={42} /><span>PRO CLUBS AMERICA</span></header>
     <div className={styles.layout}>
       <section className={styles.intro}>
@@ -179,22 +179,22 @@ export function OnboardingPage() {
       </section>
       <form className={styles.card} onSubmit={submit}>
         {step === 1 ? <>
-          <ProfileIdentityFields value={identity} onChange={changeIdentity} locale={locale} disabled={busy} />
+          <ProfileIdentityFields compact value={identity} onChange={changeIdentity} locale={locale} disabled={busy} />
           <hr />
-          <label className={styles.field}>{t.language}<select value={locale} onChange={(event) => setLocale(event.target.value as LocaleId)}>{locales.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
-          <label className={styles.field}>{t.country}<select value={country} onChange={(event) => setCountry(event.target.value)}>{countries.map((item) => <option key={item.code} value={item.slug}>{item.name[locale === "pt-br" ? "pt" : locale]}</option>)}</select></label>
+          <div className={styles.fieldPair}><label className={styles.field}>{t.language}<select value={locale} onChange={(event) => setLocale(event.target.value as LocaleId)}>{locales.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
+          <label className={styles.field}>{t.country}<select value={country} onChange={(event) => setCountry(event.target.value)}>{countries.map((item) => <option key={item.code} value={item.slug}>{item.name[locale === "pt-br" ? "pt" : locale]}</option>)}</select></label></div>
         </> : <>
-          <PlayingIdentityFields value={identity} onChange={changeIdentity} locale={locale} disabled={busy} />
+          <PlayingIdentityFields compact value={identity} onChange={changeIdentity} locale={locale} disabled={busy} />
           <hr />
           {!lockedClub && <>
-          <label className={styles.field}>{info.catalog}<select value={platform} onChange={(event) => { setPlatform(event.target.value); setClubs([]); }}><option value="common-gen5">{t.gen5}</option><option value="common-gen4">{t.gen4}</option><option value="nx">{t.switch}</option></select></label>
-          <label className={styles.field}>{t.search}<span className={styles.search}><Search size={18} /><input type="search" value={query} onChange={(event) => { setQuery(event.target.value); setClubs([]); }} placeholder={t.search} maxLength={80} autoComplete="off" /></span></label>
-          <div className={styles.results} aria-label={t.results} aria-busy={searching}>
-            {searching ? <p role="status">{t.searching}</p> : searchFailed ? <div role="alert"><p>{t.searchError}</p><button className={styles.retry} type="button" onClick={() => setRetry((value) => value + 1)}>{t.retry}</button></div> : clubs.length ? clubs.map((club) => <button className={styles.club} type="button" key={club.id} aria-pressed={selected?.id === club.id} onClick={() => { setSelected(club); setWithoutClub(false); setError(""); }}>
-              <Shield size={22} /><span><strong>{club.name}</strong><small>ID {club.id} {club.countryCode ? `· ${club.countryCode}` : ""}</small></span>{selected?.id === club.id && <Check size={18} />}
+          <details className={styles.optional}><summary>{info.catalog}</summary><label className={styles.field}>{info.catalog}<select value={platform} onChange={(event) => { setPlatform(event.target.value); setClubs([]); }}><option value="common-gen5">{t.gen5}</option><option value="common-gen4">{t.gen4}</option><option value="nx">{t.switch}</option></select></label></details>
+          <label className={styles.field}>{t.search}<span className={styles.search}><Search size={18} /><input type="search" value={query} onChange={(event) => { setQuery(event.target.value); setClubs([]); setSelected(null); setWithoutClub(false); }} placeholder={t.search} maxLength={80} autoComplete="off" /></span></label>
+          {!selected && !withoutClub && <><div className={styles.results} aria-label={t.results} aria-busy={searching}>
+            {searching ? <p role="status">{t.searching}</p> : searchFailed ? <div role="alert"><p>{t.searchError}</p><button className={styles.retry} type="button" onClick={() => setRetry((value) => value + 1)}>{t.retry}</button></div> : clubs.length ? clubs.map((club) => <button className={styles.club} type="button" key={club.id} onClick={() => { setSelected(club); setWithoutClub(false); setError(""); }}>
+              <Shield size={22} /><span><strong>{club.name}</strong><small>ID {club.id} {club.countryCode ? `· ${club.countryCode}` : ""}</small></span>
             </button>) : <p role="status">{t.empty}</p>}
           </div>
-          <small className={styles.hint}>{t.limit}</small>
+          <small className={styles.hint}>{t.limit}</small></>}
           </>}
           {selected && <div className={styles.selection} role="status"><Check size={18} /><span>{t.selected}<strong>{selected.name}</strong></span></div>}
           {!lockedClub && <button type="button" className={styles.noClub} aria-pressed={withoutClub} onClick={() => { setSelected(null); setWithoutClub(true); setError(""); }}><UserRound size={22} /><span><strong>{t.noClub}</strong><small>{t.noClubHint}</small></span>{withoutClub && <Check size={18} />}</button>}

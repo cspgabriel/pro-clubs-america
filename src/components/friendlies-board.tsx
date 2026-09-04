@@ -11,6 +11,8 @@ import { PushPrompt } from "./push-prompt";
 import { acceptFriendly, createFriendly, getCommunityProfile, markFriendlyPlayed, watchFriendlies, watchOfficialMatches, type CommunityProfile } from "@/lib/community-service";
 import { MobileNav } from "./mobile-nav";
 import { PlatformHeader } from "./platform-header";
+import { ActionForm } from "./action-form";
+import formStyles from "./action-form.module.css";
 
 export interface PublicMatch {
   id: string;
@@ -136,15 +138,15 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
 
   return <main className="app-shell">
     <PlatformHeader />
-    <section className="friendlies-hero"><div><small>CENTRAL DE JOGOS</small><h1>{view === "history" ? "Histórico de partidas" : view === "friendlies" ? "Marcar amistoso" : "Partidas e amistosos"}</h1><p>{view === "history" ? "Resultados publicados pela EA, separados por Liga, Friendly e Playoff." : "Convide um clube específico ou publique um desafio aberto. O placar só entra depois da confirmação no histórico Friendly da EA."}</p></div><Swords /></section>
+    <section className="friendlies-hero"><div><small>CENTRAL DE JOGOS</small><h1>{view === "history" ? "Histórico de partidas" : view === "friendlies" ? "Amistosos da comunidade" : "Partidas e amistosos"}</h1><p>{view === "history" ? "Resultados publicados pela EA, separados por Liga, Friendly e Playoff." : "Convide um clube específico ou publique um desafio aberto. O placar só entra depois da confirmação no histórico Friendly da EA."}</p></div><Swords /></section>
     {view !== "friendlies" && <section className="matches-wall">
       <div className="market-title"><div><small>HISTÓRICO PÚBLICO</small><h2>Últimas partidas</h2></div><span>{visibleMatches.length} jogos</span></div>
       <div className="match-filters" role="group" aria-label="Filtrar partidas">{[{ id: "all", label: "Todos" }, { id: "leagueMatch", label: "Liga" }, { id: "friendlyMatch", label: "Friendly" }, { id: "playoffMatch", label: "Playoff" }].map((item) => <button type="button" className={matchMode === item.id ? "active" : ""} onClick={() => setMatchMode(item.id as typeof matchMode)} key={item.id}>{item.label}</button>)}</div>
       {visibleMatches.length ? <div className="match-wall-grid">{visibleMatches.map((match) => <Link className="public-match-card" href={`/partida/${encodeURIComponent(match.id)}`} key={match.id}><header><span>{match.mode === "leagueMatch" ? "LIGA" : match.mode === "friendlyMatch" ? "FRIENDLY" : "PLAYOFF"}</span><small>{new Date(match.playedAt).toLocaleDateString("pt-BR")}</small></header><div><strong>{match.homeClubName}</strong><b>{match.homeScore}<i>×</i>{match.awayScore}</b><strong>{match.awayClubName}</strong></div><footer><Trophy /> {match.competition}</footer></Link>)}</div> : <div className="match-wall-empty"><Goal /><strong>Nenhum jogo publicado neste modo</strong><span>O mural só mostra resultados confirmados na fonte pública.</span></div>}
     </section>}
 
-    {view !== "history" && <section className="friendlies-layout" id="buscar-amistoso">
-      <form className="challenge-form" onSubmit={submit}>
+    {view !== "history" && <section className={`friendlies-layout ${formStyles.layout}`} id="buscar-amistoso">
+      <ActionForm id="novo-amistoso" label={initialChallengeTarget ? `Convidar ${initialChallengeTarget.name}` : "Criar amistoso"}><form className="challenge-form" onSubmit={submit}>
         <h2>Criar amistoso</h2>
         <section className="match-identity"><header><UserCheck /><span>CONTA E TIME ATIVOS<strong>{canManage ? `${profile?.displayName} · ${activeClub?.name}` : authUser ? "Cadastre ou vincule seu clube" : "Entre para criar ou aceitar"}</strong></span></header>{authUser ? <><label>Conta autenticada<input readOnly value={profile?.displayName || authUser.name} /></label><label>Time vinculado<input readOnly value={activeClub?.name || profile?.clubName || "Nenhum clube vinculado"} /></label></> : <Link href="/entrar"><LockKeyhole /> Entrar na minha conta</Link>}</section>
         <div className="challenge-type" role="group" aria-label="Tipo de desafio"><button type="button" className={challengeMode === "invite" ? "active" : ""} onClick={() => setChallengeMode("invite")}><Users /> Convidar time</button><button type="button" className={challengeMode === "open" ? "active" : ""} onClick={() => setChallengeMode("open")}><Radio /> Desafio aberto</button></div>
@@ -153,10 +155,11 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
         <div className="form-pair"><label>Data<input required type="date" value={date} onChange={(event) => setDate(event.target.value)} /></label><label>Horário<input required type="time" value={time} onChange={(event) => setTime(event.target.value)} /></label></div>
         <label>Região ou servidor<input value={region} onChange={(event) => setRegion(event.target.value)} /></label>
         <button type="submit" disabled={busyId === "create" || !canManage}><Search /> {busyId === "create" ? "Publicando…" : challengeMode === "invite" ? "Enviar convite" : "Publicar desafio aberto"}</button>
-        {notice && <p className="challenge-notice" role="status">{notice}</p>}
-        <PushPrompt visible={awaitingReply} reason="Avisamos no seu celular assim que o outro clube responder — mesmo com o app fechado." />
+
         <aside><ShieldCheck /> Aceite exige conta e time. Resultado validado exclusivamente pelo histórico Friendly Match.</aside>
-      </form>
+      </form></ActionForm>
+      {notice && <p className={formStyles.notice} role="status">{notice}</p>}
+      <PushPrompt visible={awaitingReply} reason="Avisamos no seu celular assim que o outro clube responder — mesmo com o app fechado." />
 
       <section className="challenge-list" id="desafios-abertos">
         <div className="market-title"><div><small>GERADOS PELA PLATAFORMA</small><h2>Jogos marcados e desafios</h2></div><span>{requests.length} anúncios</span></div>
@@ -173,7 +176,7 @@ export function FriendliesBoard({ matches, communityClubs, initialChallengeTarge
           </article>;
         }) : <div className="challenge-suggestions">
           <div className="market-empty"><Swords /><strong>Nenhum desafio aberto agora</strong><span>Seja o primeiro — ou convide um destes times direto.</span></div>
-          <div className="suggestion-grid">{suggestedOpponents.map((club) => <button type="button" key={club.id} onClick={() => { setChallengeMode("invite"); setOpponentClubId(club.id); setOpponentQuery(club.name); document.getElementById("buscar-amistoso")?.scrollIntoView({ behavior: "smooth", block: "center" }); }}>
+          <div className="suggestion-grid">{suggestedOpponents.map((club) => <button type="button" key={club.id} onClick={() => { setChallengeMode("invite"); setOpponentClubId(club.id); setOpponentQuery(club.name); const panel = document.getElementById("novo-amistoso"); if (panel instanceof HTMLDetailsElement) { panel.open = true; panel.querySelector("summary")?.focus(); panel.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" }); } }}>
             <Image src={club.crestUrl} alt="" width={40} height={40} unoptimized />
             <span><strong>{club.name}</strong><small>SR {club.skillRating ?? "—"}{club.matches ? ` · ${club.matches} jogos` : ""}</small></span>
             <em>Desafiar</em>
