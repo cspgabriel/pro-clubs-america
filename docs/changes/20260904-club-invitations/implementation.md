@@ -1,6 +1,6 @@
 # Convites de elenco
 
-Status: em implementação
+Status: publicado
 
 ## Fluxo mapeado
 
@@ -24,4 +24,5 @@ Status: em implementação
 - Migração remota aplicada no projeto Supabase `proclubsamerica`.
 - `npm run check` sem erros.
 - Cloudflare Pages em produção no mesmo SHA de `origin/main`.
-- QA autenticado: criar, visualizar, aceitar, recusar, cancelar e sair, sem deixar dados temporários.
+- QA autenticado confirmou a gestão para o dono, o carregamento dos convites e a validação de jogador inexistente sem criar convite.
+- A tentativa de cenário sintético completo foi interrompida por timeout de infraestrutura antes da criação do convite. As duas contas Firebase e os dois perfis temporários foram removidos por IDs e e-mails exatos; a limpeza ficou registrada na migração seguinte.
