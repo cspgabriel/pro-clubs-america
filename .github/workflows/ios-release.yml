@@ -35,14 +35,19 @@ env:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 45
     steps:
       - name: Checkout canonical repository
         uses: actions/checkout@v4
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode_15.4.app
+        run: |
+          set -euo pipefail
+          # O Firebase SDK usa sintaxe Swift 6 (sending), que exige Xcode 16+.
+          LATEST="$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -n 1 || true)"
+          sudo xcode-select -switch "${LATEST:-/Applications/Xcode.app}"
+          xcodebuild -version
 
       - name: Install CocoaPods dependencies
         working-directory: ios
