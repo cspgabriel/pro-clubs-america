@@ -1,5 +1,6 @@
 import WebKit
 import FirebaseMessaging
+import FirebaseCore
 
 class SubscribeMessage {
     var topic  = ""
@@ -25,6 +26,7 @@ class SubscribeMessage {
 }
 
 func handleSubscribeTouch(message: WKScriptMessage) {
+    guard FirebaseApp.app() != nil else { return }
   // [START subscribe_topic]
     let subscribeMessages = parseSubscribeMessage(message: message)
     if (subscribeMessages.count > 0){
@@ -81,6 +83,10 @@ func returnPermissionState(state: String){
 }
 
 func handlePushPermission() {
+    guard FirebaseApp.app() != nil else {
+        returnPermissionResult(isGranted: false)
+        return
+    }
     UNUserNotificationCenter.current().getNotificationSettings () { settings in
             switch settings.authorizationStatus {
             case .notDetermined:
@@ -147,13 +153,16 @@ func checkViewAndEvaluate(event: String, detail: String) {
 }
 
 func handleFCMToken(){
+    guard FirebaseApp.app() != nil else {
+        returnPermissionState(state: "unavailable")
+        return
+    }
     DispatchQueue.main.async(execute: {
         Messaging.messaging().token { token, error in
             if let error = error {
                 print("Error fetching FCM registration token: \(error)")
                 checkViewAndEvaluate(event: "push-token", detail: "ERROR GET TOKEN")
             } else if let token = token {
-                print("FCM registration token: \(token)")
                 checkViewAndEvaluate(event: "push-token", detail: "'\(token)'")
             }
         }   

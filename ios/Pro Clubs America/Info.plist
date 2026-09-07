@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Capture Audio by user request</string>
+	<string>Use o microfone para gravar áudio quando você solicitar.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Track current location by user request</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Capture Video by user request</string>
+	<string>Use a câmera para anexar imagens quando você solicitar.</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>pt_BR</string>
 	<key>CFBundleDisplayName</key>
 	<string>Pro Clubs America</string>
 	<key>CFBundleExecutable</key>
@@ -32,7 +32,7 @@
 			<key>CFBundleURLName</key>
 			<string></string>
 			<key>CFBundleURLSchemes</key>
-			<array />
+			<array/>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
@@ -65,11 +65,6 @@
 			</array>
 		</dict>
 	</dict>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>processing</string>
-		<string>remote-notification</string>
-	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -99,16 +94,11 @@
 	<key>WKAppBoundDomains</key>
 	<array>
 		<string>proclubsamerica.com</string>
-<string>accounts.google.com</string>
-<string>primeval-jet-326417.firebaseapp.com</string>
-<string>www.googleapis.com</string>
+		<string>accounts.google.com</string>
+		<string>primeval-jet-326417.firebaseapp.com</string>
+		<string>www.googleapis.com</string>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	</array>
-	
 </dict>
 </plist>

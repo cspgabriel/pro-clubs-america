@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		25D3517F267A48E0002E5DC0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 25D3517E267A48E0002E5DC0 /* GoogleService-Info.plist */; };
-		7A1PRIV0002A48E0002E5DC0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7A1PRIV0001A48E0002E5DC0 /* PrivacyInfo.xcprivacy */; };
+		7A10000002AA48E0002E5DC0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7A10000001AA48E0002E5DC0 /* PrivacyInfo.xcprivacy */; };
 		595F23A525CEFBFE0053416C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 595F239A25CEFBFD0053416C /* Settings.swift */; };
 		595F23A625CEFBFE0053416C /* Entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 595F239B25CEFBFD0053416C /* Entitlements */; };
 		595F23A725CEFBFE0053416C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 595F239C25CEFBFD0053416C /* Assets.xcassets */; };
@@ -25,7 +25,7 @@
 
 /* Begin PBXFileReference section */
 		25D3517E267A48E0002E5DC0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Pro Clubs America/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		7A1PRIV0001A48E0002E5DC0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = "Pro Clubs America/PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
+		7A10000001AA48E0002E5DC0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = "Pro Clubs America/PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
 		4C1C2162A8048FDF52B2A9D0 /* Pods-Pro Clubs America.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro Clubs America.release.xcconfig"; path = "Target Support Files/Pods-Pro Clubs America/Pods-Pro Clubs America.release.xcconfig"; sourceTree = "<group>"; };
 		59333BAA25CFF706003392A4 /* ProClubsAmerica.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ProClubsAmerica.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		595F239A25CEFBFD0053416C /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Settings.swift; path = "Pro Clubs America/Settings.swift"; sourceTree = "<group>"; };
@@ -81,7 +81,7 @@
 				595F239B25CEFBFD0053416C /* Entitlements */,
 				595F23A025CEFBFE0053416C /* Info.plist */,
 				25D3517E267A48E0002E5DC0 /* GoogleService-Info.plist */,
-				7A1PRIV0001A48E0002E5DC0 /* PrivacyInfo.xcprivacy */,
+				7A10000001AA48E0002E5DC0 /* PrivacyInfo.xcprivacy */,
 				595F23A325CEFBFE0053416C /* Printer.swift */,
 				595F239F25CEFBFE0053416C /* PushNotifications.swift */,
 				595F239D25CEFBFD0053416C /* SceneDelegate.swift */,
@@ -162,7 +162,7 @@
 				CDC0FE2A2388222C002C8D56 /* LaunchScreen.storyboard in Resources */,
 				595F23A725CEFBFE0053416C /* Assets.xcassets in Resources */,
 				25D3517F267A48E0002E5DC0 /* GoogleService-Info.plist in Resources */,
-				7A1PRIV0002A48E0002E5DC0 /* PrivacyInfo.xcprivacy in Resources */,
+				7A10000002AA48E0002E5DC0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,7 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //FirebaseApp.configure()
 
         // [START set_messaging_delegate]
-        Messaging.messaging().delegate = self
+        if FirebaseApp.app() != nil {
+            Messaging.messaging().delegate = self
+        }
         // [END set_messaging_delegate]
         // Register for remote notifications. This shows a permission dialog on first run, to
         // show the dialog at a more appropriate time move this registration accordingly.
@@ -43,11 +45,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-          print("Message ID 1: \(messageID)")
         }
 
         // Print full message.
-        print("push userInfo 1:", userInfo)
         sendPushToWebView(userInfo: userInfo)
       }
 
@@ -59,11 +59,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-          print("Message ID 2: \(messageID)")
         }
 
         // Print full message. **
-        print("push userInfo 2:", userInfo)
         sendPushToWebView(userInfo: userInfo)
 
         completionHandler(UIBackgroundFetchResult.newData)
@@ -97,11 +95,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-          print("Message ID: 3 \(messageID)")
         }
 
         // Print full message.
-        print("push userInfo 3:", userInfo)
         sendPushToWebView(userInfo: userInfo)
 
         // Change this to your preferred presentation option
@@ -114,13 +110,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let userInfo = response.notification.request.content.userInfo
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-          print("Message ID 4: \(messageID)")
         }
 
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         // Print full message.
-        print("push userInfo 4:", userInfo)
         sendPushClickToWebView(userInfo: userInfo)
 
         completionHandler()
@@ -131,7 +125,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     extension AppDelegate : MessagingDelegate {
       // [START refresh_token]
       func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("Firebase registration token: \(String(describing: fcmToken))")
         
         let dataDict:[String: String] = ["token": fcmToken ?? ""]
         NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)

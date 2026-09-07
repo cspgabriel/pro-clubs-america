@@ -20,7 +20,7 @@ func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNav
     config.limitsNavigationsToAppBoundDomains = true;
     config.allowsInlineMediaPlayback = true
     config.preferences.javaScriptCanOpenWindowsAutomatically = true
-    config.preferences.setValue(true, forKey: "standalone")
+
     
     let webView = WKWebView(frame: calcWebviewFrame(webviewView: container, toolbarView: nil), configuration: config)
     setCustomCookie(webView: webView)
@@ -38,10 +38,7 @@ func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNav
         webView.isInspectable = true
     }
     
-    let deviceModel = UIDevice.current.model
-    let osVersion = UIDevice.current.systemVersion
-    webView.configuration.applicationNameForUserAgent = "Safari/604.1"
-    webView.customUserAgent = "Mozilla/5.0 (\(deviceModel); CPU \(deviceModel) OS \(osVersion.replacingOccurrences(of: ".", with: "_")) like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/\(osVersion) Mobile/15E148 Safari/604.1 PWAShell"
+    webView.configuration.applicationNameForUserAgent = "pro-clubs-america/iOS"
 
     webView.addObserver(NSO, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: NSKeyValueObservingOptions.new, context: nil)
     
@@ -66,7 +63,7 @@ func setCustomCookie(webView: WKWebView) {
         .path: "/",
         .name: platformCookie.name,
         .value: platformCookie.value,
-        .secure: "FALSE",
+        .secure: "TRUE",
         .expires: NSDate(timeIntervalSinceNow: 31556926)
     ])!
 
@@ -133,7 +130,7 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
 
             if let requestHost = requestUrl.host {
                 // NOTE: Match auth origin first, because host origin may be a subset of auth origin and may therefore always match
-                let matchingAuthOrigin = authOrigins.first(where: { requestHost.range(of: $0) != nil })
+                let matchingAuthOrigin = authOrigins.first(where: { requestHost.lowercased() == $0.lowercased() })
                 if (matchingAuthOrigin != nil) {
                     decisionHandler(.allow)
                     if (toolbarView.isHidden) {
@@ -143,7 +140,7 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
                     return
                 }
 
-                let matchingHostOrigin = allowedOrigins.first(where: { requestHost.range(of: $0) != nil })
+                let matchingHostOrigin = allowedOrigins.first(where: { requestHost.lowercased() == $0.lowercased() })
                 if (matchingHostOrigin != nil) {
                     // Open in main webview
                     decisionHandler(.allow)
@@ -153,18 +150,7 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
                     }
                     return
                 }
-                if (navigationAction.navigationType == .other &&
-                    navigationAction.value(forKey: "syntheticClickType") as! Int == 0 &&
-                    (navigationAction.targetFrame != nil) &&
-                    // no error here, fake warning
-                    (navigationAction.sourceFrame != nil)
-                ) {
-                    decisionHandler(.allow)
-                    return
-                }
-                else {
-                    decisionHandler(.cancel)
-                }
+                decisionHandler(.cancel)
 
 
                 if ["http", "https"].contains(requestUrl.scheme?.lowercased() ?? "") {

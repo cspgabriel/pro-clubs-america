@@ -129,8 +129,8 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
         webviewView.addSubview(toolbarView)
     }
     
-    @objc func loadRootUrl(cachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy) {
-        ProClubsAmerica.webView.load(URLRequest(url: SceneDelegate.universalLinkToLaunch ?? SceneDelegate.shortcutLinkToLaunch ?? rootUrl, cachePolicy: cachePolicy))
+    @objc func loadRootUrl() {
+        ProClubsAmerica.webView.load(URLRequest(url: SceneDelegate.universalLinkToLaunch ?? SceneDelegate.shortcutLinkToLaunch ?? rootUrl, cachePolicy: .useProtocolCachePolicy))
     }
     
     func reloadWebview(
@@ -138,10 +138,10 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
     ) {
         switch loadingMode {
         case LoadingMode.defaultCachePolicy:
-            loadRootUrl(cachePolicy: .useProtocolCachePolicy);
+            loadRootUrl();
 
         case LoadingMode.forceCache:
-            loadRootUrl(cachePolicy: .useProtocolCachePolicy);
+            loadRootUrl();
         }
 
         self.loadingMode = loadingMode
@@ -257,6 +257,7 @@ extension UIColor {
 
 extension ViewController: WKScriptMessageHandler {
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.frameInfo.isMainFrame, allowedOrigins.contains(message.frameInfo.securityOrigin.host.lowercased()) else { return }
         if message.name == "print" {
             printView(webView: ProClubsAmerica.webView)
         }

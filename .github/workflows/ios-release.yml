@@ -1,165 +1,87 @@
 name: iOS Release
-
 on:
   workflow_dispatch:
     inputs:
       build_number:
-        description: Numero do build (CFBundleVersion)
+        description: Numero do build
         required: true
         default: "1"
       marketing_version:
-        description: Versao publica (CFBundleShortVersionString)
+        description: Versao publica
         required: true
         default: "1.0.0"
       signed:
-        description: Assinar o build (exige os secrets de certificado e perfil)
+        description: Assinar e exportar IPA
         type: boolean
         default: false
       upload:
-        description: Enviar para o App Store Connect ao final
+        description: Enviar IPA ao App Store Connect
         type: boolean
         default: false
-
 permissions:
   contents: read
-
 concurrency:
-  group: pro-clubs-america-ios
+  group: ios-release
   cancel-in-progress: false
-
-env:
-  SCHEME: Pro Clubs America
-  WORKSPACE: ios/Pro Clubs America.xcworkspace
-  BUNDLE_ID: com.proclubsamerica.app
-  TEAM_ID: BUK3X7JL65
-
 jobs:
   build:
     runs-on: macos-15
     timeout-minutes: 45
+    env:
+      IOS_FOLDER: ios
+      IOS_TARGET: Pro Clubs America
+      BUNDLE_ID: com.proclubsamerica.app
+      TEAM_ID: BUK3X7JL65
+      BUILD_NUMBER: ${{ inputs.build_number }}
+      MARKETING_VERSION: ${{ inputs.marketing_version }}
+      SIGNED: ${{ inputs.signed }}
     steps:
-      - name: Checkout canonical repository
-        uses: actions/checkout@v4
-
-      - name: Select Xcode
+      - uses: actions/checkout@v4
+      - name: Select App Store compatible Xcode
         run: |
           set -euo pipefail
-          # O Firebase SDK usa sintaxe Swift 6 (sending), que exige Xcode 16+.
-          LATEST="$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -n 1 || true)"
-          sudo xcode-select -switch "${LATEST:-/Applications/Xcode.app}"
+          test -d /Applications/Xcode_26.3.app
+          sudo xcode-select --switch /Applications/Xcode_26.3.app
           xcodebuild -version
-
-      - name: Install CocoaPods dependencies
-        working-directory: ios
-        run: pod install --repo-update
-
-      - name: Import signing certificate and provisioning profile
-        if: ${{ inputs.signed }}
+          xcrun --sdk iphoneos --show-sdk-version
+      - name: Validate requested signing and upload
+        env:
+          UPLOAD: ${{ inputs.upload }}
+        run: |
+          if [[ "$UPLOAD" == true && "$SIGNED" != true ]]; then
+            echo 'Upload requires a signed archive'; exit 1
+          fi
+      - name: Install dependencies and prepare signing
         env:
           CERT_P12: ${{ secrets.IOS_DIST_CERT_P12_BASE64 }}
           CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
           PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
-        run: |
-          set -euo pipefail
-          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
-          KEYCHAIN_PASSWORD="$(uuidgen)"
-          echo "$CERT_P12" | base64 --decode > "$RUNNER_TEMP/dist.p12"
-          echo "$PROFILE" | base64 --decode > "$RUNNER_TEMP/profile.mobileprovision"
-
-          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security set-keychain-settings -lut 21600 "$KEYCHAIN"
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security import "$RUNNER_TEMP/dist.p12" -P "$CERT_PASSWORD" -A \
-            -t cert -f pkcs12 -k "$KEYCHAIN"
-          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security list-keychain -d user -s "$KEYCHAIN" login.keychain-db
-
-          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          UUID="$(/usr/libexec/PlistBuddy -c 'Print UUID' /dev/stdin \
-            <<< "$(security cms -D -i "$RUNNER_TEMP/profile.mobileprovision")")"
-          cp "$RUNNER_TEMP/profile.mobileprovision" \
-            "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
-          echo "PROFILE_UUID=$UUID" >> "$GITHUB_ENV"
-
-      - name: Apply version numbers
-        run: |
-          set -euo pipefail
-          cd "ios/Pro Clubs America.xcodeproj"
-          sed -i '' \
-            -e "s/MARKETING_VERSION = [^;]*;/MARKETING_VERSION = ${{ inputs.marketing_version }};/g" \
-            -e "s/CURRENT_PROJECT_VERSION = [^;]*;/CURRENT_PROJECT_VERSION = ${{ inputs.build_number }};/g" \
-            project.pbxproj
-
-      - name: Compile without signing
+        run: bash scripts/ios-release.sh prepare
+      - name: Compile for physical iOS devices
+        run: bash scripts/ios-release.sh compile
+      - name: Simulator launch and screenshots
         if: ${{ !inputs.signed }}
-        run: |
-          set -euo pipefail
-          xcodebuild build             -workspace "$WORKSPACE"             -scheme "$SCHEME"             -configuration Release             -destination 'generic/platform=iOS'             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID"             CODE_SIGNING_ALLOWED=NO             CODE_SIGNING_REQUIRED=NO             CODE_SIGN_IDENTITY=""             | xcpretty && exit "${PIPESTATUS[0]}"
-
-      - name: Archive
+        run: bash scripts/ios-release.sh simulator
+      - name: Archive and export signed IPA
         if: ${{ inputs.signed }}
-        run: |
-          set -euo pipefail
-          xcodebuild archive \
-            -workspace "$WORKSPACE" \
-            -scheme "$SCHEME" \
-            -configuration Release \
-            -destination 'generic/platform=iOS' \
-            -archivePath "$RUNNER_TEMP/ProClubsAmerica.xcarchive" \
-            DEVELOPMENT_TEAM="$TEAM_ID" \
-            PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
-            CODE_SIGN_STYLE=Manual \
-            PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" \
-            | xcpretty && exit "${PIPESTATUS[0]}"
-
-      - name: Export IPA
-        if: ${{ inputs.signed }}
-        run: |
-          set -euo pipefail
-          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key><string>app-store-connect</string>
-            <key>teamID</key><string>$TEAM_ID</string>
-            <key>signingStyle</key><string>manual</string>
-            <key>uploadSymbols</key><true/>
-            <key>provisioningProfiles</key>
-            <dict><key>$BUNDLE_ID</key><string>$PROFILE_UUID</string></dict>
-          </dict>
-          </plist>
-          PLIST
-          xcodebuild -exportArchive \
-            -archivePath "$RUNNER_TEMP/ProClubsAmerica.xcarchive" \
-            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
-            -exportPath "$RUNNER_TEMP/export"
-
-      - name: Upload IPA as workflow artifact
-        if: ${{ inputs.signed }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pro-clubs-america-ios-${{ inputs.build_number }}
-          path: ${{ runner.temp }}/export/*.ipa
-          retention-days: 14
-
+        run: bash scripts/ios-release.sh archive
       - name: Upload to App Store Connect
         if: ${{ inputs.signed && inputs.upload }}
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8: ${{ secrets.ASC_API_KEY_P8_BASE64 }}
-        run: |
-          set -euo pipefail
-          mkdir -p "$HOME/.appstoreconnect/private_keys"
-          echo "$ASC_KEY_P8" | base64 --decode \
-            > "$HOME/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8"
-          IPA="$(find "$RUNNER_TEMP/export" -name '*.ipa' -maxdepth 1 | head -n 1)"
-          xcrun altool --validate-app -f "$IPA" -t ios \
-            --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
-          xcrun altool --upload-app -f "$IPA" -t ios \
-            --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
-
-      - name: Clean up keychain
+        run: bash scripts/ios-release.sh upload
+      - name: Preserve build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-pro-clubs-america-${{ inputs.build_number }}
+          path: ${{ runner.temp }}/ios-output
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Clean up signing files
         if: ${{ always() && inputs.signed }}
-        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
+        run: |
+          security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
+          rm -f "$RUNNER_TEMP/dist.p12" "$RUNNER_TEMP/profile.mobileprovision" "$RUNNER_TEMP/profile.plist"
