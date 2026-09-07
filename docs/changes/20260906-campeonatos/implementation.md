@@ -63,8 +63,20 @@ mesmo código, para nunca divergirem.
 As duas súmulas ficam visíveis para todo mundo na tela do campeonato: é o que deixa claro
 por que um jogo está em disputa, sem ninguém ter de perguntar.
 
-**As migrations NÃO foram aplicadas.** O workflow de deploy não aplica migrations neste
-repositório; rodar as duas no Supabase remoto é passo manual e ainda pendente.
+**Aplicadas em produção em 07/09/2026** (projeto Supabase `mdqtlkvkpacjouwgtibr`,
+`proclubsamerica`). O workflow de deploy não aplica migrations neste repositório — foram
+rodadas à mão, depois do push. Estado conferido no banco: 4 tabelas, 10 funções, RLS
+ligada nas 4, e nenhum resíduo de `report_tournament_match`.
+
+Duas observações para quem replicar do zero:
+
+- `report_tournament_match` **não chegou a ser criada em produção**. Ela nasce na migration
+  2 e morre na 3; criá-la para derrubá-la segundos depois abriria uma janela em que o
+  modelo unilateral — o furo que a súmula bilateral corrige — estaria vivo e chamável se a
+  migration 3 falhasse. Um replay do zero cria e derruba; o estado final é o mesmo.
+- `can_manage_club` ganhou `set search_path = public` depois que o linter de segurança do
+  Supabase acusou `function_search_path_mutable`. O arquivo já está corrigido; em produção
+  isso entrou como uma quarta migration.
 
 ### Motor — `functions/_lib/tournaments.ts`
 

@@ -8,10 +8,17 @@ begin;
 -- ============================================================
 
 -- Quem pode falar pelo clube: dono, capitao ou admin da plataforma.
+--
+-- `set search_path` nao e enfeite: sem ele o linter de seguranca do
+-- Supabase acusa `function_search_path_mutable`, e com razao — quem
+-- controla o search_path da sessao poderia fazer `public.profiles`
+-- resolver para outro schema, e esta e justamente a funcao que decide
+-- quem fala pelo clube.
 create or replace function public.can_manage_club(p_profile public.profiles, p_club_id uuid)
 returns boolean
 language sql
 immutable
+set search_path = public
 as $$
   select p_club_id is not null
      and (p_profile.role = 'admin'
