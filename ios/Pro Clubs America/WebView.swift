@@ -117,6 +117,12 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
             return decisionHandler(.download)
         }
 
+        // Authentication iframes must not display the top-level navigation toolbar.
+        if navigationAction.targetFrame?.isMainFrame == false {
+            decisionHandler(.allow)
+            return
+        }
+
         if let requestUrl = navigationAction.request.url{
             // Schemes that should always be handed off to the system/other apps rather than
             // being processed as in-app navigation (e.g. phone calls, email, maps, FaceTime, etc.)

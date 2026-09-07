@@ -3,7 +3,7 @@ import json, os, subprocess, time
 from pathlib import Path
 
 def run(*args):
-    return subprocess.check_output(args, text=True).strip()
+    return subprocess.check_output(args, text=True, timeout=240).strip()
 
 output=Path(os.environ['OUTPUT'])
 available=json.loads(run('xcrun','simctl','list','devices','available','--json'))['devices']

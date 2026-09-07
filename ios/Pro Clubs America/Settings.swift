@@ -16,7 +16,7 @@ let allowedOrigins: [String] = ["proclubsamerica.com"]
 
 // auth origins will open in modal and show toolbar for back into the main origin.
 // These should also appear in Info.plist
-let authOrigins: [String] = ["proclubsamerica.com","accounts.google.com","primeval-jet-326417.firebaseapp.com","www.googleapis.com"]
+let authOrigins: [String] = ["accounts.google.com","primeval-jet-326417.firebaseapp.com","www.googleapis.com"]
 // allowedOrigins + authOrigins <= 10
 
 let platformCookie = Cookie(name: "app-platform", value: "iOS App Store")
