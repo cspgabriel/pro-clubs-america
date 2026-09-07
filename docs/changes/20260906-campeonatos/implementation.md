@@ -122,25 +122,45 @@ queríamos do GGClubs.
 - Toda data é exibida em `America/Sao_Paulo` e a tela diz o fuso: "começa 21:00" é uma
   frase sobre um instante só, combinada entre gente que joga junto.
 
-### Integração com a home (06/09/2026)
+### Integração com a HOME do app (06-07/09/2026)
 
-Pedido do dono do produto na mesma sessão:
+Tudo abaixo vive em `CommunityHome`, ou seja em **`/inicio`**:
 
-- **A raiz `/` passou a renderizar `CommunityHome`**, a mesma HOME de `/inicio`, no lugar
-  da landing `PublicHome`. A diferença entre as duas rotas agora é uma só: `/inicio` passa
-  `requireAuth`, `/` não. A raiz é a porta de entrada pública — mandar visitante deslogado
-  para `/entrar` mataria o tráfego orgânico, e o componente já degrada sozinho sem sessão.
-- **`PublicHome` (`src/components/public-home.tsx`) ficou órfã.** Não é mais referenciada
-  por nenhuma rota. Ficou no repositório de propósito, para a decisão de descartar ou
-  republicar em outra rota (`/sobre`, por exemplo) ser explícita e não um efeito colateral.
-- **Aba "Meu time"** no bloco de atalhos da home: leva a `/conta/time` para quem já tem
-  clube (mostrando o nome dele) e a `/cadastro` para quem ainda não vinculou.
+- **Aba "Meu time"** no bloco de atalhos: leva a `/conta/time` para quem já tem clube
+  (mostrando o nome dele) e a `/cadastro` para quem ainda não vinculou.
 - **Aba "Campeonatos"** ao lado, com a contagem de edições com inscrição aberta.
 - **Seção "Campeonatos com inscrição aberta"** acima dos desafios de amistoso, com até 3
-  edições. Ela **falha em silêncio**: enquanto as migrations não rodarem em produção a
-  chamada dá erro, a seção simplesmente não aparece e o resto da home continua de pé.
-- `.home-action-duo` passou de `1fr 1fr` fixo para `repeat(auto-fit,minmax(210px,1fr))`,
-  para comportar os quatro atalhos.
+  edições. Ela **falha em silêncio**: se a API der erro a seção some e o resto da home
+  continua de pé — foi o que segurou a página na janela entre o deploy e as migrations.
+
+**A raiz `/` continua sendo a landing `PublicHome`.** Ela chegou a ser trocada pela HOME do
+app numa iteração desta sessão e foi **revertida byte a byte** no mesmo dia: a landing tem
+hero, busca e a apresentação do produto, e trocá-la pela home logada empobreceu a porta de
+entrada. Fica o registro para ninguém refazer a troca achando que é melhoria.
+
+O `.home-action-duo` também voltou a `1fr 1fr`: eu o havia trocado por
+`repeat(auto-fit,minmax(210px,1fr))` para "caber" os quatro atalhos, e o resultado foi
+pior — em telas largas os cards quebravam 3+1, com um buraco no fim da linha. Com duas
+colunas fixas os quatro fecham 2×2.
+
+### Avisos por push (07/09/2026)
+
+Um campeonato trava em silêncio: a súmula fica esperando um adversário que não sabe que
+precisa lançar, e a disputa fica esperando uma organização que não sabe que existe. Os
+três momentos notificados são exatamente os que impedem a edição de andar:
+
+| Quando | Quem recebe |
+|---|---|
+| Um clube lança a súmula e falta a do outro | dono e capitão do adversário |
+| As duas súmulas divergem | quem organiza a edição |
+| O sorteio sai | dono e capitão de todos os clubes sorteados |
+
+Só dono e capitão recebem — são os mesmos que podem agir. Avisar o elenco inteiro sobre uma
+súmula que só o capitão lança seria barulho.
+
+Tudo roda em `context.waitUntil` com `.catch()`: **aviso que falha não derruba a ação que
+já deu certo**. E `pushConfigured` é checado antes, para o módulo não quebrar em ambiente
+sem chaves VAPID.
 
 ## Evidência de conclusão
 
@@ -159,9 +179,9 @@ Itens que a pesquisa de 04/09 prevê e que continuam abertos:
 
 - `tournament_staff` (multi-organizador), `tournament_rosters` (elenco congelado),
   check-in, `tournament_events` e outbox de notificação.
-- Notificações por push/e-mail nos confrontos, súmulas pendentes e disputas abertas — a
-  infraestrutura existe (`functions/_lib/push.ts`, `email.ts`) mas não foi ligada. Hoje
-  ninguém é avisado de que há um jogo em disputa esperando decisão.
+- **E-mail** nos mesmos momentos. O push já está ligado (ver abaixo); o e-mail exigiria um
+  `EmailFlow` novo e template em `functions/_lib/email.ts`, com o fluxo de consentimento
+  que já existe lá.
 - **Evidência em storage privado.** `tournament_match_reports.evidence_url` já existe e a
   API já a aceita, mas não há upload: hoje é uma URL que o capitão cola. Falta o storage
   com URL temporária, limite de tipo/tamanho e moderação.

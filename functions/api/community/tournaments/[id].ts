@@ -1,4 +1,5 @@
 import { apiError, assertSameOrigin, verifyFirebaseRequest, type FunctionContext } from "../../../_lib/billing";
+import { pushConfigured, sendPushToProfiles } from "../../../_lib/push";
 import { ensureProfile, supabaseRest, type SupabaseProfile } from "../../../_lib/supabase";
 import {
   buildDraw,
@@ -107,6 +108,20 @@ async function loadClubs(env: FunctionContext["env"], ids: Array<string | null>)
     `clubs?id=in.(${unique.map(encodeURIComponent).join(",")})&select=id,name,platform,ea_club_id,skill_rating`,
   );
   return new Map(rows.map((row) => [row.id, row]));
+}
+
+/**
+ * Quem recebe o aviso por um clube: dono e capitao — os mesmos que podem
+ * agir. Avisar o elenco inteiro sobre uma sumula que so o capitao lanca
+ * seria barulho.
+ */
+async function clubManagerProfileIds(env: FunctionContext["env"], clubId: string | null): Promise<string[]> {
+  if (!clubId) return [];
+  const rows = await supabaseRest<Array<{ id: string }>>(
+    env,
+    `profiles?club_id=eq.${encodeURIComponent(clubId)}&role=in.(owner,captain)&select=id`,
+  );
+  return rows.map((row) => row.id);
 }
 
 const canManageClub = (profile: SupabaseProfile, clubId: string | null) =>
@@ -330,6 +345,77 @@ const rpcMessage = (raw: string) => {
   return key ? PARTICIPANT_ERRORS[key] : null;
 };
 
+// ------------------------------------------------------------
+// Avisos
+//
+// Um campeonato trava em silencio: a sumula fica esperando o adversario
+// que nao sabe que precisa lancar, e a disputa fica esperando uma
+// organizacao que nao sabe que existe. Os tres momentos abaixo sao
+// exatamente os que bloqueiam a edicao de andar.
+//
+// Tudo roda em `waitUntil`: aviso que falha nao pode derrubar a acao que
+// ja deu certo.
+// ------------------------------------------------------------
+
+async function notifyAfterReport(
+  context: TournamentContext,
+  tournament: TournamentRow,
+  matchId: string,
+  reporterProfileId: string,
+  matchState: string | undefined,
+) {
+  if (!pushConfigured(context.env)) return;
+  const url = `${context.env.SITE_URL ?? ""}/campeonato/?id=${encodeURIComponent(tournament.slug)}`;
+
+  const match = (
+    await supabaseRest<MatchRow[]>(
+      context.env,
+      `tournament_matches?id=eq.${encodeURIComponent(matchId)}&select=${MATCH_COLUMNS}&limit=1`,
+    )
+  )[0];
+  if (!match) return;
+
+  if (matchState === "awaiting_result") {
+    // O adversario e o clube cujo gestor nao acabou de lancar.
+    const [homeIds, awayIds] = await Promise.all([
+      clubManagerProfileIds(context.env, match.home_club_id),
+      clubManagerProfileIds(context.env, match.away_club_id),
+    ]);
+    const targets = [...homeIds, ...awayIds].filter((id) => id !== reporterProfileId);
+    if (targets.length) {
+      await sendPushToProfiles(context.env, targets, {
+        title: tournament.name,
+        body: "O adversário lançou o placar. Confirme a sua súmula.",
+        url,
+        tag: `tournament-report-${matchId}`,
+      });
+    }
+    return;
+  }
+
+  if (matchState === "disputed") {
+    await sendPushToProfiles(context.env, [tournament.organizer_profile_id], {
+      title: `${tournament.name} · placar em disputa`,
+      body: "As duas súmulas não bateram. Precisa da sua decisão.",
+      url,
+      tag: `tournament-dispute-${matchId}`,
+    });
+  }
+}
+
+async function notifyDraw(context: TournamentContext, tournament: TournamentRow, clubIds: Array<string | null>) {
+  if (!pushConfigured(context.env)) return;
+  const lists = await Promise.all(clubIds.map((id) => clubManagerProfileIds(context.env, id)));
+  const targets = [...new Set(lists.flat())];
+  if (!targets.length) return;
+  await sendPushToProfiles(context.env, targets, {
+    title: `${tournament.name} · sorteio realizado`,
+    body: "Os confrontos saíram. Veja com quem seu clube joga.",
+    url: `${context.env.SITE_URL ?? ""}/campeonato/?id=${encodeURIComponent(tournament.slug)}`,
+    tag: `tournament-draw-${tournament.id}`,
+  });
+}
+
 export const onRequestPost = async (context: TournamentContext) => {
   try {
     assertSameOrigin(context.request, context.env.SITE_URL);
@@ -377,6 +463,10 @@ export const onRequestPost = async (context: TournamentContext) => {
             p_note: typeof body.note === "string" ? body.note.trim().slice(0, 500) : null,
           }),
         },
+      );
+      const state = result[0] as { match_state?: string } | undefined;
+      context.waitUntil(
+        notifyAfterReport(context, tournament, matchId, profile.id, state?.match_state).catch(() => undefined),
       );
       return Response.json({ action, result: result[0] ?? null });
     }
@@ -505,6 +595,9 @@ export const onRequestPatch = async (context: TournamentContext) => {
         method: "POST",
         body: JSON.stringify({ p_tournament_id: tournament.id, p_payload: draw.payload }),
       });
+      context.waitUntil(
+        notifyDraw(context, tournament, registrations.map((row) => row.club_id)).catch(() => undefined),
+      );
       return Response.json({ action, drawnFormat: draw.payload.drawnFormat, result: result[0] ?? null });
     }
 
