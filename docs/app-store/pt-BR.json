@@ -1,0 +1,16 @@
+{
+  "locale": "pt-BR",
+  "name": "Pro Clubs America",
+  "subtitle": "Clubes, jogadores e amistosos",
+  "keywords": "futebol,comunidade,elenco,estatísticas,ranking,partidas,time,gamertag,mercado",
+  "promotional_text": "Encontre clubes e jogadores, consulte perfis e estatísticas e participe da comunidade para organizar amistosos e divulgar oportunidades no seu time.",
+  "description": "O Pro Clubs America conecta jogadores e clubes em uma comunidade independente dedicada ao modo Clubs de EA SPORTS FC.\n\nENCONTRE SEU PRÓXIMO TIME\nExplore perfis de clubes e jogadores. Consulte o mercado da comunidade para encontrar vagas em elencos e jogadores que procuram um clube.\n\nORGANIZE AMISTOSOS\nAcesse o mural de partidas, confira desafios abertos e organize convites entre clubes.\n\nACOMPANHE O DESEMPENHO\nConsulte estatísticas, rankings e históricos disponíveis dos clubes e jogadores indexados. Os dados esportivos dependem da disponibilidade da fonte pública e podem ter atraso de atualização.\n\nPARTICIPE DA COMUNIDADE\nCrie seu perfil, informe plataforma e posição e organize sua disponibilidade. Os recursos de publicação e participação exigem conta e podem depender do vínculo com um clube e das permissões do usuário.\n\nO aplicativo precisa de conexão à internet. Nem todos os clubes, jogadores ou resultados estão disponíveis na base.\n\nPro Clubs America é um projeto independente e não é afiliado, endossado ou patrocinado pela Electronic Arts Inc. As marcas de terceiros pertencem aos respectivos titulares.\n\nPrivacidade: https://proclubsamerica.com/privacidade\nTermos da comunidade: https://proclubsamerica.com/termos",
+  "support_url": null,
+  "marketing_url": "https://proclubsamerica.com",
+  "privacy_policy_url": "https://proclubsamerica.com/privacidade",
+  "category_suggestion": {
+    "primary": "SPORTS",
+    "secondary": "SOCIAL_NETWORKING"
+  },
+  "review_notes": "Pro Clubs America é uma comunidade independente para clubes e jogadores, sem afiliação com a Electronic Arts. Não executa partidas do jogo. A consulta de dados esportivos usa fontes públicas e snapshots, sujeitos a disponibilidade e atraso. Roteiro público: abrir a busca, consultar um clube indexado, navegar pelo elenco, estatísticas, mercado e mural de partidas. Publicações, perfil e ações comunitárias exigem autenticação; o teste deve usar contas e clubes de demonstração autorizados, sem contatar usuários reais. As credenciais de revisão devem ser fornecidas no campo privado do App Store Connect após validação; este arquivo não contém credenciais. O código web oferece login por e-mail/senha e Google. Este rascunho não afirma suporte validado a Sign in with Apple, compras Apple, push nativo ou exclusão de conta dentro do aplicativo. A política pública fornece gabriel@proclubsamerica.com para solicitações de conta e dados. Ainda falta confirmar uma URL pública que apresente atendimento geral, por isso support_url está nulo. Os itens pendentes para finalizar estas notas estão em REVIEW-READINESS.md."
+}
