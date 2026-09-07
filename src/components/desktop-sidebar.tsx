@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BarChart3, BriefcaseBusiness, Crosshair, Crown, Download, ExternalLink, Globe2, Goal, Handshake, Home, Percent, Search, Shield, ShieldCheck, ShoppingBag, Swords, UserPlus, UserRound, Users } from "lucide-react";
+import { BarChart3, BriefcaseBusiness, Crosshair, Crown, Download, ExternalLink, Globe2, Goal, Handshake, Home, Percent, Search, Shield, ShieldCheck, ShoppingBag, Swords, Trophy, UserPlus, UserRound, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { BrandLogo } from "./brand-logo";
 
@@ -13,6 +13,7 @@ export const navigationGroups = [
     { href: "/jogadores", label: "Jogadores", icon: Users, tone: "violet" },
   ] },
   { label: "COMPETIÇÃO", items: [
+    { href: "/campeonatos", label: "Campeonatos", icon: Trophy, tone: "gold" },
     { href: "/rankings/jogadores/artilharia", label: "Ranking jogadores", icon: Goal, tone: "rose" },
     { href: "/rankings/clubes/artilharia", label: "Ranking clubes", icon: BarChart3, tone: "green" },
     { href: "/rankings/times", label: "Ranking de times", icon: ShieldCheck, tone: "gold" },

@@ -1,0 +1,169 @@
+/* Campeonatos · usa as variaveis ja definidas em globals.css para
+   acompanhar os quatro temas do produto sem repetir paleta. */
+
+.page { display: flex; flex-direction: column; gap: 22px; }
+
+.hero {
+  position: relative;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;
+  padding: 34px 26px; border: 1px solid var(--soft-line); border-radius: 16px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+  overflow: hidden;
+}
+.hero h1 { margin: 8px 0 6px; font-size: 32px; line-height: 1.1; }
+.hero p { margin: 0; color: var(--muted); max-width: 62ch; }
+.hero small { letter-spacing: .14em; font-size: 10px; color: var(--accent); }
+.heroArt { opacity: .18; flex-shrink: 0; }
+.heroArt svg { width: 92px; height: 92px; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filters button {
+  padding: 8px 14px; border-radius: 999px; font-size: 12px; cursor: pointer;
+  border: 1px solid var(--soft-line); background: transparent; color: var(--muted);
+}
+.filters button:hover { color: var(--color-text); }
+.filters button.active { background: var(--accent); border-color: var(--accent); color: #06121b; font-weight: 600; }
+
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+
+.card {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 18px; border: 1px solid var(--soft-line); border-radius: 14px;
+  background: var(--surface); color: inherit; text-decoration: none;
+  transition: border-color .15s ease, transform .15s ease;
+}
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.cardTop { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.cardTop h2 { margin: 0; font-size: 18px; line-height: 1.25; }
+.card p { margin: 0; font-size: 13px; color: var(--muted); }
+
+.badge {
+  flex-shrink: 0; padding: 4px 10px; border-radius: 999px;
+  font-size: 10px; letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
+  border: 1px solid var(--soft-line); color: var(--muted);
+}
+.badgeOpen { border-color: var(--accent); color: var(--accent); }
+.badgeRunning { border-color: #ffb020; color: #ffb020; }
+.badgeFinished { border-color: var(--soft-line); color: var(--muted); }
+.badgePending { border-color: #8b5cf6; color: #a78bfa; }
+
+.meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11px; color: var(--muted); }
+.meta span { display: inline-flex; align-items: center; gap: 5px; }
+.meta svg { width: 13px; height: 13px; }
+
+/* Barra de vagas: o numero grande e o dado pelo qual a pessoa abriu a pagina. */
+.slots { display: flex; flex-direction: column; gap: 5px; }
+.slotsBar { height: 5px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.slotsFill { height: 100%; background: var(--accent); border-radius: 999px; }
+.slotsText { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+.slotsText b { color: var(--color-text); }
+
+.panel {
+  padding: 18px; border: 1px solid var(--soft-line); border-radius: 14px; background: var(--surface);
+}
+.panel > header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+.panel h2 { margin: 0; font-size: 16px; }
+.panel h3 { margin: 0 0 10px; font-size: 14px; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.actions button {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 15px; border-radius: 10px; font-size: 13px; cursor: pointer;
+  border: 1px solid var(--soft-line); background: var(--surface-2); color: var(--color-text);
+}
+.actions button:hover:not(:disabled) { border-color: var(--accent); }
+.actions button:disabled { opacity: .45; cursor: not-allowed; }
+.actions button.primary { background: var(--accent); border-color: var(--accent); color: #06121b; font-weight: 600; }
+.actions button.danger { border-color: #f8717155; color: #fca5a5; }
+.actions svg { width: 15px; height: 15px; }
+
+.notice {
+  margin: 0 0 12px; padding: 10px 14px; border-radius: 10px; font-size: 13px;
+  border: 1px solid var(--soft-line); background: var(--surface-2);
+}
+.noticeError { border-color: #f8717155; color: #fca5a5; }
+
+/* Tabela de classificacao */
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th, .table td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--soft-line); }
+.table th { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.table td:first-child, .table th:first-child { text-align: left; width: 26px; color: var(--muted); }
+.table td:nth-child(2), .table th:nth-child(2) { text-align: left; }
+.table tbody tr:last-child td { border-bottom: 0; }
+.qualified td:first-child { color: var(--accent); font-weight: 700; }
+
+.groups { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+/* Chave: uma coluna por fase, com rolagem horizontal propria. */
+.bracket { display: flex; gap: 22px; overflow-x: auto; padding-bottom: 8px; }
+.bracketColumn { display: flex; flex-direction: column; justify-content: space-around; gap: 12px; min-width: 205px; }
+.bracketColumn > small {
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-align: center;
+}
+.tie {
+  display: flex; flex-direction: column; border: 1px solid var(--soft-line);
+  border-radius: 10px; background: var(--surface-2); overflow: hidden;
+}
+.tieRow { display: flex; justify-content: space-between; gap: 10px; padding: 8px 11px; font-size: 13px; }
+.tieRow + .tieRow { border-top: 1px solid var(--soft-line); }
+.tieRow span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tieRow b { flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.tieWinner { color: var(--accent); font-weight: 600; }
+.tiePending { color: var(--muted); font-style: italic; }
+
+/* Lista de jogos */
+.matchList { display: flex; flex-direction: column; gap: 8px; }
+.match {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px;
+  padding: 11px 14px; border: 1px solid var(--soft-line); border-radius: 10px; background: var(--surface-2);
+}
+.match > span:first-child { text-align: right; }
+.matchScore { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 15px; white-space: nowrap; }
+.matchFooter {
+  grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding-top: 8px; border-top: 1px solid var(--soft-line); font-size: 11px; color: var(--muted);
+}
+.matchFooter button {
+  padding: 5px 11px; border-radius: 8px; font-size: 11px; cursor: pointer;
+  border: 1px solid var(--accent); background: transparent; color: var(--accent);
+}
+
+/* Formulario de placar */
+.scoreForm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.scoreForm input {
+  width: 56px; padding: 7px 8px; text-align: center; font-size: 14px;
+  border: 1px solid var(--soft-line); border-radius: 8px;
+  background: var(--surface); color: var(--color-text);
+}
+.scoreForm label { display: flex; flex-direction: column; gap: 4px; font-size: 10px; color: var(--muted); }
+
+.form { display: grid; gap: 12px; }
+.form label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--muted); }
+.form input, .form select, .form textarea {
+  padding: 9px 11px; font-size: 14px; font-family: inherit;
+  border: 1px solid var(--soft-line); border-radius: 9px;
+  background: var(--surface-2); color: var(--color-text);
+}
+.form textarea { min-height: 90px; resize: vertical; }
+.formRow { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+
+.empty {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 44px 20px; border: 1px dashed var(--soft-line); border-radius: 14px; color: var(--muted);
+}
+.empty strong { color: var(--color-text); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 5px 11px; border-radius: 999px; font-size: 12px;
+  border: 1px solid var(--soft-line); background: var(--surface-2);
+}
+.chipOut { opacity: .5; text-decoration: line-through; }
+
+@media (max-width: 720px) {
+  .hero { flex-direction: column; align-items: flex-start; padding: 24px 18px; }
+  .hero h1 { font-size: 25px; }
+  .heroArt { display: none; }
+  .grid { grid-template-columns: 1fr; }
+  .match { font-size: 13px; }
+}
