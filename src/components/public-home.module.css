@@ -86,7 +86,10 @@
 .error button { min-height:44px; display:inline-flex; align-items:center; gap:10px; background:none; border:0; color:var(--lp-gold); padding:12px 0; }
 .skeleton { height:344px; border-radius:12px; background:repeating-linear-gradient(180deg,var(--lp-surface) 0,var(--lp-surface) 78px,transparent 78px,transparent 86px); }
 .featureGrid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-.friendly,.showcase { position:relative; overflow:hidden; padding:36px; border:1px solid var(--lp-line); border-radius:20px; background:linear-gradient(125deg,#103465,#0b2040); scroll-margin-top:24px; }
+/* Campeonatos ocupa a linha inteira: o grid tem duas colunas, e um
+   terceiro card lado a lado deixaria um buraco no fim da linha. */
+.tournament { grid-column:1/-1; }
+.friendly,.showcase,.tournament { position:relative; overflow:hidden; padding:36px; border:1px solid var(--lp-line); border-radius:20px; background:linear-gradient(125deg,#103465,#0b2040); scroll-margin-top:24px; }
 .showcase { background:linear-gradient(125deg,#163143,#0b2040); }
 .featureSymbol { position:absolute; right:26px; top:26px; color:#92b2d652; transform:rotate(-12deg); }
 .featureGrid h2 { font-size:34px; letter-spacing:-.03em; line-height:1.15; margin-top:22px; position:relative; }
@@ -131,7 +134,7 @@
   .roleCard { padding:22px; }
   .market h2 { font-size:32px; }
   .featureGrid { gap:16px; }
-  .friendly,.showcase { padding:26px; }
+  .friendly,.showcase,.tournament { padding:26px; }
   .featureGrid h2 { font-size:29px; }
   .featureSymbol { right:16px; top:16px; opacity:.65; }
   .sectionHeader h2 { font-size:30px; }
@@ -189,7 +192,7 @@
   .memberName strong { font-size:12px; }
   .dataNote { font-size:9px; }
   .featureGrid { grid-template-columns:1fr; }
-  .friendly,.showcase { padding:26px; }
+  .friendly,.showcase,.tournament { padding:26px; }
   .featureGrid h2 { font-size:32px; }
   .featureGrid p { font-size:12px; }
   .how { padding:48px 8px; }

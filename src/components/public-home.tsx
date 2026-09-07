@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronDown, Gamepad2, Globe2, Search, Shield, Smartphone, Sparkles, Swords, UserRound, Users } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronDown, Gamepad2, Globe2, Search, Shield, Smartphone, Sparkles, Swords, Trophy, UserRound, Users } from "lucide-react";
 import type { CommunityDirectory } from "@/lib/community-service";
 import { BrandLogo } from "./brand-logo";
 import styles from "./public-home.module.css";
@@ -82,7 +82,7 @@ export function PublicHome() {
     <a className={styles.skip} href="#conteudo">Pular para o conteúdo</a>
     <header className={styles.header}>
       <Link href="/" className={styles.brand} aria-label="Pro Clubs America, início"><BrandLogo size={44} /><span>PRO CLUBS<strong>AMERICA</strong></span></Link>
-      <nav aria-label="Navegação pública"><a href="#mercado">Mercado</a><a href="#comunidade">Comunidade</a><a href="#amistosos">Amistosos</a></nav>
+      <nav aria-label="Navegação pública"><a href="#mercado">Mercado</a><a href="#comunidade">Comunidade</a><a href="#campeonatos">Campeonatos</a><a href="#amistosos">Amistosos</a></nav>
       <Link href="/entrar" className={styles.login}>Entrar <ArrowUpRight size={16} aria-hidden="true" /></Link>
     </header>
     <main id="conteudo">
@@ -136,6 +136,7 @@ export function PublicHome() {
           <small className={styles.dataNote}>A busca consulta o catálogo sincronizado de clubes e os cadastros públicos da comunidade. Dados ausentes continuam indisponíveis até a próxima sincronização.</small>
         </section>
         <section className={styles.featureGrid} aria-label="Mais formas de entrar no jogo">
+          <article className={styles.tournament} id="campeonatos"><div className={styles.featureSymbol} aria-hidden="true"><Trophy size={58} strokeWidth={1.2} /></div><span className={styles.eyebrow}>CAMPEONATOS</span><h2>Título não se ganha<br />em amistoso.</h2><p>Edições com fase de grupos, mata-mata e pontos corridos. Inscreva seu clube, acompanhe a tabela e lance o placar de cada jogo por aqui.</p><Link href="/campeonatos">Ver campeonatos abertos <ArrowUpRight size={19} aria-hidden="true" /></Link></article>
           <article className={styles.friendly} id="amistosos"><div className={styles.featureSymbol} aria-hidden="true"><Swords size={58} strokeWidth={1.2} /></div><span className={styles.eyebrow}>AMISTOSOS</span><h2>Seu próximo rival<br />está a um convite.</h2><p>Encontre desafios abertos e combine uma partida com outro clube da comunidade.</p><Link href="/partidas/amistosos#desafios-abertos">Ver desafios abertos <ArrowUpRight size={19} aria-hidden="true" /></Link></article>
           <article className={styles.showcase}><div className={styles.featureSymbol} aria-hidden="true"><UserRound size={58} strokeWidth={1.2} /></div><span className={styles.eyebrow}>SEU PERFIL, SEU FUTEBOL</span><h2>Mostre<br />o seu jogo.</h2><p>Fotos do seu Pro, posições, arquétipos e vídeos do YouTube. Seus melhores momentos têm lugar aqui.</p><Link href="/criar-conta">Criar meu perfil <ArrowUpRight size={19} aria-hidden="true" /></Link></article>
         </section>
