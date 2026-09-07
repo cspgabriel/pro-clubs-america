@@ -13,16 +13,16 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
     }
-    
+
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var connectionProblemView: UIImageView!
     @IBOutlet weak var webviewView: UIView!
     var toolbarView: UIToolbar!
-    
+
     var htmlIsLoaded = false;
     private var loadingMode = LoadingMode.defaultCachePolicy
-    
+
     private var themeObservation: NSKeyValueObservation?
     var currentWebViewTheme: UIUserInterfaceStyle = .unspecified
     override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -41,26 +41,26 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
         initWebView()
         initToolbarView()
         loadRootUrl()
-    
+
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification , object: nil)
-        
+
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         ProClubsAmerica.webView.frame = calcWebviewFrame(webviewView: webviewView, toolbarView: nil)
     }
-    
+
     @objc func keyboardWillHide(_ notification: NSNotification) {
         ProClubsAmerica.webView.setNeedsLayout()
     }
-    
+
     func initWebView() {
         ProClubsAmerica.webView = createWebView(container: webviewView, WKSMH: self, WKND: self, NSO: self, VC: self)
         webviewView.addSubview(ProClubsAmerica.webView);
-        
+
         ProClubsAmerica.webView.uiDelegate = self;
-        
+
         ProClubsAmerica.webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
 
         if(pullToRefresh){
@@ -90,27 +90,27 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
         let winScene = UIApplication.shared.connectedScenes.first
         let windowScene = winScene as! UIWindowScene
         var statusBarHeight = windowScene.statusBarManager?.statusBarFrame.height ?? 60
-        
+
         #if targetEnvironment(macCatalyst)
         if (statusBarHeight == 0){
             statusBarHeight = 30
         }
         #endif
-        
+
         let toolbarView = UIToolbar(frame: CGRect(x: 0, y: 0, width: webviewView.frame.width, height: 0))
         toolbarView.sizeToFit()
         toolbarView.frame = CGRect(x: 0, y: 0, width: webviewView.frame.width, height: toolbarView.frame.height + statusBarHeight)
 //        toolbarView.autoresizingMask = [.flexibleTopMargin, .flexibleRightMargin, .flexibleWidth]
-        
+
         let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let close = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(loadRootUrl))
         toolbarView.setItems([close,flex], animated: true)
-        
+
         toolbarView.isHidden = true
-        
+
         return toolbarView
     }
-    
+
     func overrideUIStyle(toDefault: Bool = false) {
         if #available(iOS 15.0, *), adaptiveUIStyle {
             if (((htmlIsLoaded && !ProClubsAmerica.webView.isHidden) || toDefault) && self.currentWebViewTheme != .unspecified) {
@@ -122,17 +122,17 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
             }
         }
     }
-    
+
     func initToolbarView() {
         toolbarView =  createToolbarView()
-        
+
         webviewView.addSubview(toolbarView)
     }
-    
+
     @objc func loadRootUrl() {
         ProClubsAmerica.webView.load(URLRequest(url: SceneDelegate.universalLinkToLaunch ?? SceneDelegate.shortcutLinkToLaunch ?? rootUrl, cachePolicy: .useProtocolCachePolicy))
     }
-    
+
     func reloadWebview(
         loadingMode: LoadingMode = LoadingMode.defaultCachePolicy
     ) {
@@ -146,29 +146,29 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
 
         self.loadingMode = loadingMode
     }
-    
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
         htmlIsLoaded = true
-        
+
         self.setProgress(1.0, true)
         self.animateConnectionProblem(false)
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             ProClubsAmerica.webView.isHidden = false
             self.loadingView.isHidden = true
-           
+
             self.setProgress(0.0, false)
-            
+
             self.overrideUIStyle()
         }
     }
-    
+
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         htmlIsLoaded = false;
-        
+
         if (error as NSError)._code == (-999) { return }
         if (error as NSError)._code == 102 { return }
-        
+
         self.overrideUIStyle(toDefault: true);
         webView.isHidden = true;
         loadingView.isHidden = false;
@@ -180,7 +180,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
         } else {
             animateConnectionProblem(true);
             setProgress(0.05, true);
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 self.setProgress(0.1, true);
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -189,7 +189,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
             }
         }
     }
-    
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
 
         if (keyPath == #keyPath(WKWebView.estimatedProgress) &&
@@ -197,19 +197,19 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
                 !self.loadingView.isHidden &&
                 !self.htmlIsLoaded) {
                     var progress = Float(ProClubsAmerica.webView.estimatedProgress);
-                    
+
                     if (progress >= 0.8) { progress = 1.0; };
                     if (progress >= 0.3) { self.animateConnectionProblem(false); }
-                    
+
                     self.setProgress(progress, true);
         }
     }
-    
+
     func setProgress(_ progress: Float, _ animated: Bool) {
         self.progressView.setProgress(progress, animated: animated);
     }
-    
-    
+
+
     func animateConnectionProblem(_ show: Bool) {
         if (show) {
             self.connectionProblemView.isHidden = false;
@@ -227,7 +227,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
             })
         }
     }
-        
+
     deinit {
         ProClubsAmerica.webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
     }

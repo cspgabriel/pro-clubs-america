@@ -1,5 +1,8 @@
 name: iOS Release
 on:
+  push:
+    branches: [codex/ios-release-20260907]
+    paths: ["ios/**", "ios-pwa/**", "scripts/ios-*", ".github/workflows/ios-release.yml"]
   workflow_dispatch:
     inputs:
       build_number:
@@ -32,9 +35,9 @@ jobs:
       IOS_TARGET: Pro Clubs America
       BUNDLE_ID: com.proclubsamerica.app
       TEAM_ID: BUK3X7JL65
-      BUILD_NUMBER: ${{ inputs.build_number }}
-      MARKETING_VERSION: ${{ inputs.marketing_version }}
-      SIGNED: ${{ inputs.signed }}
+      BUILD_NUMBER: ${{ inputs.build_number || '1' }}
+      MARKETING_VERSION: ${{ inputs.marketing_version || '1.0.0' }}
+      SIGNED: ${{ inputs.signed || false }}
     steps:
       - uses: actions/checkout@v4
       - name: Select App Store compatible Xcode
@@ -63,7 +66,7 @@ jobs:
         if: ${{ !inputs.signed }}
         run: bash scripts/ios-release.sh simulator
       - name: Archive and export signed IPA
-        if: ${{ inputs.signed }}
+        if: ${{ inputs.signed || false }}
         run: bash scripts/ios-release.sh archive
       - name: Upload to App Store Connect
         if: ${{ inputs.signed && inputs.upload }}
@@ -76,7 +79,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ios-pro-clubs-america-${{ inputs.build_number }}
+          name: ios-pro-clubs-america-${{ inputs.build_number || '1' }}
           path: ${{ runner.temp }}/ios-output
           if-no-files-found: ignore
           retention-days: 14

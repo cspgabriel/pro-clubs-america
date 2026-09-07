@@ -7,6 +7,7 @@ import SafariServices
 func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNavigationDelegate, NSO: NSObject, VC: ViewController) -> WKWebView{
 
     let config = WKWebViewConfiguration()
+    config.applicationNameForUserAgent = "pro-clubs-america/iOS"
     let userContentController = WKUserContentController()
 
     userContentController.add(WKSMH, name: "print")
@@ -21,7 +22,7 @@ func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNav
     config.allowsInlineMediaPlayback = true
     config.preferences.javaScriptCanOpenWindowsAutomatically = true
 
-    
+
     let webView = WKWebView(frame: calcWebviewFrame(webviewView: container, toolbarView: nil), configuration: config)
     setCustomCookie(webView: webView)
 
@@ -31,23 +32,23 @@ func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNav
     webView.scrollView.bounces = false
     webView.scrollView.contentInsetAdjustmentBehavior = .never
     webView.allowsBackForwardNavigationGestures = true
-    
+
     // Check if macCatalyst 16.4+ is available and if so, enable web inspector.
     // This allows the web app to be inspected using Safari Web Inspector. Supported on iOS 16.4+ and macOS 13.3+
     if #available(iOS 16.4, macOS 13.3, *) {
         webView.isInspectable = true
     }
-    
-    webView.configuration.applicationNameForUserAgent = "pro-clubs-america/iOS"
+
+
 
     webView.addObserver(NSO, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: NSKeyValueObservingOptions.new, context: nil)
-    
+
     #if DEBUG
     if #available(iOS 16.4, *) {
         webView.isInspectable = true
     }
     #endif
-    
+
     return webView
 }
 

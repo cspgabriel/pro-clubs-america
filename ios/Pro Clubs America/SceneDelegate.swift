@@ -6,7 +6,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     // If our app is launched with a universal link, we'll store it in this variable
-    static var universalLinkToLaunch: URL? = nil; 
+    static var universalLinkToLaunch: URL? = nil;
     static var shortcutLinkToLaunch: URL? = nil
 
 
@@ -23,22 +23,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         // See if we were launched via shortcut
-        if let shortcutUrl = connectionOptions.shortcutItem?.type {            
+        if let shortcutUrl = connectionOptions.shortcutItem?.type {
             SceneDelegate.shortcutLinkToLaunch = URL.init(string: shortcutUrl)
         }
-        
+
         // See if we were launched via scheme URL
         if let schemeUrl = connectionOptions.urlContexts.first?.url {
             // Convert scheme://url to a https://url
             var comps = URLComponents(url: schemeUrl, resolvingAgainstBaseURL: false)
             comps?.scheme = "https"
-            
+
             if let url = comps?.url {
                 SceneDelegate.universalLinkToLaunch = url;
             }
         }
     }
-    
+
     // This function is called when our app is already running and the user clicks a custom scheme URL
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let scheme = URLContexts.first?.url {
@@ -58,7 +58,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Handle universal links into our app when the app is already running.
         // This allows your PWA to open links to your domain, rather than opening in a browser tab.
         // For more info about universal links, see https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app
-        
+
         // Ensure we're trying to launch a link.
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
             let universalLink = userActivity.webpageURL else {
@@ -108,4 +108,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
-

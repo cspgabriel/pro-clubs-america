@@ -5,7 +5,7 @@ import FirebaseMessaging
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
+
     var window : UIWindow?
 
     func application(_ application: UIApplication,
@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Register for remote notifications. This shows a permission dialog on first run, to
         // show the dialog at a more appropriate time move this registration accordingly.
         // [START register_for_notifications]
-   
+
         UNUserNotificationCenter.current().delegate = self
 
       //  let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -125,7 +125,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     extension AppDelegate : MessagingDelegate {
       // [START refresh_token]
       func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
+
         let dataDict:[String: String] = ["token": fcmToken ?? ""]
         NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
         handleFCMToken()

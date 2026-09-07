@@ -11,7 +11,7 @@ func printView(webView: WKWebView){
     printInfo.orientation = UIPrintInfo.Orientation.portrait
 
     printController.printPageRenderer = UIPrintPageRenderer()
-          
+
     printController.printPageRenderer?.addPrintFormatter(webView.viewPrintFormatter(), startingAtPageAt: 0)
 
     printController.printInfo = printInfo
