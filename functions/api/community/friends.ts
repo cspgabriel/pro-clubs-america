@@ -139,6 +139,9 @@ export const onRequestPost = async ({ request, env, waitUntil }: FunctionContext
         return apiError("Você não pode adicionar a si mesmo como amigo.", 400);
       }
 
+      const blocks = await supabaseRest<Array<{ blocker_profile_id: string }>>(env, `community_profile_blocks?or=(and(blocker_profile_id.eq.${encodeURIComponent(profile.id)},blocked_profile_id.eq.${encodeURIComponent(targetProfileId)}),and(blocker_profile_id.eq.${encodeURIComponent(targetProfileId)},blocked_profile_id.eq.${encodeURIComponent(profile.id)}))&select=blocker_profile_id&limit=1`);
+      if (blocks[0]) return apiError("Não é possível enviar uma solicitação de amizade para este perfil.", 403);
+
       // Verifica se já existe amizade ou solicitação
       const existing = await supabaseRest<FriendshipRow[]>(env, `friendships?or=(and(user_id.eq.${encodeURIComponent(profile.id)},friend_id.eq.${encodeURIComponent(targetProfileId)}),and(user_id.eq.${encodeURIComponent(targetProfileId)},friend_id.eq.${encodeURIComponent(profile.id)}))&limit=1`);
 

@@ -187,6 +187,16 @@ export function requestAccountDeletion() {
   return api<{ requested: true; requestId?: string; requestedAt?: string; alreadyPending?: boolean }>("/api/community/account-deletion", { method: "POST", body: JSON.stringify({ confirm: true }) }, true);
 }
 
+type CommunitySafetyReason = "abuse" | "offensive_content" | "spam" | "other";
+
+export function reportCommunityProfile(targetProfileId: string, reason: CommunitySafetyReason) {
+  return api<{ reported: true }>("/api/community/safety", { method: "POST", body: JSON.stringify({ action: "report", targetProfileId, reason }) }, true);
+}
+
+export function blockCommunityProfile(targetProfileId: string) {
+  return api<{ blocked: true }>("/api/community/safety", { method: "POST", body: JSON.stringify({ action: "block", targetProfileId }) }, true);
+}
+
 export interface ClubInvitationRecord {
   id: string;
   status: "pending" | "accepted" | "declined" | "cancelled" | "expired";
