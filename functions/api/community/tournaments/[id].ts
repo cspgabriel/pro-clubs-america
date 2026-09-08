@@ -282,13 +282,14 @@ export const onRequestGet = async (context: TournamentContext) => {
           scheduledAt: row.scheduled_at ?? undefined,
           reportedAt: row.reported_at ?? undefined,
           // Quem esta olhando pode lancar a propria sumula deste jogo?
-          // Admin de fora nao lanca por ninguem — para corrigir existe
-          // a arbitragem, que exige justificativa.
+          // Admin de fora nao lanca por ninguem — quem garante isso e o
+          // viewerSide, que so existe se o clube do perfil joga a partida.
+          // Para corrigir jogo alheio existe a arbitragem, com justificativa.
           canReport: Boolean(
             profile &&
               viewerSide &&
               ACCEPTS_REPORT.includes(row.status) &&
-              ["owner", "captain"].includes(profile.role),
+              ["owner", "captain", "admin"].includes(profile.role),
           ),
           // Arbitrar so aparece para quem organiza a edicao.
           canResolve: Boolean(profile && canAdminister(profile, tournament) && row.home_registration_id && row.away_registration_id),

@@ -163,7 +163,7 @@ export interface AdminOverview {
     runs: Array<{ started_at: string; finished_at: string | null; status: string; source: string; clubs_processed: number; players_observed: number; matches_observed: number; error_count: number }>;
   };
   recentProfiles: Array<{ email: string; full_name: string | null; role: string; plan: string; created_at: string; club_id: string | null; player_id: string | null }>;
-  recentClubs: Array<{ id: string; name: string; ea_club_id: string; platform: string; country_slug: string | null; created_at: string }>;
+  recentClubs: Array<{ id: string; name: string; ea_club_id: string; platform: string; country_code: string | null; created_at: string }>;
 }
 
 export function getAdminOverview() {

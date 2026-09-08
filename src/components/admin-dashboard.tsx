@@ -146,7 +146,7 @@ export default function AdminDashboard() {
                   <td><a href={`/club/${club.ea_club_id}/`}>{club.name}</a></td>
                   <td>{club.ea_club_id}</td>
                   <td>{club.platform}</td>
-                  <td>{club.country_slug || "—"}</td>
+                  <td>{club.country_code || "—"}</td>
                   <td>{dateTime(club.created_at)}</td>
                 </tr>
               ))}
