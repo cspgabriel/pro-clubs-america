@@ -1,5 +1,5 @@
 import { apiError, assertSameOrigin, verifyFirebaseRequest, type FunctionContext } from "../../../_lib/billing";
-import { refreshEaClub } from "../../../_lib/ea";
+import { requestEaClubRefresh } from "../../../_lib/ea";
 import { ensureProfile, findClubByEa, supabaseRest, type SupabaseClub } from "../../../_lib/supabase";
 
 interface ClaimBody {
@@ -14,7 +14,8 @@ interface ClaimBody {
 
 const allowedPlatforms = new Set(["common-gen5", "common-gen4", "nx"]);
 
-export const onRequestPost = async ({ request, env }: FunctionContext) => {
+export const onRequestPost = async (context: FunctionContext) => {
+  const { request, env } = context;
   try {
     assertSameOrigin(request, env.SITE_URL);
     const identity = await verifyFirebaseRequest(request, env);
@@ -51,39 +52,37 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
       body: JSON.stringify({ club_id: club.id, profile_id: profile.id, firebase_uid: identity.uid, responsible_name: responsibleName, contact_email: contactEmail, country_slug: country, ea_url: eaUrl, status: "approved", reviewed_at: now, updated_at: now }),
     });
     const claim = claims[0];
-    // Clube reivindicado entra na fila do crawler com prioridade alta e coleta imediata.
-    await supabaseRest(env, "ea_crawl_queue?on_conflict=club_id", {
-      method: "POST",
-      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
-      body: JSON.stringify({ club_id: club.id, priority: 95, status: "queued", next_run_at: now, updated_at: now }),
-    }).catch((error) => console.error(JSON.stringify({ event: "club_claim_enqueue_failed", clubId: club.id, reason: error instanceof Error ? error.message : "UNKNOWN" })));
     await supabaseRest(env, `profiles?id=eq.${encodeURIComponent(profile.id)}`, {
       method: "PATCH",
       body: JSON.stringify({ club_id: club.id, role: "owner", country_slug: country, updated_at: now }),
     });
 
-    // Dados da EA na hora do cadastro. A fila do crawler continua existindo
-    // para manter o clube atualizado depois, mas esperar por ela significava
-    // o dono abrir a pagina do proprio clube e ver zeros. `refreshEaClub`
-    // nunca lanca: EA fora do ar degrada para o comportamento antigo.
-    const eaSync = await refreshEaClub(env, supabaseRest, {
-      clubUuid: club.id,
-      eaClubId: clubId,
-      platform,
-    });
+    // Coleta pedida no ato do cadastro, com a maior prioridade da fila.
+    // Antes o clube so era coletado quando o cron horario chegasse nele — o
+    // dono cadastrava e abria a pagina do proprio clube cheia de zeros.
+    // Vai em `waitUntil` porque uma coleta com Browser Rendering leva
+    // dezenas de segundos e nao pode segurar a resposta do cadastro.
+    context.waitUntil(
+      requestEaClubRefresh(env, supabaseRest, {
+        clubUuid: club.id,
+        eaClubId: clubId,
+        platform,
+        priority: 95,
+      }),
+    );
 
     return Response.json({
       id: claim?.id,
       responsibleName,
       email: contactEmail,
-      clubName: eaSync.name || club.name,
+      clubName: club.name,
       country,
       eaUrl,
       clubId,
       platform,
       submittedAt: claim?.created_at || now,
       status: "indexed",
-      ea: { synced: eaSync.ok, players: eaSync.playersUpserted },
+      ea: { refreshRequested: true },
     }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "CLAIM_FAILED";

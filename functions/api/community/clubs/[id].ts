@@ -1,5 +1,5 @@
 import { apiError, type FunctionContext } from "../../../_lib/billing";
-import { refreshEaClub } from "../../../_lib/ea";
+import { requestEaClubRefresh } from "../../../_lib/ea";
 import { findClubByPublicRouteId, publicRouteId, supabaseRest } from "../../../_lib/supabase";
 
 type ClubContext = FunctionContext & { params: { id: string } };
@@ -88,24 +88,26 @@ export const onRequestGet = async (context: ClubContext) => {
     )[0];
     if (!before) return apiError("Clube não encontrado.", 404);
 
-    // Sem retrato nenhum, buscar na EA agora: a pagina publica nao pode
-    // estrear com zeros so porque a fila do crawler ainda nao chegou aqui.
-    // Com retrato velho, revalidar em segundo plano e servir o que ja existe.
+    // Retrato velho (ou inexistente) pede coleta e serve o que ja existe.
+    // A coleta nao pode ser esperada aqui: quem fala com a EA e o Worker
+    // `ea-crawler`, via Browser Rendering, e isso leva dezenas de segundos.
+    // Quem visita primeiro paga o pedido; quem chega depois ve o dado.
     const age = before.last_synced_at ? Date.now() - new Date(before.last_synced_at).getTime() : Infinity;
-    const refresh = { clubUuid: club.id, eaClubId: club.ea_club_id, platform: club.platform };
-    if (!before.last_synced_at) {
-      await refreshEaClub(env, supabaseRest, refresh);
-    } else if (age > EA_STALE_MS) {
-      context.waitUntil(refreshEaClub(env, supabaseRest, refresh));
+    if (age > EA_STALE_MS) {
+      context.waitUntil(
+        requestEaClubRefresh(env, supabaseRest, {
+          clubUuid: club.id,
+          eaClubId: club.ea_club_id,
+          platform: club.platform,
+          // Clube que alguem esta olhando agora vale mais que a varredura
+          // de catalogo, e menos que o clube recem-cadastrado.
+          priority: before.last_synced_at ? 60 : 80,
+        }),
+      );
     }
 
-    const [stats, profiles, squad] = await Promise.all([
-      before.last_synced_at
-        ? Promise.resolve(before)
-        : supabaseRest<ClubStatsRow[]>(
-            env,
-            `clubs?id=eq.${encodeURIComponent(club.id)}&select=${CLUB_COLUMNS}&limit=1`,
-          ).then((rows) => rows[0] ?? before),
+    const stats = before;
+    const [profiles, squad] = await Promise.all([
       supabaseRest<ClubMemberRow[]>(
         env,
         `profiles?club_id=eq.${encodeURIComponent(club.id)}&select=id,full_name,role,country_slug,avatar_url,player_id&order=created_at.asc&limit=100`,

@@ -8,6 +8,8 @@ export interface BillingEnv {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
   EA_INGEST_SECRET?: string;
+  /** Coletor com Browser Rendering. Ver `functions/_lib/ea.ts`. */
+  EA_CRAWLER_URL?: string;
   ADMIN_EMAILS?: string;
   SITE_URL?: string;
   VAPID_SUBJECT?: string;

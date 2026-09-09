@@ -1,16 +1,21 @@
 /**
- * Ponte unica com a API publica da EA (proclubs.ea.com).
+ * Ponte unica com os dados publicos da EA.
  *
- * Antes deste arquivo o projeto falava com a EA em dois lugares que nao se
- * conheciam: `/api/ea` normalizava para a tela e o crawler externo mandava
- * payload bruto para `/api/internal/ea-ingest`. O cadastro de clube nao
- * falava com a EA nenhuma vez — o clube nascia vazio e so ganhava dados
- * quando a fila do crawler chegasse nele, o que podia levar horas.
+ * Duas coisas convivem aqui, e a diferenca entre elas importa:
  *
- * Aqui ficam as tres pecas que todos precisam: buscar na EA, normalizar
- * para o dominio da aplicacao e gravar no catalogo (clubs + players).
- * Quem cadastra clube chama `refreshEaClub` na hora; a pagina publica do
- * clube chama a mesma funcao quando o dado esta velho.
+ * 1. `fetchEaClubPayloads` + `normalizeEaClub` — consulta direta a
+ *    proclubs.ea.com. Funciona de fora da Cloudflare (o `npm run crawl:ea`
+ *    local, por exemplo). **De dentro de uma Pages Function a EA responde
+ *    403**, sempre; e por isso que `/api/ea` tem fallback para o catalogo.
+ *
+ * 2. `requestEaClubRefresh` — o caminho que de fato traz dado novo em
+ *    producao. Enfileira o clube e aciona o Worker `ea-crawler`, que abre a
+ *    pagina publica com Browser Rendering (Chrome real, nao `fetch`) e
+ *    devolve a coleta para `/api/internal/ea-ingest`. E o unico caminho que
+ *    a EA aceita, e e o que o cadastro de clube e a pagina publica usam.
+ *
+ * Antes disto o cadastro nao pedia coleta nenhuma: o clube nascia vazio e
+ * esperava a vez na fila horaria, o que podia levar horas.
  */
 
 export type EaRecord = Record<string, unknown>;
@@ -35,18 +40,6 @@ export const number = (value: unknown) => (Number.isFinite(Number(value)) ? Numb
 export const values = (value: unknown) => (Array.isArray(value) ? value : Object.values(record(value)));
 export const pick = (row: EaRecord, ...keys: string[]) =>
   keys.map((key) => row[key]).find((value) => value != null && value !== "");
-
-const num = (value: unknown) => {
-  if (value == null || value === "") return null;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
-};
-
-const ratio = (part: unknown, total: unknown) => {
-  const a = Number(part);
-  const b = Number(total);
-  return Number.isFinite(a) && Number.isFinite(b) && b > 0 ? Math.round((a / b) * 1000) / 1000 : null;
-};
 
 async function ea(path: string, params: URLSearchParams) {
   const response = await fetch(`${BASE_URL}/${path}?${params}`, { headers: HEADERS });
@@ -168,151 +161,89 @@ export function normalizeEaClub(clubId: string, platform: string, payloads: EaCl
   };
 }
 
+
 // ------------------------------------------------------------
-// Gravacao no catalogo
+// Coleta em producao: Worker ea-crawler (Browser Rendering)
 // ------------------------------------------------------------
 
-interface CatalogEnv {
+/** URL publica do Worker coletor, com override por variavel de ambiente. */
+const DEFAULT_CRAWLER_URL = "https://pro-clubs-america-ea-crawler.cspgabriel.workers.dev/";
+
+interface RefreshEnv {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
+  EA_INGEST_SECRET?: string;
+  EA_CRAWLER_URL?: string;
 }
 
-type RestFn = <T>(env: CatalogEnv, path: string, init?: RequestInit) => Promise<T>;
+type RestFn = <T>(env: RefreshEnv, path: string, init?: RequestInit) => Promise<T>;
 
-export interface EaSyncSummary {
-  clubUpdated: boolean;
-  playersUpserted: number;
-  name?: string;
+export interface EaRefreshResult {
+  ok: boolean;
+  /** Status devolvido pelo coletor: succeeded, failed, blocked ou idle. */
+  status?: string;
+  error?: string;
 }
 
 /**
- * Grava no catalogo o que a EA devolveu para um clube.
+ * Pede uma coleta agora para um clube.
  *
- * As colunas sao as mesmas que o crawler ja alimentava em
- * `functions/api/internal/ea-ingest.ts`; o que muda e a origem — aqui o
- * payload vem de uma chamada direta, nao de uma coleta agendada. Isso
- * mantem uma unica forma de dado no banco, seja quem tiver buscado.
+ * Sao dois passos, e os dois importam: a fila e a fonte de verdade de
+ * "quem precisa ser coletado" (o cron horario le dela), e o coletor so
+ * atende um clube que esteja nela. Enfileirar antes garante que, se a
+ * chamada ao Worker falhar, a coleta ainda acontece na proxima hora — o
+ * pedido nao se perde, so demora.
+ *
+ * Uma coleta com Browser Rendering leva dezenas de segundos, entao quem
+ * chama isto deve usar `waitUntil` em vez de esperar na frente do usuario.
+ * Nunca lanca.
  */
-export async function syncEaClubToCatalog(
-  env: CatalogEnv,
+export async function requestEaClubRefresh(
+  env: RefreshEnv,
   supabaseRest: RestFn,
-  input: { clubUuid: string; eaClubId: string; platform: string; payloads: EaClubPayloads },
-): Promise<EaSyncSummary> {
-  const summary: EaSyncSummary = { clubUpdated: false, playersUpserted: 0 };
-  const now = new Date().toISOString();
-  const { clubUuid, eaClubId, payloads } = input;
-
-  const info = record(record(payloads.info)[eaClubId] || values(payloads.info)[0]);
-  const stats = record(record(payloads.overall)[eaClubId] || values(payloads.overall)[0]);
-  const members = values(record(payloads.members).members || payloads.members).map(record);
-  const publishedName = text(pick(info, "name", "clubName"));
-
-  if (Object.keys(stats).length || publishedName) {
-    const games = num(pick(stats, "gamesPlayed", "games", "matches"));
-    const patch: Record<string, unknown> = {
-      skill_rating: num(pick(stats, "skillRating", "skillRatingValue")),
-      wins: num(pick(stats, "wins", "win")),
-      ties: num(pick(stats, "ties", "draws")),
-      losses: num(pick(stats, "losses", "loss")),
-      games_played: games,
-      goals: num(pick(stats, "goals", "goalsFor")),
-      goals_against: num(pick(stats, "goalsAgainst", "goalsConceded")),
-      clean_sheets: num(stats.cleanSheets),
-      goals_per_game: num(stats.goalsPerGame) ?? ratio(pick(stats, "goals", "goalsFor"), games),
-      all_time_rank: num(stats.rank),
-      current_division: num(pick(stats, "currentDivision", "division")),
-      reputation_level: text(pick(info, "reputation", "reputationLevel")) || null,
-      source_payload: {
-        overallStats: stats,
-        info,
-        memberNames: members.map((member) => text(member.name).slice(0, 80)).filter(Boolean),
-        observedAt: now,
-      },
-      last_synced_at: now,
-      updated_at: now,
-    };
-    // O nome oficial da EA vence o que o usuario digitou no cadastro; se a EA
-    // nao publicou nome, o digitado permanece.
-    if (publishedName) {
-      patch.name = publishedName.slice(0, 120);
-      summary.name = patch.name as string;
-    }
-    // Chave nula significa "a EA nao publicou este campo agora" — deixar o
-    // valor anterior no banco em vez de zerar um historico bom.
-    for (const key of Object.keys(patch)) {
-      if (patch[key] === null && key !== "reputation_level") delete patch[key];
-    }
-
-    await supabaseRest(env, `clubs?id=eq.${encodeURIComponent(clubUuid)}`, {
-      method: "PATCH",
-      headers: { Prefer: "return=minimal" },
-      body: JSON.stringify(patch),
-    });
-    summary.clubUpdated = true;
+  input: { clubUuid: string; eaClubId: string; platform: string; priority?: number },
+): Promise<EaRefreshResult> {
+  if (!/^\d{1,12}$/.test(input.eaClubId) || !EA_PLATFORMS.has(input.platform)) {
+    return { ok: false, error: "EA_PARAMS_INVALID" };
   }
+  const now = new Date().toISOString();
 
-  const rows = members
-    .map((member) => {
-      const gamertag = text(member.name).slice(0, 80);
-      if (!gamertag) return null;
-      const games = num(pick(member, "gamesPlayed", "games"));
-      return {
-        club_id: clubUuid,
-        gamertag,
-        favorite_position: text(pick(member, "favoritePosition", "position")).slice(0, 40) || null,
-        rating: num(pick(member, "ratingAve", "rating", "averageRating")),
-        games_played: games,
-        goals: num(member.goals),
-        assists: num(member.assists),
-        passes_made: num(pick(member, "passesMade", "passes")),
-        pass_success_rate: num(pick(member, "passSuccessRate", "passSuccess")),
-        tackles_made: num(pick(member, "tacklesMade", "tackles")),
-        tackle_success_rate: num(pick(member, "tackleSuccessRate", "tackleSuccess")),
-        clean_sheets_def: num(member.cleanSheetsDef),
-        clean_sheets_gk: num(pick(member, "cleanSheetsGK", "cleanSheetsGk")),
-        man_of_the_match: num(pick(member, "manOfTheMatch", "motm")),
-        win_rate: num(member.winRate),
-        source_payload: { member, observedAt: now },
-        goals_per_game: ratio(member.goals, games),
-        assists_per_game: ratio(member.assists, games),
-        tackles_per_game: ratio(pick(member, "tacklesMade", "tackles"), games),
-        last_synced_at: now,
-        updated_at: now,
-      };
-    })
-    .filter(Boolean);
-
-  if (rows.length) {
-    await supabaseRest(env, "players?on_conflict=club_id,gamertag", {
+  try {
+    await supabaseRest(env, "ea_crawl_queue?on_conflict=club_id", {
       method: "POST",
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
-      body: JSON.stringify(rows),
+      body: JSON.stringify({
+        club_id: input.clubUuid,
+        priority: input.priority ?? 90,
+        status: "queued",
+        next_run_at: now,
+        updated_at: now,
+      }),
     });
-    summary.playersUpserted = rows.length;
-  }
-
-  return summary;
-}
-
-/**
- * Busca na EA e grava, numa chamada. Nunca lanca: o cadastro do clube e a
- * pagina publica precisam continuar funcionando se a EA estiver fora.
- */
-export async function refreshEaClub(
-  env: CatalogEnv,
-  supabaseRest: RestFn,
-  input: { clubUuid: string; eaClubId: string; platform: string },
-): Promise<EaSyncSummary & { ok: boolean; error?: string }> {
-  if (!/^\d{1,12}$/.test(input.eaClubId) || !EA_PLATFORMS.has(input.platform)) {
-    return { ok: false, clubUpdated: false, playersUpserted: 0, error: "EA_PARAMS_INVALID" };
-  }
-  try {
-    const payloads = await fetchEaClubPayloads(input.eaClubId, input.platform);
-    const summary = await syncEaClubToCatalog(env, supabaseRest, { ...input, payloads });
-    return { ok: true, ...summary };
   } catch (error) {
-    const reason = error instanceof Error ? error.message : "EA_UNAVAILABLE";
-    console.error(JSON.stringify({ event: "ea_refresh_failed", eaClubId: input.eaClubId, reason }));
-    return { ok: false, clubUpdated: false, playersUpserted: 0, error: reason };
+    console.error(
+      JSON.stringify({
+        event: "ea_enqueue_failed",
+        eaClubId: input.eaClubId,
+        reason: error instanceof Error ? error.message : "UNKNOWN",
+      }),
+    );
+  }
+
+  // O coletor exige o mesmo segredo da ingestao. Sem ele, o clube fica
+  // enfileirado e o cron horario resolve — degradado, nao quebrado.
+  if (!env.EA_INGEST_SECRET) return { ok: false, status: "queued", error: "EA_INGEST_SECRET_MISSING" };
+
+  try {
+    const crawler = new URL(env.EA_CRAWLER_URL || DEFAULT_CRAWLER_URL);
+    crawler.searchParams.set("clubId", input.eaClubId);
+    const response = await fetch(crawler, { headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}` } });
+    const payload = (await response.json().catch(() => null)) as { status?: string; error?: string } | null;
+    if (!response.ok) throw new Error(payload?.error || `CRAWLER_${response.status}`);
+    return { ok: payload?.status === "succeeded", status: payload?.status };
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : "CRAWLER_UNAVAILABLE";
+    console.error(JSON.stringify({ event: "ea_crawl_request_failed", eaClubId: input.eaClubId, reason }));
+    return { ok: false, status: "queued", error: reason };
   }
 }
