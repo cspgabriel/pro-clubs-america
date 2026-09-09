@@ -61,7 +61,7 @@ export function RegistrationPage({ indexedClubs }: { indexedClubs: IndexedClubOp
   return <main className="app-shell registration-page"><PlatformHeader />
     <section className="registration-hero"><div><small>ENTRE PARA A COMUNIDADE</small><h1>Cadastre seu time</h1><p>Vincule sua conta ao clube público da EA. O acesso é liberado imediatamente e os dados esportivos entram nos diretórios e rankings após a coleta oficial.</p></div><UserPlus /></section>
     <div className="registration-layout">
-      {submitted ? <section className="registration-success"><CheckCircle2 /><small>TIME VINCULADO</small><h2>{submitted.clubName}</h2><p>Você agora representa o clube EA ID <b>{submitted.clubId}</b> como dono. O vínculo é imediato; resultados e estatísticas continuam validados pela fonte oficial.</p><div><Clock3 /><span>STATUS ATUAL<strong>Vínculo ativo · prioridade máxima na coleta</strong></span></div><Link href="/conta/time">Gerenciar meu time</Link></section> : <form className="registration-form" onSubmit={submit}>
+      {submitted ? <section className="registration-success"><CheckCircle2 /><small>TIME VINCULADO</small><h2>{submitted.clubName}</h2><p>Você agora representa o clube EA ID <b>{submitted.clubId}</b> como dono. O vínculo é imediato; resultados e estatísticas continuam validados pela fonte oficial.</p><div><Clock3 /><span>STATUS ATUAL<strong>{submitted.ea?.synced ? `Vínculo ativo · ${submitted.ea.matches} partidas da EA já carregadas` : "Vínculo ativo · buscando os dados da EA, aparecem em instantes"}</strong></span></div><Link href="/conta/time">Gerenciar meu time</Link></section> : <form className="registration-form" onSubmit={submit}>
         <header><ShieldCheck /><div><small>CADASTRO DE USUÁRIO + TIME</small><h2>Identificação obrigatória</h2></div></header>
         {!user && <p className="registration-error">Você precisa <Link href="/entrar">entrar ou criar uma conta</Link> antes de vincular o clube.</p>}
         {user?.name && user?.email
@@ -78,7 +78,10 @@ export function RegistrationPage({ indexedClubs }: { indexedClubs: IndexedClubOp
           : <label>Link público do time na EA Clubs <span>OBRIGATÓRIO</span><div className="url-field"><Link2 /><input required name="eaUrl" type="url" value={eaUrl} onChange={(event) => setEaUrl(event.target.value)} placeholder="https://www.ea.com/pt-br/games/ea-sports-fc/clubs/member-list?clubId=...&platform=common-gen5" /></div></label>}
         {error && <p className="registration-error">{error}</p>}
         <label className="registration-consent"><input required type="checkbox" /> Confirmo que este é o link público do meu clube e autorizo a indexação das estatísticas esportivas publicadas pela EA.</label>
-        <button type="submit" disabled={!user || busy}>{busy ? "Enviando…" : "Enviar para indexação"} <UserPlus /></button>
+        {/* O cadastro espera a coleta na EA — uns 15 segundos. Dizer isso
+            evita que a espera pareca travamento e o usuario recarregue. */}
+        <button type="submit" disabled={!user || busy}>{busy ? "Buscando dados na EA…" : "Vincular meu clube"} <UserPlus /></button>
+        {busy && <p className="registration-busy" role="status">Estamos trazendo elenco e estatísticas oficiais do seu clube. Leva alguns segundos — não feche esta página.</p>}
       </form>}
       <aside className="registration-help"><Search /><small>NÃO SABE O LINK?</small><h2>Procure seu clube na EA</h2><p>Abra a página pública de Clubs, escolha a plataforma, encontre seu time e copie a URL de Overview, Integrantes ou Histórico.</p><a href="https://www.ea.com/pt-br/games/ea-sports-fc/clubs" target="_blank" rel="noreferrer">Abrir busca/ranking público da EA <ExternalLink /></a><ol><li><span>01</span> Encontre o clube</li><li><span>02</span> Abra a página dele</li><li><span>03</span> Copie a URL completa</li></ol><div className="sla-card"><Clock3 /><span>INDEXAÇÃO<strong>Na próxima coleta</strong><small>Clubes vinculados entram na fila com prioridade máxima.</small></span></div></aside>
     </div><MobileNav /></main>;

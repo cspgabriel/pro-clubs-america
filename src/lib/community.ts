@@ -9,6 +9,13 @@ export interface TeamRegistration {
   country: string;
   submittedAt: string;
   status: "pending_review" | "indexed";
+  /**
+   * Resultado da coleta feita durante o proprio cadastro.
+   *
+   * `synced: false` nao e erro — significa que a EA nao respondeu a tempo e
+   * o clube ficou na fila; os numeros aparecem sozinhos em ate uma hora.
+   */
+  ea?: { synced: boolean; matches: number };
 }
 
 export function parseEaClubUrl(value: string) {

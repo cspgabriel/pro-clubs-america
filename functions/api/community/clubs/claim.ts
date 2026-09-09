@@ -57,32 +57,41 @@ export const onRequestPost = async (context: FunctionContext) => {
       body: JSON.stringify({ club_id: club.id, role: "owner", country_slug: country, updated_at: now }),
     });
 
-    // Coleta pedida no ato do cadastro, com a maior prioridade da fila.
-    // Antes o clube so era coletado quando o cron horario chegasse nele — o
-    // dono cadastrava e abria a pagina do proprio clube cheia de zeros.
-    // Vai em `waitUntil` porque uma coleta com Browser Rendering leva
-    // dezenas de segundos e nao pode segurar a resposta do cadastro.
-    context.waitUntil(
-      requestEaClubRefresh(env, supabaseRest, {
-        clubUuid: club.id,
-        eaClubId: clubId,
-        platform,
-        priority: 95,
-      }),
-    );
+    // Coleta esperada aqui, de proposito. Sao ~15s a mais no cadastro, e em
+    // troca o dono cai na pagina do proprio clube com o elenco e as
+    // estatisticas ja no lugar, em vez de zeros ate o cron horario passar.
+    // O teto de 25s existe para o coletor travado nao pendurar o cadastro:
+    // se estourar, a linha na fila continua la e o cron resolve.
+    const eaSync = await requestEaClubRefresh(env, supabaseRest, {
+      clubUuid: club.id,
+      eaClubId: clubId,
+      platform,
+      priority: 95,
+      timeoutMs: 25_000,
+    });
+
+    // A EA publica o nome oficial do clube; ele vence o que foi digitado.
+    const synced = eaSync.ok
+      ? (await supabaseRest<Array<{ name: string; games_played: number | null }>>(
+          env,
+          `clubs?id=eq.${encodeURIComponent(club.id)}&select=name,games_played&limit=1`,
+        ))[0]
+      : null;
 
     return Response.json({
       id: claim?.id,
       responsibleName,
       email: contactEmail,
-      clubName: club.name,
+      clubName: synced?.name || club.name,
       country,
       eaUrl,
       clubId,
       platform,
       submittedAt: claim?.created_at || now,
       status: "indexed",
-      ea: { refreshRequested: true },
+      // `synced: false` nao e erro: o clube esta na fila e os numeros
+      // aparecem sozinhos em ate uma hora.
+      ea: { synced: eaSync.ok, matches: synced?.games_played ?? 0 },
     }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "CLAIM_FAILED";

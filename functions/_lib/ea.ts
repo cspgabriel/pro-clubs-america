@@ -194,14 +194,18 @@ export interface EaRefreshResult {
  * chamada ao Worker falhar, a coleta ainda acontece na proxima hora — o
  * pedido nao se perde, so demora.
  *
- * Uma coleta com Browser Rendering leva dezenas de segundos, entao quem
- * chama isto deve usar `waitUntil` em vez de esperar na frente do usuario.
+ * Uma coleta com Browser Rendering leva dezenas de segundos. O cadastro de
+ * clube espera (o dono nao pode abrir o proprio clube e ver zeros); a pagina
+ * publica pede em `waitUntil` e serve o retrato que ja tem. Quem espera
+ * passa `timeoutMs` para nao ficar pendurado se o coletor travar — estourar
+ * o teto nao perde nada, porque a fila ja recebeu o pedido.
+ *
  * Nunca lanca.
  */
 export async function requestEaClubRefresh(
   env: RefreshEnv,
   supabaseRest: RestFn,
-  input: { clubUuid: string; eaClubId: string; platform: string; priority?: number },
+  input: { clubUuid: string; eaClubId: string; platform: string; priority?: number; timeoutMs?: number },
 ): Promise<EaRefreshResult> {
   if (!/^\d{1,12}$/.test(input.eaClubId) || !EA_PLATFORMS.has(input.platform)) {
     return { ok: false, error: "EA_PARAMS_INVALID" };
@@ -237,7 +241,10 @@ export async function requestEaClubRefresh(
   try {
     const crawler = new URL(env.EA_CRAWLER_URL || DEFAULT_CRAWLER_URL);
     crawler.searchParams.set("clubId", input.eaClubId);
-    const response = await fetch(crawler, { headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}` } });
+    const response = await fetch(crawler, {
+      headers: { authorization: `Bearer ${env.EA_INGEST_SECRET}` },
+      signal: input.timeoutMs ? AbortSignal.timeout(input.timeoutMs) : undefined,
+    });
     const payload = (await response.json().catch(() => null)) as { status?: string; error?: string } | null;
     if (!response.ok) throw new Error(payload?.error || `CRAWLER_${response.status}`);
     return { ok: payload?.status === "succeeded", status: payload?.status };
