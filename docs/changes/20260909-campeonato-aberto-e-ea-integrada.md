@@ -84,9 +84,19 @@ ainda acontece no cron horário. O pedido não se perde, só demora.
 Prioridades: `95` clube recém-cadastrado · `80` clube visitado e nunca sincronizado ·
 `60` clube visitado com retrato velho · `5` descoberta orgânica de catálogo.
 
-Uma coleta leva dezenas de segundos, então ambos os chamadores usam `waitUntil` e
-respondem na hora. Consequência aceita e explícita: **a primeira visita a um clube nunca
-sincronizado ainda vem sem o bloco `ea`** — ela paga o pedido, a seguinte vê o dado.
+Uma coleta leva ~15s (medido: clube `10541994` enfileirado 12:43:38, sincronizado
+12:43:53). Os dois chamadores tratam essa espera de forma diferente, de propósito:
+
+- **Cadastro de clube — espera**, com teto de 25s. O dono não pode cadastrar e cair na
+  própria página cheia de zeros; ~15s a mais no cadastro compra isso. Estourar o teto não
+  perde nada: a linha continua em `ea_crawl_queue` e o cron horário resolve, então
+  `synced: false` na resposta não é erro. Como a espera é longa o bastante para parecer
+  travamento, o botão vira "Buscando dados na EA…" com um aviso explícito, e a tela de
+  sucesso informa quantas partidas vieram.
+- **Página pública — `waitUntil`**, servindo o retrato que já existe. Consequência aceita:
+  **a primeira visita a um clube nunca sincronizado vem sem o bloco `ea`** — ela paga o
+  pedido, a seguinte vê o dado. Prender um visitante por 15s não se justifica; prender
+  quem está cadastrando o próprio clube, sim.
 
 ### Na página pública
 
