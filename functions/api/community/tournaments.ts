@@ -93,6 +93,41 @@ const isoDate = (value: unknown) => {
 const clampText = (value: unknown, max: number) =>
   typeof value === "string" && value.trim() ? value.trim().slice(0, max) : null;
 
+const HOUR_MS = 3_600_000;
+
+/**
+ * Quantas edicoes vivas um organizador comum pode manter ao mesmo tempo.
+ *
+ * A criacao deixou de passar por curadoria — qualquer conta abre campeonato.
+ * O freio contra spam passou a ser este teto, que nao atrapalha quem organiza
+ * de verdade e impede que uma conta encha a vitrine sozinha.
+ */
+const MAX_LIVE_PER_ORGANIZER = 5;
+const LIVE_STATUSES = ["draft", "pending_approval", "open", "closed", "drawn", "running"];
+
+/**
+ * O desenho que a edicao ganha quando o organizador nao mexe em nada.
+ *
+ * Escada elastica de 32/16/8: com 8 clubes inscritos o sorteio desce ao
+ * degrau de 8 em vez de cancelar por falta de gente. Grupos de 4 com 2
+ * classificados e o padrao da casa, e a conta fecha em todos os degraus.
+ */
+const DEFAULT_FORMAT: Record<TournamentFormatKind, Record<string, unknown>> = {
+  groups_knockout: {
+    sizes: [32, 16, 8].map((slots) => ({ slots, groupSize: 4, qualifiersPerGroup: 2, bestThirds: 0 })),
+    thirdPlaceMatch: true,
+  },
+  knockout: { sizes: [32, 16, 8, 4], thirdPlaceMatch: true },
+  league: { legs: 2, minTeams: 4 },
+};
+
+/** So considera "formato informado" o que traz de fato uma escada. */
+const hasFormatInput = (value: unknown) => {
+  if (!value || typeof value !== "object") return false;
+  const input = value as Record<string, unknown>;
+  return Array.isArray(input.sizes) ? input.sizes.length > 0 : Object.keys(input).length > 0;
+};
+
 export const onRequestGet = async (context: FunctionContext) => {
   try {
     const url = new URL(context.request.url);
@@ -152,28 +187,59 @@ export const onRequestPost = async (context: FunctionContext) => {
     const profile = await ensureProfile(context.env, identity, identity.name);
 
     const isAdmin = profile.role === "admin";
-    const isClubManager = Boolean(profile.club_id && (profile.role === "owner" || profile.role === "captain"));
-    if (!isAdmin && !isClubManager) {
-      return apiError("Só administradores ou donos de clube podem abrir um campeonato.", 403);
+
+    // Qualquer conta autenticada abre campeonato. O que segura o volume e o
+    // teto de edicoes vivas por organizador, nao mais o papel do usuario.
+    if (!isAdmin) {
+      const live = await supabaseRest<Array<{ id: string }>>(
+        context.env,
+        `tournaments?organizer_profile_id=eq.${encodeURIComponent(profile.id)}&status=in.(${LIVE_STATUSES.join(",")})&select=id&limit=${MAX_LIVE_PER_ORGANIZER}`,
+      );
+      if (live.length >= MAX_LIVE_PER_ORGANIZER) {
+        return apiError(
+          `Você já tem ${MAX_LIVE_PER_ORGANIZER} campeonatos em andamento. Encerre ou cancele um antes de abrir outro.`,
+          409,
+        );
+      }
     }
 
     const body = (await context.request.json()) as Record<string, unknown>;
 
+    // Unico campo obrigatorio. Todo o resto tem um padrao que funciona.
     const name = clampText(body.name, 40);
     if (!name || name.length < 2) return apiError("Dê um nome ao campeonato (2 a 40 caracteres).");
 
-    const kind = body.formatKind as TournamentFormatKind;
-    if (!["groups_knockout", "knockout", "league"].includes(kind)) return apiError("Formato inválido.");
+    const kind = (
+      typeof body.formatKind === "string" && ["groups_knockout", "knockout", "league"].includes(body.formatKind)
+        ? body.formatKind
+        : "groups_knockout"
+    ) as TournamentFormatKind;
 
-    const validation = validateFormat(kind, body.format);
+    const validation = validateFormat(kind, hasFormatInput(body.format) ? body.format : DEFAULT_FORMAT[kind]);
     if (!validation.ok) return apiError(validation.error ?? "Configuração de formato inválida.");
 
-    const opensAt = isoDate(body.registrationOpensAt);
-    const closesAt = isoDate(body.registrationClosesAt);
-    const startsAt = isoDate(body.startsAt);
-    if (!opensAt || !closesAt || !startsAt) return apiError("Informe as datas de inscrição e de início.");
-    if (new Date(closesAt) <= new Date(opensAt)) return apiError("O fim das inscrições tem de vir depois da abertura.");
-    if (new Date(startsAt) < new Date(closesAt)) return apiError("O campeonato não pode começar antes de as inscrições fecharem.");
+    // Datas: quem informa manda, quem nao informa recebe um calendario que
+    // fecha — inscricoes abrem agora, fecham uma hora antes e a bola rola no
+    // dia marcado (ou em uma semana, se nem isso foi dito).
+    const nowMs = Date.now();
+    const startsInput = isoDate(body.startsAt);
+    const startsMs = startsInput ? Date.parse(startsInput) : nowMs + 7 * 24 * HOUR_MS;
+    if (startsMs <= nowMs) return apiError("A data de início tem de ser no futuro.");
+
+    const opensInput = isoDate(body.registrationOpensAt);
+    const opensMs = Math.min(opensInput ? Date.parse(opensInput) : nowMs, startsMs - 60_000);
+
+    const closesInput = isoDate(body.registrationClosesAt);
+    const closesMs = closesInput
+      ? Date.parse(closesInput)
+      : Math.min(startsMs, Math.max(opensMs + 30 * 60_000, startsMs - HOUR_MS));
+
+    if (closesMs <= opensMs) return apiError("O fim das inscrições tem de vir depois da abertura.");
+    if (startsMs < closesMs) return apiError("O campeonato não pode começar antes de as inscrições fecharem.");
+
+    const opensAt = new Date(opensMs).toISOString();
+    const closesAt = new Date(closesMs).toISOString();
+    const startsAt = new Date(startsMs).toISOString();
 
     const platform =
       typeof body.platform === "string" && ["common-gen5", "common-gen4", "nx", "crossplay"].includes(body.platform)
@@ -201,8 +267,11 @@ export const onRequestPost = async (context: FunctionContext) => {
       ? `${base}-${Math.random().toString(36).slice(2, 6)}`
       : base;
 
-    // Proposta de dono de clube entra na fila; a do admin ja nasce util.
-    const status = isAdmin ? "draft" : "pending_approval";
+    // Antes, proposta de nao-admin ia para uma fila de aprovacao e a do admin
+    // nascia como rascunho: em nenhum dos dois casos criar um campeonato
+    // significava ter um campeonato. Agora a edicao ja nasce com inscricoes
+    // abertas; quem quiser preparar em silencio manda `publish: false`.
+    const status = body.publish === false ? "draft" : "open";
 
     const created = await supabaseRest<TournamentRow[]>(context.env, "tournaments", {
       method: "POST",
@@ -223,7 +292,7 @@ export const onRequestPost = async (context: FunctionContext) => {
         prize_cents: { first: cents(prize.first), second: cents(prize.second), third: cents(prize.third) },
         max_teams: maxTeams,
         organizer_profile_id: profile.id,
-        organizer_club_id: isAdmin ? null : profile.club_id,
+        organizer_club_id: profile.club_id ?? null,
         created_by_admin: isAdmin,
         registration_opens_at: opensAt,
         registration_closes_at: closesAt,
@@ -240,7 +309,7 @@ export const onRequestPost = async (context: FunctionContext) => {
       {
         tournament: serializeTournament(row),
         organizerClubName: club?.name,
-        needsApproval: status === "pending_approval",
+        needsApproval: false,
       },
       { status: 201 },
     );

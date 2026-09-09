@@ -160,6 +160,12 @@
 }
 .chipOut { opacity: .5; text-decoration: line-through; }
 
+/* O "(opcional)" ao lado do rotulo: presente, sem competir com o campo. */
+.form label em { font-style: normal; font-size: 10px; opacity: .7; }
+/* O chip tambem e usado solto, como o botao que abre os ajustes avancados. */
+.form > .chip { justify-self: start; color: var(--muted); cursor: pointer; }
+.form > .chip:hover { color: var(--text); }
+
 @media (max-width: 720px) {
   .hero { flex-direction: column; align-items: flex-start; padding: 24px 18px; }
   .hero h1 { font-size: 25px; }

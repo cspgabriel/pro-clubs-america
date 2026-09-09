@@ -194,21 +194,30 @@ export function getTournament(slug: string): Promise<TournamentDetail> {
   return api<TournamentDetail>(`/api/community/tournaments/${encodeURIComponent(slug)}`);
 }
 
+/**
+ * O nome e o unico campo obrigatorio.
+ *
+ * O servidor completa formato, plataforma, datas, vagas e premios com
+ * padroes que funcionam — criar um campeonato passou a ser uma decisao, nao
+ * um formulario. Quem quiser desenhar cada detalhe continua podendo.
+ */
 export interface CreateTournamentInput {
   name: string;
   summary?: string;
   rules?: string;
   bannerUrl?: string;
-  platform: string;
+  platform?: string;
   countryCode?: string;
-  formatKind: TournamentFormatKind;
-  format: Record<string, unknown>;
+  formatKind?: TournamentFormatKind;
+  format?: Record<string, unknown>;
   maxTeams?: number;
   prizeCents?: { first: number; second: number; third: number };
-  registrationOpensAt: string;
-  registrationClosesAt: string;
+  registrationOpensAt?: string;
+  registrationClosesAt?: string;
   drawAt?: string;
-  startsAt: string;
+  startsAt?: string;
+  /** `false` guarda como rascunho em vez de abrir as inscricoes na hora. */
+  publish?: boolean;
 }
 
 export function createTournament(input: CreateTournamentInput) {

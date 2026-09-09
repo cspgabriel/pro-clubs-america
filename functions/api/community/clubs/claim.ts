@@ -1,4 +1,5 @@
 import { apiError, assertSameOrigin, verifyFirebaseRequest, type FunctionContext } from "../../../_lib/billing";
+import { refreshEaClub } from "../../../_lib/ea";
 import { ensureProfile, findClubByEa, supabaseRest, type SupabaseClub } from "../../../_lib/supabase";
 
 interface ClaimBody {
@@ -60,7 +61,30 @@ export const onRequestPost = async ({ request, env }: FunctionContext) => {
       method: "PATCH",
       body: JSON.stringify({ club_id: club.id, role: "owner", country_slug: country, updated_at: now }),
     });
-    return Response.json({ id: claim?.id, responsibleName, email: contactEmail, clubName: club.name, country, eaUrl, clubId, platform, submittedAt: claim?.created_at || now, status: "indexed" }, { status: 201 });
+
+    // Dados da EA na hora do cadastro. A fila do crawler continua existindo
+    // para manter o clube atualizado depois, mas esperar por ela significava
+    // o dono abrir a pagina do proprio clube e ver zeros. `refreshEaClub`
+    // nunca lanca: EA fora do ar degrada para o comportamento antigo.
+    const eaSync = await refreshEaClub(env, supabaseRest, {
+      clubUuid: club.id,
+      eaClubId: clubId,
+      platform,
+    });
+
+    return Response.json({
+      id: claim?.id,
+      responsibleName,
+      email: contactEmail,
+      clubName: eaSync.name || club.name,
+      country,
+      eaUrl,
+      clubId,
+      platform,
+      submittedAt: claim?.created_at || now,
+      status: "indexed",
+      ea: { synced: eaSync.ok, players: eaSync.playersUpserted },
+    }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "CLAIM_FAILED";
     const status = message.startsWith("AUTH_") ? 401 : message === "ORIGIN_NOT_ALLOWED" ? 403 : 500;

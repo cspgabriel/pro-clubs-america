@@ -65,6 +65,10 @@ export function TournamentsPage() {
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [busy, setBusy] = useState(false);
+  // O formulario curto e o caminho normal. Os ajustes finos existem, mas
+  // atras de um clique: eram eles que faziam "criar campeonato" parecer
+  // trabalho de organizador profissional.
+  const [advanced, setAdvanced] = useState(false);
 
   const [kind, setKind] = useState<TournamentFormatKind>("groups_knockout");
   const [groupSize, setGroupSize] = useState(4);
@@ -110,11 +114,16 @@ export function TournamentsPage() {
     return list.filter((item) => ["finished", "cancelled"].includes(item.status));
   }, [data, shelf]);
 
-  const canPropose = Boolean(
-    data?.viewer && (data.viewer.isAdmin || (data.viewer.clubId && ["owner", "captain"].includes(data.viewer.role))),
-  );
+  // Qualquer conta logada organiza. Nao ter clube nao impede ninguem de
+  // abrir uma copa — impedia, e era so uma trava sem motivo.
+  const canCreate = Boolean(data?.viewer);
 
+  /**
+   * Sem ajustes avancados, nao manda formato nenhum: o servidor aplica a
+   * escada padrao (32/16/8, grupos de 4, dois classificados).
+   */
   function buildFormat() {
+    if (!advanced) return undefined;
     if (kind === "league") return { legs: 2, minTeams: 4 };
     if (kind === "knockout") {
       return { sizes: [...knockoutLadder].sort((a, b) => b - a), thirdPlaceMatch: true };
@@ -131,7 +140,7 @@ export function TournamentsPage() {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const format = buildFormat();
-    if (kind !== "league" && !(format as { sizes: unknown[] }).sizes.length) {
+    if (advanced && kind !== "league" && !(format as { sizes: unknown[] }).sizes.length) {
       setError("Escolha ao menos um tamanho de chave.");
       return;
     }
@@ -140,23 +149,26 @@ export function TournamentsPage() {
     setNotice("");
     try {
       const prize = (field: string) => Math.round(Number(form.get(field) || 0) * 100);
+      const optional = (field: string) => String(form.get(field) || "") || undefined;
       const created = await createTournament({
         name: String(form.get("name") || ""),
-        summary: String(form.get("summary") || "") || undefined,
-        rules: String(form.get("rules") || "") || undefined,
-        platform: String(form.get("platform") || "common-gen5"),
+        summary: optional("summary"),
+        startsAt: toIso(String(form.get("startsAt") || "")) || undefined,
         formatKind: kind,
-        format,
-        prizeCents: { first: prize("first"), second: prize("second"), third: prize("third") },
-        registrationOpensAt: toIso(String(form.get("opensAt") || "")),
-        registrationClosesAt: toIso(String(form.get("closesAt") || "")),
-        startsAt: toIso(String(form.get("startsAt") || "")),
+        // Fora do modo avancado nada mais viaja: cada `undefined` aqui e um
+        // padrao que o servidor escolhe por quem esta criando.
+        ...(advanced
+          ? {
+              format,
+              rules: optional("rules"),
+              platform: optional("platform"),
+              prizeCents: { first: prize("first"), second: prize("second"), third: prize("third") },
+              registrationOpensAt: toIso(String(form.get("opensAt") || "")) || undefined,
+              registrationClosesAt: toIso(String(form.get("closesAt") || "")) || undefined,
+            }
+          : {}),
       });
-      setNotice(
-        created.needsApproval
-          ? "Proposta enviada. A organização avisa quando aprovar."
-          : `"${created.tournament.name}" criado como rascunho. Publique quando quiser abrir as inscrições.`,
-      );
+      setNotice(`"${created.tournament.name}" está no ar com inscrições abertas. Chame os clubes.`);
       setShowForm(false);
       await reload();
     } catch (submitError) {
@@ -199,31 +211,26 @@ export function TournamentsPage() {
                 {item.label}
               </button>
             ))}
-            {canPropose && (
+            {canCreate && (
               <button type="button" className={styles.active} onClick={() => setShowForm((current) => !current)}>
-                <Plus /> {showForm ? "Fechar" : data?.viewer?.isAdmin ? "Novo campeonato" : "Propor campeonato"}
+                <Plus /> {showForm ? "Fechar" : "Criar campeonato"}
               </button>
             )}
           </div>
 
-          {showForm && canPropose && (
+          {showForm && canCreate && (
             <section className={styles.panel}>
               <header>
-                <h2>{data?.viewer?.isAdmin ? "Criar campeonato" : "Propor campeonato"}</h2>
+                <h2>Criar campeonato</h2>
               </header>
-              {!data?.viewer?.isAdmin && (
-                <p className={styles.notice}>
-                  Propostas de clubes passam por aprovação da organização antes de aparecer publicamente.
-                </p>
-              )}
+              <p className={styles.notice}>
+                Só o nome é obrigatório. Sem mexer em nada, a edição nasce com inscrições abertas, grupos de 4 com
+                mata-mata e escada elástica de 8 a 32 clubes — o sorteio usa o tamanho que couber nos inscritos.
+              </p>
               <form className={styles.form} onSubmit={submit}>
                 <label>
-                  Nome (até 40 caracteres)
+                  Nome do campeonato
                   <input required name="name" maxLength={40} placeholder="Ex.: Copa Pro Clubs America" />
-                </label>
-                <label>
-                  Chamada curta
-                  <input name="summary" maxLength={240} placeholder="Ex.: 32 clubes, grupos de 4 e mata-mata" />
                 </label>
 
                 <div className={styles.formRow}>
@@ -236,17 +243,21 @@ export function TournamentsPage() {
                     </select>
                   </label>
                   <label>
-                    Plataforma
-                    <select name="platform" defaultValue="common-gen5">
-                      <option value="common-gen5">PS5 / Xbox Series / PC</option>
-                      <option value="common-gen4">PS4 / Xbox One</option>
-                      <option value="nx">Nintendo Switch</option>
-                      <option value="crossplay">Crossplay (qualquer)</option>
-                    </select>
+                    Começa em <em>(opcional — padrão: em 7 dias)</em>
+                    <input type="datetime-local" name="startsAt" />
                   </label>
                 </div>
 
-                {kind === "groups_knockout" && (
+                <label>
+                  Chamada curta <em>(opcional)</em>
+                  <input name="summary" maxLength={240} placeholder="Ex.: 32 clubes, grupos de 4 e mata-mata" />
+                </label>
+
+                <button type="button" className={styles.chip} onClick={() => setAdvanced((current) => !current)}>
+                  {advanced ? "Esconder ajustes avançados" : "Ajustar plataforma, datas, chaves e premiação"}
+                </button>
+
+                {advanced && kind === "groups_knockout" && (
                   <>
                     <div className={styles.formRow}>
                       <label>
@@ -288,7 +299,7 @@ export function TournamentsPage() {
                   </>
                 )}
 
-                {kind === "knockout" && (
+                {advanced && kind === "knockout" && (
                   <label>
                     Tamanhos da chave
                     <span className={styles.chips}>
@@ -310,44 +321,54 @@ export function TournamentsPage() {
                   </label>
                 )}
 
-                <div className={styles.formRow}>
-                  <label>
-                    Inscrições abrem
-                    <input required type="datetime-local" name="opensAt" />
-                  </label>
-                  <label>
-                    Inscrições fecham
-                    <input required type="datetime-local" name="closesAt" />
-                  </label>
-                  <label>
-                    Começa
-                    <input required type="datetime-local" name="startsAt" />
-                  </label>
-                </div>
+                {advanced && (
+                  <>
+                    <label>
+                      Plataforma
+                      <select name="platform" defaultValue="common-gen5">
+                        <option value="common-gen5">PS5 / Xbox Series / PC</option>
+                        <option value="common-gen4">PS4 / Xbox One</option>
+                        <option value="nx">Nintendo Switch</option>
+                        <option value="crossplay">Crossplay (qualquer)</option>
+                      </select>
+                    </label>
 
-                <div className={styles.formRow}>
-                  <label>
-                    Prêmio 1º (R$)
-                    <input type="number" name="first" min="0" step="1" defaultValue="0" />
-                  </label>
-                  <label>
-                    Prêmio 2º (R$)
-                    <input type="number" name="second" min="0" step="1" defaultValue="0" />
-                  </label>
-                  <label>
-                    Prêmio 3º (R$)
-                    <input type="number" name="third" min="0" step="1" defaultValue="0" />
-                  </label>
-                </div>
+                    <div className={styles.formRow}>
+                      <label>
+                        Inscrições abrem <em>(padrão: agora)</em>
+                        <input type="datetime-local" name="opensAt" />
+                      </label>
+                      <label>
+                        Inscrições fecham <em>(padrão: 1h antes do início)</em>
+                        <input type="datetime-local" name="closesAt" />
+                      </label>
+                    </div>
 
-                <label>
-                  Regulamento (markdown, até 8.000 caracteres)
-                  <textarea name="rules" maxLength={8000} placeholder="Regras de W.O., horários, formato dos jogos…" />
-                </label>
+                    <div className={styles.formRow}>
+                      <label>
+                        Prêmio 1º (R$)
+                        <input type="number" name="first" min="0" step="1" defaultValue="0" />
+                      </label>
+                      <label>
+                        Prêmio 2º (R$)
+                        <input type="number" name="second" min="0" step="1" defaultValue="0" />
+                      </label>
+                      <label>
+                        Prêmio 3º (R$)
+                        <input type="number" name="third" min="0" step="1" defaultValue="0" />
+                      </label>
+                    </div>
+
+                    <label>
+                      Regulamento (markdown, até 8.000 caracteres)
+                      <textarea name="rules" maxLength={8000} placeholder="Regras de W.O., horários, formato dos jogos…" />
+                    </label>
+                  </>
+                )}
 
                 <div className={styles.actions}>
                   <button type="submit" className={styles.primary} disabled={busy}>
-                    <Trophy /> {busy ? "Enviando…" : data?.viewer?.isAdmin ? "Criar rascunho" : "Enviar proposta"}
+                    <Trophy /> {busy ? "Criando…" : "Criar e abrir inscrições"}
                   </button>
                 </div>
               </form>
